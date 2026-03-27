@@ -84,5 +84,4 @@ export default withSentryConfig(nextConfig, {
   disableLogger: true,
   autoInstrumentAppDirectory: true,
   autoInstrumentMiddleware: true,
-  hideSourceMaps: true,
 });
