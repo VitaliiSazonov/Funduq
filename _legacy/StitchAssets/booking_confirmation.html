@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#fed65b",
+              "on-secondary-container": "#745c00",
+              "primary": "#5f5e5e",
+              "tertiary-fixed": "#ffe088",
+              "on-primary": "#ffffff",
+              "background": "#fafaf5",
+              "on-tertiary-container": "#554300",
+              "primary-fixed": "#e5e2e1",
+              "tertiary-container": "#d4af37",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#c8c6c5",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#574500",
+              "inverse-surface": "#2f312e",
+              "tertiary": "#735c00",
+              "secondary-fixed-dim": "#e9c349",
+              "secondary": "#735c00",
+              "outline-variant": "#d0c5af",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#e3e3de",
+              "surface-container-high": "#e8e8e3",
+              "secondary-fixed": "#ffe088",
+              "error-container": "#ffdad6",
+              "surface-container": "#eeeee9",
+              "surface": "#fafaf5",
+              "surface-tint": "#5f5e5e",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#474746",
+              "on-primary-container": "#454545",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#c8c6c5",
+              "on-secondary-fixed-variant": "#574500",
+              "inverse-on-surface": "#f1f1ec",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1a1c19",
+              "surface-bright": "#fafaf5",
+              "tertiary-fixed-dim": "#e9c349",
+              "surface-dim": "#dadad5",
+              "surface-variant": "#e3e3de",
+              "outline": "#7f7663",
+              "on-tertiary-fixed": "#241a00",
+              "on-surface-variant": "#4d4635",
+              "on-primary-fixed": "#1c1b1b",
+              "on-background": "#1a1c19",
+              "surface-container-low": "#f4f4ef",
+              "primary-container": "#b4b2b2",
+              "on-secondary-fixed": "#241a00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .success-glow {
+            box-shadow: 0 0 60px -15px rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fafaf5]/80 backdrop-blur-xl border-b border-[#d0c5af]/30 shadow-sm transition-colors duration-300">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-[#5f5e5e] font-headline">LUXE ALTA</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-[#5f5e5e] font-headline tracking-tight hover:text-[#d4af37] transition-colors duration-300" href="#">Residences</a>
+<a class="text-[#5f5e5e] font-headline tracking-tight hover:text-[#d4af37] transition-colors duration-300" href="#">Experiences</a>
+<a class="text-[#d4af37] font-semibold font-headline tracking-tight transition-colors duration-300" href="#">My Bookings</a>
+</nav>
+<div class="flex items-center gap-4 text-[#5f5e5e]">
+<span class="material-symbols-outlined cursor-pointer hover:text-[#d4af37] transition-colors">help</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#d4af37] transition-colors">close</span>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+<!-- Success State Header -->
+<section class="text-center mb-16">
+<div class="relative inline-block mb-8">
+<div class="w-24 h-24 bg-surface-container-lowest rounded-full flex items-center justify-center success-glow mx-auto border border-outline-variant/20">
+<span class="material-symbols-outlined text-tertiary-container !text-5xl" style="font-variation-settings: 'wght' 200;">check_circle</span>
+</div>
+<!-- Asymmetric accent element -->
+<div class="absolute -top-2 -right-2 w-6 h-6 bg-tertiary-fixed rounded-full opacity-50"></div>
+</div>
+<h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tighter text-primary mb-6">Booking Request Sent</h1>
+<p class="text-on-surface-variant max-w-lg mx-auto leading-relaxed text-lg">
+                The host of <span class="text-primary font-semibold">'The Palm Sanctuary'</span> will review your request within 24 hours. You haven't been charged yet.
+            </p>
+</section>
+<!-- Bento Layout for Next Steps -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+<!-- Step 1 -->
+<div class="bg-surface-container-low p-8 rounded-xl border-l-2 border-tertiary-container relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-xs font-label uppercase tracking-widest text-tertiary-container mb-4 block">Step 01</span>
+<h3 class="font-headline text-xl font-semibold mb-3 text-primary">Availability</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Host confirms property availability for your selected dates.</p>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container-high opacity-40 group-hover:scale-110 transition-transform duration-500">calendar_today</span>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-low p-8 rounded-xl border-l-2 border-tertiary-container/30 relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant/60 mb-4 block">Step 02</span>
+<h3 class="font-headline text-xl font-semibold mb-3 text-primary">Connection</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">You'll receive host's direct contact details via secure message.</p>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container-high opacity-40 group-hover:scale-110 transition-transform duration-500">contact_mail</span>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-low p-8 rounded-xl border-l-2 border-tertiary-container/30 relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant/60 mb-4 block">Step 03</span>
+<h3 class="font-headline text-xl font-semibold mb-3 text-primary">Finalize</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Contract &amp; payment are handled directly with the host concierge.</p>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container-high opacity-40 group-hover:scale-110 transition-transform duration-500">payments</span>
+</div>
+</div>
+<!-- Featured Property Preview (Asymmetric) -->
+<section class="relative mb-20">
+<div class="flex flex-col md:flex-row items-center gap-10">
+<div class="w-full md:w-1/2 rounded-xl overflow-hidden shadow-2xl">
+<img class="w-full h-[350px] object-cover" data-alt="luxury modern villa in Dubai with infinity pool and palm trees under a clear blue sky with warm sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF1ZFSMvDmCpqYE_3UvIFYo89tBE1y8uJLudF4VYkVLB9oxi_5acAFX7DkSCdw8G3jbAuaQqBT4k-8lYWPVZ6GlDxLCx-Q9f_rD0H9cdNd22zdUTGyzFY4nxbKOrE9QglhxG8ZgpVEPJUUHHm3BiAkew4ZcWWQe5Yk6NAEBCzBJtjbO8km5uJCEuBvnrlOTauWXWxLCVFX-NzlEcWPePGLjBp0o5UOGHEo2ki_FJEGf9cgsx4AviWdzMx_9I8pxHIM8dBJUsdXsZc"/>
+</div>
+<div class="w-full md:w-1/2 py-4">
+<div class="inline-block bg-tertiary-fixed px-3 py-1 rounded-sm mb-4">
+<span class="text-[10px] font-label font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Verified Villa</span>
+</div>
+<h2 class="font-headline text-3xl font-bold text-primary mb-4 leading-tight">Your curated horizon awaits.</h2>
+<p class="text-on-surface-variant mb-8 leading-relaxed">
+                        While the host reviews your request, why not explore our exclusive collection of waterfront sanctuaries and desert retreats?
+                    </p>
+<div class="flex flex-col sm:flex-row items-center gap-6">
+<button class="w-full sm:w-auto px-10 py-4 bg-primary text-on-primary rounded-lg font-headline font-semibold text-sm hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                            Explore More Properties
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<a class="text-primary font-headline font-semibold text-sm hover:text-tertiary-container transition-colors underline underline-offset-8 decoration-outline-variant/50" href="#">
+                            View My Bookings
+                        </a>
+</div>
+</div>
+</div>
+</section>
+<!-- Help Section -->
+<section class="bg-surface-container rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-outline-variant/10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">support_agent</span>
+<div>
+<h4 class="font-headline font-bold text-primary">Need assistance with your request?</h4>
+<p class="text-on-surface-variant text-sm">Our 24/7 concierge is here to help you navigate the process.</p>
+</div>
+</div>
+<button class="px-6 py-2 border border-outline text-primary font-label text-xs uppercase tracking-widest font-bold hover:bg-surface-container-highest transition-colors">
+                Contact Concierge
+            </button>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-[#f4f4ef] text-[#5f5e5e] transition-colors duration-300">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="font-['Inter'] text-xs uppercase tracking-widest opacity-70">
+                © 2024 LUXE ALTA. A Curated Horizon Experience.
+            </div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-all" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-all" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-all" href="#">Cookie Settings</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-all" href="#">Guest Guarantee</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Message Center | The Curated Horizon</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#2f312e",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#d4af37",
+              "on-primary": "#ffffff",
+              "primary-container": "#b4b2b2",
+              "on-tertiary-fixed-variant": "#574500",
+              "primary-fixed-dim": "#c8c6c5",
+              "surface-container-high": "#e8e8e3",
+              "on-secondary-fixed-variant": "#574500",
+              "background": "#fafaf5",
+              "surface-tint": "#5f5e5e",
+              "surface": "#fafaf5",
+              "error": "#ba1a1a",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#e3e3de",
+              "on-surface": "#1a1c19",
+              "inverse-primary": "#c8c6c5",
+              "on-tertiary-container": "#554300",
+              "primary": "#5f5e5e",
+              "secondary-fixed": "#ffe088",
+              "outline": "#7f7663",
+              "surface-container-low": "#f4f4ef",
+              "primary-fixed": "#e5e2e1",
+              "on-secondary": "#ffffff",
+              "surface-container": "#eeeee9",
+              "on-background": "#1a1c19",
+              "inverse-on-surface": "#f1f1ec",
+              "on-tertiary-fixed": "#241a00",
+              "on-error": "#ffffff",
+              "tertiary-fixed": "#ffe088",
+              "on-primary-fixed-variant": "#474746",
+              "secondary-fixed-dim": "#e9c349",
+              "secondary": "#735c00",
+              "on-secondary-fixed": "#241a00",
+              "error-container": "#ffdad6",
+              "tertiary": "#735c00",
+              "secondary-container": "#fed65b",
+              "on-primary-fixed": "#1c1b1b",
+              "on-secondary-container": "#745c00",
+              "surface-bright": "#fafaf5",
+              "on-primary-container": "#454545",
+              "surface-variant": "#e3e3de",
+              "on-surface-variant": "#4d4635",
+              "tertiary-fixed-dim": "#e9c349",
+              "surface-dim": "#dadad5",
+              "outline-variant": "#d0c5af"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d0c5af; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased overflow-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-50/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-sm shadow-stone-200/50 flex items-center justify-between px-8 h-20 w-full font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-stone-800 dark:text-stone-100">The Curated Horizon</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors" href="#">Marketplace</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors" href="#">My Bookings</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors" href="#">Concierge</a>
+<a class="text-stone-900 dark:text-white border-b-2 border-[#D4AF37] pb-1" href="#">Messages</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-stone-100 dark:hover:bg-zinc-900 transition-all duration-300 ease-out active:scale-95 text-stone-600">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-stone-100 dark:hover:bg-zinc-900 transition-all duration-300 ease-out active:scale-95 text-stone-600">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</nav>
+<main class="flex h-screen pt-20">
+<!-- Sidebar Navigation (Message Center) -->
+<aside class="h-full w-80 bg-[#fafaf5] dark:bg-zinc-950 border-r border-stone-200 dark:border-zinc-800 flex flex-col font-['Inter'] text-sm font-medium">
+<div class="p-6">
+<h1 class="text-lg font-semibold text-[#5f5e5e] dark:text-stone-200 tracking-tight">Message Center</h1>
+<p class="text-xs text-stone-500 font-normal">Premium Concierge</p>
+<button class="mt-6 w-full py-3 bg-primary text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    New Inquiry
+                </button>
+</div>
+<div class="px-4 space-y-1 mb-6">
+<div class="flex items-center gap-3 px-3 py-2.5 bg-white dark:bg-zinc-900 text-[#D4AF37] border-r-4 border-[#D4AF37] shadow-sm transition-all duration-300 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span>All Chats</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 text-stone-500 hover:bg-stone-50 dark:hover:bg-zinc-900/50 transition-all duration-200 cursor-pointer hover:translate-x-1">
+<span class="material-symbols-outlined">mark_as_unread</span>
+<span>Unread</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 text-stone-500 hover:bg-stone-50 dark:hover:bg-zinc-900/50 transition-all duration-200 cursor-pointer hover:translate-x-1">
+<span class="material-symbols-outlined">real_estate_agent</span>
+<span>Property Leads</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-2">
+<!-- Conversation List -->
+<div class="p-3 bg-surface-container-lowest rounded-xl border border-stone-100 shadow-sm cursor-pointer hover:border-[#D4AF37]/30 transition-all group">
+<div class="flex gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="portrait of a professional male host in a clean studio setting with soft lighting and warm background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1Of39btuUvf4FtzRQUcl4A5w39XiMhcm7JxGfPdJ0KLEizI-F3YjGsRtmeNXG_ErtVH1IezfUs0PvRgw6vby8zrSM2kd1zfl8JoD7NXpDWCuhRhy6VlKHSuganm9sGEG3rItzCzpHLGtaANqvjqIM-WQo7rxwnTpMJzuFq1CkGRkfwZdm_yv-X9TqYyg-G5nE6Tk7AM_a-aL29ExRM7Uqvb38SNyeip4f0EZaGlEhctAje8tlSgdE0NrCxoIITxEd0eWpiZRG84"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface truncate">Julian Sterling</h4>
+<span class="text-[10px] text-stone-400">12:45 PM</span>
+</div>
+<p class="text-[11px] text-[#D4AF37] font-semibold tracking-wide uppercase mt-0.5">The Palm Sanctuary</p>
+<p class="text-xs text-on-surface-variant truncate mt-1">Perfect, the keys will be in the vault...</p>
+</div>
+</div>
+</div>
+<div class="p-3 hover:bg-surface-container-low rounded-xl cursor-pointer transition-all">
+<div class="flex gap-3">
+<img class="w-10 h-10 rounded-full object-cover grayscale opacity-80" data-alt="confident professional woman with a warm smile in a blurred architectural interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbKVo6H_MOaSoeg4-F1Q211iTsk7UXE4MrUe2FWOHoJphTI_YXx0DKW-VbrnzX3WTcKF_bueFbwJrxPzht6Ce2Ws0voJyCg7xbQiDUInSD_vUqtsB2agrYwH_eTr8Naxz2AlAN41aQBRNZazAOPwbzSzqRMBmm22WNLS0TVEWLqKnyeZ8O05SzUm3vzMRMrcLVhc4k9GXjbmj38GAvKzFRr1bMxWbm31z565zAopBKX9LxU7pmpr4DYDtHkQCGW7YNKz7ooaLj0to"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-medium text-on-surface-variant truncate">Elena Rossi</h4>
+<span class="text-[10px] text-stone-400">Yesterday</span>
+</div>
+<p class="text-[11px] text-stone-400 font-semibold tracking-wide uppercase mt-0.5">Skyline Duplex</p>
+<p class="text-xs text-stone-400 truncate mt-1">Regarding the contract revision...</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 mt-auto border-t border-stone-100 flex flex-col gap-1">
+<div class="flex items-center gap-3 px-3 py-2 text-stone-500 hover:bg-stone-50 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Chat Interface -->
+<section class="flex-1 flex flex-col bg-surface overflow-hidden">
+<!-- Chat Header -->
+<header class="h-20 px-8 flex items-center justify-between border-b border-stone-100 bg-white/50 backdrop-blur-sm">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover" data-alt="portrait of a professional male host in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVk_CWR3aNL9IlxUcNvsm1E_0r_dUsrXKjJ9miGkdvoAA0YXWFU73u_eXjmso3UZwaJiDfrzRp7ulVzgZ--5p47qRgsdbDYp3l-q2XljRvr9OTICvVY8TykWL2tJUQam4lmY_Kyghpiteb8sV2IIyv5PHvzEHNxoGSRUvy-ycr7usI1Q1dEdervVoqn_VzTFBT8m9zud0xJPXd-l9EzNGdBwyX44-eemm1vJ_75cADhEXOndYI_rFFKl1_rBuNeNY8YPSAyLiRy44"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline font-bold text-lg text-primary">Julian Sterling</h2>
+<span class="px-2 py-0.5 bg-tertiary-fixed text-[10px] font-bold text-on-tertiary-fixed rounded-full tracking-wider uppercase">Host - Verified</span>
+</div>
+<p class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                            Active now • Dubai, UAE
+                        </p>
+</div>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-tertiary hover:bg-tertiary/5 rounded-lg transition-all">
+                    View Property
+                    <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</header>
+<!-- Chat Content -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8 scroll-smooth">
+<!-- Timestamp separator -->
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold text-outline uppercase tracking-widest rounded-full">Today, August 24</span>
+</div>
+<!-- Received Message (Host) -->
+<div class="flex gap-4 max-w-[80%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" data-alt="host profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfRm2d4NS4HUqqos5Sp3EqvGfnoglgd2IZH8TkJdfcFho7EilpNHGmeouXh-UEcRth5iHHTDYYdDjhlyRfa59IqxoyjCLmbJ2rSQjjgt4IwDUejp0e23ESb8sn5Z_eXHXUTBKscu8jrFVD1ozM39AD1zNLdjaRFl0A-FY54cjzPA0ESJb9aNg-s0_Ny857guhaCAhAcvaSpof7tB344jnHQBAo5cOVRWkCIV_-j0t21DoBHwrxpUdx58BOc3-YOvcCOpQY2HH3nZY"/>
+<div class="space-y-2">
+<div class="p-4 bg-surface-container-low rounded-2xl rounded-bl-none text-on-surface leading-relaxed text-sm">
+                            Good morning! I've just finalized the details for your stay at The Palm Sanctuary. Everything is ready for your arrival on the 28th.
+                        </div>
+<p class="text-[10px] text-stone-400 font-medium">10:15 AM</p>
+</div>
+</div>
+<!-- Sent Message (User) -->
+<div class="flex flex-row-reverse gap-4 max-w-[80%] ml-auto">
+<div class="space-y-2 flex flex-col items-end">
+<div class="p-4 bg-primary text-white rounded-2xl rounded-br-none leading-relaxed text-sm shadow-md shadow-primary/10">
+                            That's great to hear, Julian. Have you had a chance to look at the contract amendment regarding the late checkout?
+                        </div>
+<p class="text-[10px] text-stone-400 font-medium">10:22 AM • Read</p>
+</div>
+</div>
+<!-- File Attachment Message -->
+<div class="flex gap-4 max-w-[80%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" data-alt="host profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIonh4zMw6CT2uhN7KA80fUCh_cvvAbMF0gzPbQjkyxC2Fr4vVOWeT5db68t_0LfPzXe-IsxT810s2txTzJmTvEfuK1KsoE0_dBT5aDd9q-tS8QTpq-WA1xJRluA3x12103ey4urTldvNOjlE0oOJdOfFG1ckMX6CZ-IEesWvRn1ojj6rsHgNl-ELoVvHt2ziTvoTS6JUvXWHCcWnveciREShlD1O5rRQcYKRzQislUAUNZU9w6nHNJ3vy1lMj-BuvXLl2dWfUbdk"/>
+<div class="space-y-3">
+<div class="p-4 bg-surface-container-low rounded-2xl rounded-bl-none">
+<p class="text-sm mb-3 text-on-surface">Yes, I've attached the updated agreement here for your signature.</p>
+<div class="flex items-center gap-3 p-3 bg-white/60 border border-stone-200 rounded-xl cursor-pointer hover:bg-white transition-all">
+<div class="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface">Rental_Contract_Amended.pdf</p>
+<p class="text-[10px] text-stone-400 uppercase">2.4 MB • PDF Document</p>
+</div>
+<span class="material-symbols-outlined text-stone-400 hover:text-primary">download</span>
+</div>
+</div>
+<p class="text-[10px] text-stone-400 font-medium">10:45 AM</p>
+</div>
+</div>
+<!-- Image Attachment Message -->
+<div class="flex flex-row-reverse gap-4 max-w-[80%] ml-auto">
+<div class="space-y-3 flex flex-col items-end">
+<div class="p-2 bg-primary rounded-2xl rounded-br-none shadow-lg shadow-primary/5">
+<img class="rounded-xl w-full max-w-sm h-48 object-cover" data-alt="modern luxury villa infinity pool overlooking the ocean at sunset with warm orange and teal lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmvDIn_RZQsegcGmTekxUzNbVJM_acraK9h0u1HLUGhp4svzfkUzPlBu4geYXoznV1nv1hTWg2uu1yoNujXKSu6kah0qgxr2OpDQ6XasPPOLotE55SDawIbAunQmn3efwS76n1XvG_41_NcDLsuQiXiAUbJNJA0XwZu-Fy_4i97SBxn3yALK-QDoiF_j58AWVl4c2Bk-hkvn8Xk4V_cws38u_yE1kv9Xua4yKTVTOgGYZwspPEP8bC-zz0voIC3W6tF7xuXWXS4f0"/>
+</div>
+<div class="p-4 bg-primary text-white rounded-2xl rounded-br-none text-sm">
+                            I just saw this view on the listing again, absolutely stunning! Can't wait.
+                        </div>
+<p class="text-[10px] text-stone-400 font-medium">10:50 AM</p>
+</div>
+</div>
+</div>
+<!-- Message Input -->
+<footer class="p-6 bg-white/50 border-t border-stone-100">
+<div class="max-w-4xl mx-auto flex items-end gap-3 bg-surface-container-low rounded-2xl p-2 transition-all focus-within:bg-white focus-within:ring-2 focus-within:ring-tertiary-container/30">
+<button class="p-2 text-stone-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 py-2 text-sm resize-none max-h-32 placeholder:text-stone-400" placeholder="Type your message..." rows="1"></textarea>
+<div class="flex items-center gap-1 pr-1 pb-1">
+<button class="p-2 text-stone-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined">mood</span>
+</button>
+<button class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center hover:bg-primary/90 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</div>
+</footer>
+</section>
+<!-- Right Side Panel: Property Brief -->
+<aside class="hidden lg:flex w-80 bg-surface-container-low border-l border-stone-200 flex-col overflow-y-auto">
+<div class="p-6">
+<h3 class="font-headline font-bold text-stone-800 uppercase tracking-widest text-[11px] mb-6">Property Brief</h3>
+<!-- Property Card -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm mb-6">
+<div class="relative h-40">
+<img class="w-full h-full object-cover" data-alt="ultra-modern white villa with palm trees and glass walls in Dubai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdNPXjBV19_cvHSxg6J4WiwL5y0PWwKhrypeih8ARY0Vfw5JVAfeHSWt5hQefOMKR1c3236EVZ9X5pM0QfrQbQOkvhpMQdRO6X10U2SOr7e3VaIJTG5nI9il5Y40BtAU4wiquJ2R6In9uRZWOo6vuaD7ucPmZQDPhIJ2z1b5Iu4zzZ4sVGzVDAPVQJJiN2PZPruTsAVvDkkDjnfeEktujoT1gwJ49qqnQ_muN6-qUsPM6HMomO3Ewp1BGzO8XRTjudANlGeclgenE"/>
+<div class="absolute top-3 left-3">
+<span class="px-2 py-1 bg-white/90 backdrop-blur-md text-[9px] font-bold text-primary rounded-md uppercase tracking-wider">Premium Listing</span>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-headline font-bold text-on-surface">The Palm Sanctuary</h4>
+<p class="text-xs text-on-surface-variant mt-1">Palm Jumeirah, Dubai</p>
+</div>
+</div>
+<!-- Booking Details -->
+<div class="space-y-6">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-stone-500">Dates</span>
+<span class="text-xs font-bold text-on-surface">Aug 28 — Sep 04, 2024</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-stone-500">Guests</span>
+<span class="text-xs font-bold text-on-surface">2 Adults</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-stone-500">Total Price</span>
+<span class="text-xs font-bold text-tertiary">$14,500</span>
+</div>
+</div>
+<div class="h-[1px] bg-stone-200"></div>
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Manage Booking</p>
+<button class="w-full py-3 bg-white border border-stone-200 rounded-xl text-xs font-bold text-primary hover:border-primary transition-all active:scale-[0.98]">
+                            Request Modification
+                        </button>
+<button class="w-full py-3 bg-tertiary text-white rounded-xl text-xs font-bold hover:bg-opacity-90 shadow-lg shadow-tertiary/10 transition-all active:scale-[0.98]">
+                            Confirm Booking
+                        </button>
+</div>
+<div class="p-4 bg-tertiary-fixed/30 rounded-2xl border border-tertiary-fixed-dim/20">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary">info</span>
+<p class="text-[11px] leading-relaxed text-on-tertiary-container">
+<span class="font-bold">Concierge Note:</span> You have until 48 hours before check-in to request a full refund according to the sanctuary's policy.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Contacts -->
+<div class="mt-auto p-6 bg-white/30">
+<p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-4">Support &amp; Help</p>
+<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-white transition-all cursor-pointer border border-transparent hover:border-stone-100">
+<div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+</div>
+<div>
+<p class="text-xs font-bold">Priority Support</p>
+<p class="text-[10px] text-stone-500">Available 24/7</p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

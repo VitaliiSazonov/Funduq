@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7f7663",
+              "tertiary-fixed": "#ffe088",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#ffe088",
+              "outline-variant": "#d0c5af",
+              "on-secondary-container": "#745c00",
+              "on-secondary-fixed-variant": "#574500",
+              "on-tertiary-container": "#554300",
+              "secondary-fixed-dim": "#e9c349",
+              "surface-dim": "#dadad5",
+              "primary-container": "#b4b2b2",
+              "on-primary-fixed-variant": "#474746",
+              "surface-container-high": "#e8e8e3",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#fed65b",
+              "on-background": "#1a1c19",
+              "primary-fixed-dim": "#c8c6c5",
+              "on-tertiary-fixed-variant": "#574500",
+              "surface-bright": "#fafaf5",
+              "on-secondary": "#ffffff",
+              "background": "#fafaf5",
+              "on-secondary-fixed": "#241a00",
+              "on-primary-fixed": "#1c1b1b",
+              "primary-fixed": "#e5e2e1",
+              "tertiary-container": "#d4af37",
+              "surface-tint": "#5f5e5e",
+              "on-surface-variant": "#4d4635",
+              "inverse-surface": "#2f312e",
+              "surface-variant": "#e3e3de",
+              "secondary": "#735c00",
+              "on-primary-container": "#454545",
+              "primary": "#5f5e5e",
+              "surface-container-low": "#f4f4ef",
+              "on-error": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#241a00",
+              "inverse-on-surface": "#f1f1ec",
+              "surface-container": "#eeeee9",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "tertiary": "#735c00",
+              "surface-container-highest": "#e3e3de",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#e9c349",
+              "on-surface": "#1a1c19",
+              "surface": "#fafaf5",
+              "inverse-primary": "#c8c6c5"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-surface-variant bg-surface-container-low flex flex-col py-6 z-40 hidden md:flex">
+<div class="px-8 mb-10">
+<span class="text-[#d4af37] font-bold text-lg font-headline tracking-tighter">Funduq Heritage</span>
+<div class="mt-8 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Luxury Villa Host" class="w-full h-full object-cover" data-alt="Close up portrait of a sophisticated middle-aged man in business casual attire with soft office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqLM2PL_8oI5frJaqbLrgJB193X7rHKsDkm8z2bd96foHQ7EG3OlKjGm3U77ltwYKbmxQq1sAumGkEl5Tl1gScA7tz2ggJwXU3wsfaDHQD33gqabquantIcqQ1Jri-53e-KCVsxKYnB_W8MHN76JnfyZo9UPUSPL9Xn9_1ZK2nSrDrs4OO_ddvYTcJ_rBEl9pCM2nU2kYJ4MifFq8Pj5X_w_lHSdOIVB6LZPwq82xRIh0URa1uP6aP3uENI2EsC7qblIwoAWn4GbI"/>
+</div>
+<div>
+<h3 class="text-sm font-bold font-headline text-primary">Host Portal</h3>
+<p class="text-[10px] uppercase tracking-widest text-outline">Premier Tier</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-4">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:pl-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium font-headline">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-surface-container-lowest text-primary border-r-4 border-tertiary-container shadow-sm transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-sm font-semibold font-headline">Revenue</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:pl-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="text-sm font-medium font-headline">Inventory</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:pl-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium font-headline">Guests</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:pl-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="text-sm font-medium font-headline">Support</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-headline font-semibold text-sm shadow-sm hover:opacity-90 transition-opacity">
+                Add New Villa
+            </button>
+<div class="mt-6 border-t border-surface-variant pt-6 pb-2">
+<a class="flex items-center space-x-3 px-4 py-2 text-outline-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-xs font-medium uppercase tracking-wider">Help Center</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-64 min-h-screen pb-20">
+<!-- Top App Bar -->
+<header class="fixed top-0 md:left-64 right-0 z-30 bg-surface/80 backdrop-blur-md px-8 py-4 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-8">
+<h1 class="text-xl font-bold text-primary font-headline tracking-tight">Revenue &amp; Analytics</h1>
+<nav class="hidden lg:flex space-x-6">
+<a class="text-sm font-semibold text-primary border-b-2 border-tertiary-container pb-1" href="#">Analytics</a>
+<a class="text-sm font-semibold text-primary/60 hover:text-primary transition-colors" href="#">Bookings</a>
+<a class="text-sm font-semibold text-primary/60 hover:text-primary transition-colors" href="#">Listings</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-outline text-sm mr-2">calendar_today</span>
+<span class="text-xs font-semibold text-primary">Last 30 Days</span>
+<span class="material-symbols-outlined text-outline text-sm ml-2">expand_more</span>
+</div>
+<div class="flex space-x-2">
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-all">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-all">
+<span class="material-symbols-outlined text-primary">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="mt-24 px-8 space-y-8 max-w-7xl mx-auto">
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-surface-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] uppercase font-bold tracking-[0.1em] text-outline">Total Revenue</span>
+<span class="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">+12.4%</span>
+</div>
+<p class="text-3xl font-extrabold font-headline text-primary tracking-tighter">AED 842,500</p>
+<p class="text-xs text-outline-variant mt-2 font-medium">vs. previous period</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-surface-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] uppercase font-bold tracking-[0.1em] text-outline">Average Daily Rate</span>
+<div class="w-6 h-6 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-container text-xs">trending_up</span>
+</div>
+</div>
+<p class="text-3xl font-extrabold font-headline text-primary tracking-tighter">AED 6,200</p>
+<p class="text-xs text-outline-variant mt-2 font-medium">Yield optimization peak</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-surface-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] uppercase font-bold tracking-[0.1em] text-outline">Occupancy Rate</span>
+<span class="text-primary font-bold text-xs">Target: 85%</span>
+</div>
+<p class="text-3xl font-extrabold font-headline text-primary tracking-tighter">78.2%</p>
+<div class="w-full bg-surface-container-low h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-tertiary-container h-full w-[78%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-surface-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] uppercase font-bold tracking-[0.1em] text-outline">Total Payouts</span>
+<span class="material-symbols-outlined text-outline text-sm">verified_user</span>
+</div>
+<p class="text-3xl font-extrabold font-headline text-primary tracking-tighter">AED 790,000</p>
+<p class="text-xs text-emerald-600 mt-2 font-bold flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1">check_circle</span>
+                        Next payout in 4 days
+                    </p>
+</div>
+</div>
+<!-- Chart Visualizations Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Main Growth Chart -->
+<div class="lg:col-span-2 bg-surface-container-low rounded-3xl p-8 relative overflow-hidden">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h3 class="text-xl font-bold font-headline text-primary">Revenue Growth</h3>
+<p class="text-sm text-outline-variant">Performance across the last 6 months</p>
+</div>
+<div class="flex space-x-4">
+<div class="flex items-center space-x-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-semibold text-primary">Direct</span>
+</div>
+<div class="flex items-center space-x-2">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="text-xs font-semibold text-primary">Partner</span>
+</div>
+</div>
+</div>
+<!-- Simplified Visual Representation of a Line Chart -->
+<div class="relative h-64 w-full flex items-end justify-between px-2">
+<div class="absolute inset-0 flex flex-col justify-between opacity-10 pointer-events-none">
+<div class="border-b border-primary w-full"></div>
+<div class="border-b border-primary w-full"></div>
+<div class="border-b border-primary w-full"></div>
+<div class="border-b border-primary w-full"></div>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-40 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-primary rounded-full h-24 mb-4"></div>
+<div class="absolute -top-8 bg-primary text-on-primary text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">120k</div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">JAN</span>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-48 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-primary rounded-full h-32 mb-4"></div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">FEB</span>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-52 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-tertiary-container rounded-full h-44 mb-4"></div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">MAR</span>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-44 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-primary rounded-full h-28 mb-4"></div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">APR</span>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-56 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-tertiary-container rounded-full h-52 mb-4"></div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">MAY</span>
+</div>
+<div class="flex flex-col items-center group cursor-pointer">
+<div class="relative w-16 h-60 bg-primary/5 rounded-t-xl transition-all group-hover:bg-primary/10 flex items-end justify-center">
+<div class="w-2 bg-primary rounded-full h-56 mb-4"></div>
+</div>
+<span class="mt-4 text-[10px] font-bold text-outline">JUN</span>
+</div>
+</div>
+</div>
+<!-- Booking Sources Doughnut -->
+<div class="bg-surface-container-highest/30 rounded-3xl p-8 border border-surface-variant flex flex-col items-center justify-center text-center">
+<h3 class="text-lg font-bold font-headline text-primary mb-2">Booking Sources</h3>
+<p class="text-xs text-outline mb-8">Channel contribution breakdown</p>
+<div class="relative w-48 h-48 mb-8">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background Track -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#e3e3de" stroke-width="12"></circle>
+<!-- Direct (60%) -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#5f5e5e" stroke-dasharray="251.2" stroke-dashoffset="100.48" stroke-width="12"></circle>
+<!-- Funduq (25%) -->
+<circle class="transform origin-center rotate-[216deg]" cx="50" cy="50" fill="transparent" r="40" stroke="#d4af37" stroke-dasharray="251.2" stroke-dashoffset="188.4" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold font-headline text-primary">92%</span>
+<span class="text-[10px] uppercase font-bold text-outline tracking-wider">Efficiency</span>
+</div>
+</div>
+<div class="w-full space-y-3">
+<div class="flex justify-between items-center text-xs">
+<div class="flex items-center space-x-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-medium text-primary">Direct Website</span>
+</div>
+<span class="font-bold text-primary">60%</span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<div class="flex items-center space-x-2">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<span class="font-medium text-primary">Funduq Premium</span>
+</div>
+<span class="font-bold text-primary">25%</span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<div class="flex items-center space-x-2">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<span class="font-medium text-primary">External (OTA)</span>
+</div>
+<span class="font-bold text-primary">15%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Revenue by Property & Recent Transactions -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Revenue by Property -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-bold font-headline text-primary">Revenue by Property</h3>
+<button class="text-xs font-bold text-tertiary-container hover:underline">Full Portfolio</button>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-2xl flex items-center space-x-4 border border-surface-variant/10 group hover:shadow-md transition-all">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="The Palm Sanctuary" class="w-full h-full object-cover" data-alt="Modern minimalist luxury villa with infinity pool overlooking the Arabian Gulf at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBthQkF7vaydDdSKTgXP0pik1H2rbtN3j0xw1GnBy1jjM8APRgQkvTewQ84Zr1wXhl09s5x3I26hQz4mLpu5UNZVTzzZfE4SyAGUIWkPvdA5MwZRgKPYFxOK_2-ythvlxABW77HKTo7s4B99tRdE64twoNAMUddjGFHUOgAZ1qEGlyc-_Jg0C2Kll-0lop8O0a7ViEpf5Cm9R5pIUL6aYdkwy6N9xC9SaBpUnRvqdeQkTL6vzbdzmjF2dLsKLl7qx58hFGHSNmRAFE"/>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold font-headline text-primary">The Palm Sanctuary</h4>
+<p class="text-xs text-outline font-medium">Palm Jumeirah, Dubai</p>
+<div class="w-full bg-surface-container-low h-1 rounded-full mt-3">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold font-headline text-primary">AED 412,000</p>
+<p class="text-[10px] text-emerald-600 font-bold">Top Performer</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-2xl flex items-center space-x-4 border border-surface-variant/10 group hover:shadow-md transition-all">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Desert Rose Villa" class="w-full h-full object-cover" data-alt="Exotic desert villa architecture with sand-colored stone walls and private oasis garden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHGaXTy0bR5VRNK6EbTJj6mQL5qUtlhVKI_LkwDdGAbt5LV9xlr5GoBvf5SBavjq2wwB_yz9TS57pYCjWR_AKMqaQfc_SDQeB9rgxtClJBwnVYFrkHqL5eRvTIhBtu017mHvnRCDTBNUrAZmTy5Mnnyi0cYUz_svSmm3mZQA1ePwLnszeqAC-4Si8NzOwqsmUHDt2rF9RoBltKH4k79i18yuVMYgMeZtcTPwXaSaWNhfEylkjhZJ-axDl6QBCjERpF9W_oSGgcEME"/>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold font-headline text-primary">Desert Rose Villa</h4>
+<p class="text-xs text-outline font-medium">Al Maha Reserve</p>
+<div class="w-full bg-surface-container-low h-1 rounded-full mt-3">
+<div class="bg-primary h-full w-[62%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold font-headline text-primary">AED 298,500</p>
+<p class="text-[10px] text-outline-variant font-medium">+5% vs last mth</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-2xl flex items-center space-x-4 border border-surface-variant/10 group hover:shadow-md transition-all">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Azure Heights" class="w-full h-full object-cover" data-alt="Mediterranean style mansion with arched windows and bougainvillea flowers in Dubai Hills" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-FQZbB9fCqBZqJLA15V_WSNLnqjs8FCWhhO9XEscnQXeE388PDRn4mi2DHKgeg0ZHuu9mLXuBW5oSVGkH9CIUwjJEiJsjndQgbT_q_tLywIrOL2yLYzSy-uM-vjHZ8kThBJYDtO1Ci0Bykqdj0KbljVugSwAgl5f8SKVyRyP1VPreUvIS-Ew6Bx_eTyriSRbO0PMcWy0U5Kmui_vzvPcwqB6VP5dcJMG4Qolyz97oe-xLFhEl6zBJUU-8ilvkGXa1V3bgcIGO0a8"/>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold font-headline text-primary">Azure Heights</h4>
+<p class="text-xs text-outline font-medium">Dubai Hills Estate</p>
+<div class="w-full bg-surface-container-low h-1 rounded-full mt-3">
+<div class="bg-primary h-full w-[35%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold font-headline text-primary">AED 132,000</p>
+<p class="text-[10px] text-tertiary-container font-bold">New Listing</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-bold font-headline text-primary">Recent Payouts</h3>
+<div class="flex space-x-2">
+<button class="p-2 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+<button class="p-2 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-variant/10 shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-outline">Date</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-outline">Property</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-outline">Amount</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-outline text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant/30">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold text-primary">Oct 24, 2024</p>
+<p class="text-[10px] text-emerald-600 font-bold">Processed</p>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-primary">Palm Sanctuary</td>
+<td class="px-6 py-4 text-xs font-extrabold text-primary">AED 42,500</td>
+<td class="px-6 py-4 text-right">
+<a class="inline-flex items-center text-[10px] font-bold text-tertiary-container hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm mr-1">picture_as_pdf</span>
+                                            INVOICE
+                                        </a>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold text-primary">Oct 20, 2024</p>
+<p class="text-[10px] text-emerald-600 font-bold">Processed</p>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-primary">Desert Rose Villa</td>
+<td class="px-6 py-4 text-xs font-extrabold text-primary">AED 18,200</td>
+<td class="px-6 py-4 text-right">
+<a class="inline-flex items-center text-[10px] font-bold text-tertiary-container hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm mr-1">picture_as_pdf</span>
+                                            INVOICE
+                                        </a>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold text-primary">Oct 18, 2024</p>
+<p class="text-[10px] text-amber-600 font-bold">Pending</p>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-primary">Azure Heights</td>
+<td class="px-6 py-4 text-xs font-extrabold text-primary">AED 12,400</td>
+<td class="px-6 py-4 text-right">
+<span class="text-[10px] font-bold text-outline-variant italic">Generating...</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold text-primary">Oct 12, 2024</p>
+<p class="text-[10px] text-emerald-600 font-bold">Processed</p>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-primary">Palm Sanctuary</td>
+<td class="px-6 py-4 text-xs font-extrabold text-primary">AED 38,000</td>
+<td class="px-6 py-4 text-right">
+<a class="inline-flex items-center text-[10px] font-bold text-tertiary-container hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm mr-1">picture_as_pdf</span>
+                                            INVOICE
+                                        </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="w-full mt-4 py-3 border border-dashed border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest text-outline hover:bg-surface-container-low transition-all">
+                        View All Transactions
+                    </button>
+</section>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 mt-20 border-t border-surface-variant bg-surface flex flex-col md:flex-row justify-between items-center px-12 space-y-4 md:space-y-0">
+<p class="font-body text-xs uppercase tracking-widest text-outline/50">© 2024 Funduq Heritage. All Rights Reserved.</p>
+<div class="flex space-x-8">
+<a class="font-body text-xs uppercase tracking-widest text-outline/50 hover:text-primary underline underline-offset-4 decoration-tertiary-container transition-all" href="#">Privacy Policy</a>
+<a class="font-body text-xs uppercase tracking-widest text-outline/50 hover:text-primary underline underline-offset-4 decoration-tertiary-container transition-all" href="#">Terms of Service</a>
+<a class="font-body text-xs uppercase tracking-widest text-outline/50 hover:text-primary underline underline-offset-4 decoration-tertiary-container transition-all" href="#">Host Guarantee</a>
+</div>
+</footer>
+</main>
+<!-- Mobile Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-surface-variant flex md:hidden justify-around py-4 px-2 z-50">
+<a class="flex flex-col items-center space-y-1 text-outline" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center space-y-1 text-tertiary-container" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-[10px] font-bold">Revenue</span>
+</a>
+<a class="flex flex-col items-center space-y-1 text-outline" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="text-[10px] font-bold">Listings</span>
+</a>
+<a class="flex flex-col items-center space-y-1 text-outline" href="#">
+<span class="material-symbols-outlined">message</span>
+<span class="text-[10px] font-bold">Inbox</span>
+</a>
+</nav>
+</body></html>

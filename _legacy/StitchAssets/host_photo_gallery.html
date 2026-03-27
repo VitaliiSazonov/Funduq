@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#ffffff",
+              "surface-bright": "#fafaf5",
+              "surface-dim": "#dadad5",
+              "surface-container": "#eeeee9",
+              "primary-fixed": "#e5e2e1",
+              "secondary": "#735c00",
+              "inverse-surface": "#2f312e",
+              "tertiary-container": "#d4af37",
+              "surface-container-low": "#f4f4ef",
+              "surface-variant": "#e3e3de",
+              "on-surface-variant": "#4d4635",
+              "on-primary": "#ffffff",
+              "on-secondary-container": "#745c00",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#474746",
+              "on-primary-container": "#454545",
+              "surface-container-high": "#e8e8e3",
+              "surface": "#fafaf5",
+              "on-tertiary-container": "#554300",
+              "on-surface": "#1a1c19",
+              "surface-container-highest": "#e3e3de",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#f1f1ec",
+              "error-container": "#ffdad6",
+              "secondary-container": "#fed65b",
+              "on-background": "#1a1c19",
+              "primary-fixed-dim": "#c8c6c5",
+              "outline-variant": "#d0c5af",
+              "outline": "#7f7663",
+              "background": "#fafaf5",
+              "on-tertiary-fixed-variant": "#574500",
+              "on-secondary-fixed-variant": "#574500",
+              "on-primary-fixed": "#1c1b1b",
+              "secondary-fixed-dim": "#e9c349",
+              "secondary-fixed": "#ffe088",
+              "primary-container": "#b4b2b2",
+              "on-error-container": "#93000a",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#241a00",
+              "surface-tint": "#5f5e5e",
+              "tertiary-fixed-dim": "#e9c349",
+              "tertiary-fixed": "#ffe088",
+              "tertiary": "#735c00",
+              "inverse-primary": "#c8c6c5",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#5f5e5e",
+              "on-tertiary-fixed": "#241a00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-6 space-y-2 bg-[#f4f4ef] dark:bg-stone-950 h-screen w-72 border-r border-[#d0c5af]/30 font-['Inter'] text-sm tracking-wide z-40">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="modern minimalist luxury villa exterior with clean white lines and glass walls at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEYeIBqRJ1UTa0apaa34YV8GmvABolzfye944b05PVvpLbCvFit7zzled35NVYtXM_acAf58xJnpcQYy8Kand6jS6GpE64meHSmKv8a5ihnkLQi_hBYtYCef4V0TeVwzJv32EoTLYnLaMyAxeBPCz20NO6y27MeyIHeHZruWK3-t3vlhoUF2OrQ7pSs7fnW8hFi3MYKDXIfYMmynM8it-vNBNCmIEFCgaF9mHoxOlqGS89dSTpwPYNcit_9g6KFJms3-AHNOnfpSg"/>
+</div>
+<div>
+<h3 class="font-semibold text-primary">New Listing</h3>
+<p class="text-xs text-on-surface-variant">Draft - 80% Complete</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-outline-variant/30 h-1 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full w-[83%]"></div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms cursor-not-allowed">
+<span class="material-symbols-outlined" data-icon="cloud_download">cloud_download</span>
+<span>Import Airbnb</span>
+</div>
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Basic Details</span>
+</div>
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="pool">pool</span>
+<span>Amenities</span>
+</div>
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span>Location</span>
+</div>
+<!-- Active Tab -->
+<div class="flex items-center gap-3 bg-[#ffffff] dark:bg-stone-900 text-[#5f5e5e] dark:text-[#d4af37] font-semibold rounded-lg px-4 py-3 shadow-sm hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+<span>Gallery</span>
+</div>
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Pricing</span>
+</div>
+</nav>
+<div class="pt-6 border-t border-outline-variant/20 space-y-1">
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span>Support</span>
+</div>
+<div class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300 ease-out-300ms">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</div>
+<button class="w-full mt-4 bg-primary text-on-primary py-3 rounded-lg font-medium shadow-sm hover:opacity-90 active:scale-95 transition-all">
+                Save &amp; Exit
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 min-h-screen">
+<!-- Top Nav Replacement for Wizard -->
+<header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl px-12 py-6 flex justify-between items-center">
+<div>
+<span class="text-xs font-bold tracking-[0.2em] text-tertiary-container uppercase">Step 5 of 6</span>
+<h1 class="text-3xl font-headline font-extrabold text-primary tracking-tight">Gallery</h1>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 rounded-lg border border-outline-variant text-primary font-medium hover:bg-surface-container-low transition-colors">
+                    Back
+                </button>
+<button class="px-8 py-2.5 rounded-lg bg-primary text-on-primary font-medium shadow-lg shadow-primary/10 hover:opacity-90 transition-all active:scale-95">
+                    Next
+                </button>
+</div>
+</header>
+<div class="max-w-6xl mx-auto px-12 py-8 space-y-12">
+<!-- Professional Photo Service Alert (Concierge Style) -->
+<section class="bg-tertiary-fixed/30 border-l-4 border-tertiary-container p-6 rounded-r-xl flex items-center justify-between gap-6">
+<div class="flex items-center gap-4">
+<div class="bg-tertiary-container/20 p-3 rounded-full text-tertiary">
+<span class="material-symbols-outlined text-3xl" data-icon="camera">camera</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">EliteStay Professional Photography</h4>
+<p class="text-sm text-on-surface-variant max-w-md">Listings with professional photos earn up to 40% more. Schedule a Funduq-certified shoot starting at $199.</p>
+</div>
+</div>
+<button class="bg-surface-container-lowest text-primary px-5 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-white transition-colors">
+                    Learn More
+                </button>
+</section>
+<!-- Upload Area -->
+<section>
+<div class="group relative border-2 border-dashed border-outline-variant/50 hover:border-tertiary-container/50 bg-surface-container-low rounded-2xl p-12 transition-all duration-300 flex flex-col items-center justify-center text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-outline" data-icon="add_a_photo">add_a_photo</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-primary mb-2">Drag and drop your photos here</h3>
+<p class="text-on-surface-variant mb-6 text-sm">Upload at least 5 high-resolution photos of your property.<br/>JPEG or PNG only, max 20MB per file.</p>
+<label class="cursor-pointer bg-primary text-on-primary px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity active:scale-95">
+                        Browse Files
+                        <input class="hidden" multiple="" type="file"/>
+</label>
+</div>
+</section>
+<!-- Thumbnail Grid (Asymmetric Editorial Feel) -->
+<section class="space-y-6">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-2xl font-headline font-bold text-primary">Your Gallery</h2>
+<p class="text-on-surface-variant text-sm">8 photos uploaded. Drag to reorder.</p>
+</div>
+<button class="text-tertiary font-semibold text-sm hover:underline">Delete all</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Main Cover Photo (Bigger/Featured) -->
+<div class="md:col-span-2 md:row-span-2 relative group rounded-2xl overflow-hidden shadow-sm aspect-square md:aspect-auto">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="high-end luxury living room with floor to ceiling windows overlooking the ocean, soft morning light, designer furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPDbwW-8NYAnb_H4J2PeB5HRtqTsmgPWmq1PxpjtobqON6En3tkVpJ-032Pk4xlq3RefXDDK9XqdBX71YZI11lTNu8vsY1IBxLz1Mc5kMklvDv9SxN87IwLIJ3fLT0lzgU4WCtWR2tLSGCAoAJeKz4DD5024-Xh2KM8LkgEME2ihJ-UmqSvJC_bfPnOfGbQEOe3gLUcMQZvo-4GAsJWB7tR2CdqckYlkfi_GzSfiaXfuMytpYChr_Ja7pQP5GkynlsrMF3KtAtCE4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 left-4 bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-sm">Main Cover</div>
+<div class="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+<button class="bg-white/90 backdrop-blur p-2 rounded-lg text-error hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Grid Item 2 -->
+<div class="relative group rounded-2xl overflow-hidden shadow-sm aspect-square bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="modern minimalist bedroom with crisp white linens and sunlight streaming through sheer curtains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtqV8rgV72KkQQLtTvaIBH2alrSdbont4MKYnlvjd9cuy5irg_3wxnWxNpMriZ8M6B24l1bLPy99pBT34Pa8ckkf6Hk12bQM6d7aMLxj_kmbp4bnPi1DTMkX-h1o7rGwT5Ui-AB_DUApA4g5XZ3UIllwSRCfBxXPdHqm8IZj6PitcrFkMUPYzjE87lAB0daIeIRhof95ZCUx_ryxdJnJaQLps5phEWJixuWKskeqSBS88SnZhsD-4arDT2DXLWuWb1TXL1ZMI9108"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+<button class="bg-white px-4 py-2 rounded-lg text-xs font-bold text-primary shadow-lg">Set as Main</button>
+</div>
+<button class="absolute top-2 right-2 p-1.5 bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Grid Item 3 -->
+<div class="relative group rounded-2xl overflow-hidden shadow-sm aspect-square bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="professional chef style kitchen with marble islands and high-end stainless steel appliances" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC27ha1zzUaMkY0OW8VrfNuPFKzp0qajqys2F4eKgm11vFUcu6LkiTPH3WClgTd_Wa5rfGHsge6Ix5lqWxpIYUfd-jHpoHwhIQr27RL4hbRtpGX3Q2Gku5sQnHNDkUZ642rCg2SyakzPx2nCnH2ddsZCtT_4FvuYHLT4lsMmzGqMOshY9pMp3wrRn0FpAghxAiGvI7p2rUW1FhYGfvJQMsZ-V7k1te8Yu2oaRp1GCAp5o-WZderqXlrC2_O9hbscaJtmhdnEKXnV9o"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+<button class="bg-white px-4 py-2 rounded-lg text-xs font-bold text-primary shadow-lg">Set as Main</button>
+</div>
+<button class="absolute top-2 right-2 p-1.5 bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Grid Item 4 -->
+<div class="relative group rounded-2xl overflow-hidden shadow-sm aspect-square bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="luxury bathroom with deep soaking tub and golden fixtures in soft warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBusdiX3nVgkRjA45wtFC1YO_D4mjvTDaNJ_73zzTF21e85EX8k9PNpuVEKPWdKa5Czr5j4Ha3wmerJF1d9-q9zdVjMdji5j_6QLSXg-gY7EPvAVyoNJc8TXI-uVhDts6BnC0fKOUuUaK5tITwSTsew2X1q51U4TuGj7WD3zTGQSC1GWJQ-uPolrI4-CVYEw6z-7PHfaKiT_KvnY254qnkbhIEyrPIUx7MNyiRd3FjlZ0layFUw2Gu8apFBX6A4UtkMbwLOkf1PWK4"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+<button class="bg-white px-4 py-2 rounded-lg text-xs font-bold text-primary shadow-lg">Set as Main</button>
+</div>
+<button class="absolute top-2 right-2 p-1.5 bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<!-- Grid Item 5 -->
+<div class="relative group rounded-2xl overflow-hidden shadow-sm aspect-square bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="exterior pool deck at sunset with comfortable lounge chairs and infinity edge looking over palm trees" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASRr2QaWTa5NuJpHjIgNQp-Xw7dO199YNpc8fJsC5XrpRu7dqk7sYYdyd4vSYGdUn7TB9lxwwYnraFQF9ltUAl-fwFI8kQM07WU7C91Dnx8OYkYpucy2TzlyakSIjedWBCHt2NtxQoMFt1d5j4nzQ4000UTxSGQ_ZjGak_cSI4H1SoInSMFlhoIbucdbXdKLTNuxQHHq9w6dPRsRq6EyC5ugSCSmw3MCvYwpxlVKecd2X-KD8IBmHrlFWf6A17X_raCZzy6BJXYqQ"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
+<button class="bg-white px-4 py-2 rounded-lg text-xs font-bold text-primary shadow-lg">Set as Main</button>
+</div>
+<button class="absolute top-2 right-2 p-1.5 bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Navigation Bar for Mobile (Hidden on Web as per hierarchy) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-lg border-t border-outline-variant/30 flex justify-around py-4 z-50">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-[10px]">Details</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+<span class="text-[10px] font-bold">Gallery</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-[10px]">Pricing</span>
+</div>
+</div>
+</div>
+<!-- Subtle background layer for editorial feel -->
+<div class="fixed top-0 right-0 w-1/3 h-full bg-surface-container-low -z-10 pointer-events-none"></div>
+</main>
+</body></html>

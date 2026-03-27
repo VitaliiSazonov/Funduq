@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#ffffff",
+              "surface-bright": "#fafaf5",
+              "surface-dim": "#dadad5",
+              "surface-container": "#eeeee9",
+              "primary-fixed": "#e5e2e1",
+              "secondary": "#735c00",
+              "inverse-surface": "#2f312e",
+              "tertiary-container": "#d4af37",
+              "surface-container-low": "#f4f4ef",
+              "surface-variant": "#e3e3de",
+              "on-surface-variant": "#4d4635",
+              "on-primary": "#ffffff",
+              "on-secondary-container": "#745c00",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#474746",
+              "on-primary-container": "#454545",
+              "surface-container-high": "#e8e8e3",
+              "surface": "#fafaf5",
+              "on-tertiary-container": "#554300",
+              "on-surface": "#1a1c19",
+              "surface-container-highest": "#e3e3de",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#f1f1ec",
+              "error-container": "#ffdad6",
+              "secondary-container": "#fed65b",
+              "on-background": "#1a1c19",
+              "primary-fixed-dim": "#c8c6c5",
+              "outline-variant": "#d0c5af",
+              "outline": "#7f7663",
+              "background": "#fafaf5",
+              "on-tertiary-fixed-variant": "#574500",
+              "on-secondary-fixed-variant": "#574500",
+              "on-primary-fixed": "#1c1b1b",
+              "secondary-fixed-dim": "#e9c349",
+              "secondary-fixed": "#ffe088",
+              "primary-container": "#b4b2b2",
+              "on-error-container": "#93000a",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#241a00",
+              "surface-tint": "#5f5e5e",
+              "tertiary-fixed-dim": "#e9c349",
+              "tertiary-fixed": "#ffe088",
+              "tertiary": "#735c00",
+              "inverse-primary": "#c8c6c5",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#5f5e5e",
+              "on-tertiary-fixed": "#241a00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(250, 250, 245, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="bg-[#fafaf5]/80 dark:bg-stone-900/80 backdrop-blur-xl font-['Plus_Jakarta_Sans'] font-medium tracking-tight docked full-width top-0 sticky z-50 shadow-[0_12px_40px_rgba(26,28,25,0.06)]">
+<div class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-xl font-bold text-[#5f5e5e] dark:text-stone-100">EliteStay Host</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#5f5e5e]/60 dark:text-stone-500 hover:text-[#5f5e5e] hover:opacity-80 transition-opacity duration-300 ease-out" href="#">Dashboard</a>
+<a class="text-[#5f5e5e] dark:text-[#d4af37] border-b-2 border-[#d4af37] pb-1 hover:opacity-80 transition-opacity duration-300 ease-out" href="#">Listings</a>
+<a class="text-[#5f5e5e]/60 dark:text-stone-500 hover:text-[#5f5e5e] hover:opacity-80 transition-opacity duration-300 ease-out" href="#">Bookings</a>
+<a class="text-[#5f5e5e]/60 dark:text-stone-500 hover:text-[#5f5e5e] hover:opacity-80 transition-opacity duration-300 ease-out" href="#">Messages</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#5f5e5e] hover:opacity-80 transition-opacity scale-98 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#5f5e5e] hover:opacity-80 transition-opacity scale-98 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container ml-2">
+<img alt="Host Profile Avatar" data-alt="professional portrait of a luxury property host in a minimalist modern setting, soft natural lighting, warm tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpDnUjswinooSsbmlR7IjuAkLYkTZ8VWBoMDD4KzydgY81cAfQK1xfXk-REf6ZEpYkPTI-jaIgJrdCLei_JUIgMpqESc9tFzUgBNnnqBQB15PQNIHkPX2BHw5QwBnzJhjWIbJrqQNC3Ghlv7ldlSuC8RjlLUyAZke8vTqh4y57fqsbUpxrbZolDpkC-Zixbufe7qBKq9zl_DLGHVb4NxLSerEFPW8a1L3Kj5TcDTh4sxuYdF_NuYpJgAe_IPLTCNlUIvkFKIlJdvc"/>
+</div>
+</div>
+</div>
+<div class="bg-[#f4f4ef] dark:bg-stone-800 h-[1px] w-full"></div>
+</nav>
+<div class="flex min-h-[calc(100vh-73px)]">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-[73px] h-full flex flex-col p-6 space-y-2 bg-[#f4f4ef] dark:bg-stone-950 font-['Inter'] text-sm tracking-wide h-screen w-72 border-r border-[#d0c5af]/30 flat no shadows">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest overflow-hidden">
+<img alt="Villa Preview" data-alt="ultra-modern luxury villa exterior with infinity pool and palm trees under a clear blue sky, architectural photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMQR3Og2ReiUryKHNDEgc8uaylEGeOZExL1_uGsYVbtMRLlKB_rt4jfdyC5OEB_Me7ir4HZJSaUi7TPo7Z8WTO2RKHd5k410PeKvBvT75lNJmEXc7-wyYVuPREh3zlv5go77rYxkzv0He0CxiaC-uyHMD788cHhhr_RcVz-bhrhCeohGYfygcgGPCHxOgZ0cRmWPDB6BoDJbrEMzpl0mjIvTsrUDbzhz87_RGThxJlojmSAnF5HKGPfnbqZ8PXwGe28dNCxGjdBvo"/>
+</div>
+<div>
+<h3 class="font-bold text-on-surface">New Listing</h3>
+<p class="text-xs text-on-surface-variant">Draft - 20% Complete</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 bg-[#ffffff] dark:bg-stone-900 text-[#5f5e5e] dark:text-[#d4af37] font-semibold rounded-lg px-4 py-3 shadow-sm hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="cloud_download">cloud_download</span>
+                    Import Airbnb
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                    Basic Details
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="pool">pool</span>
+                    Amenities
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                    Location
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+                    Gallery
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 dark:hover:bg-stone-900/30 rounded-lg hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                    Pricing
+                </a>
+</nav>
+<div class="pt-6 border-t border-outline-variant/20 space-y-1">
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 text-[#5f5e5e]/70 dark:text-stone-500 px-4 py-3 hover:bg-[#ffffff]/50 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<button class="w-full mt-4 bg-primary text-on-primary font-semibold py-3 rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+                    Save &amp; Exit
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-72 p-10 bg-surface">
+<div class="max-w-4xl mx-auto">
+<!-- Header & Progress -->
+<header class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h1 class="text-4xl font-headline font-extrabold tracking-tight text-primary">Add New Listing</h1>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label text-xs tracking-widest px-4 py-1.5 rounded-full uppercase font-bold">Step 1 of 6</span>
+</div>
+<!-- Custom Progress Bar -->
+<div class="w-full h-1 bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="w-1/6 h-full bg-tertiary-container transition-all duration-500"></div>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<!-- Option 1: Import -->
+<section class="flex flex-col h-full bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_40px_rgba(26,28,25,0.06)] border border-transparent hover:border-tertiary-container/30 transition-all duration-300">
+<div class="mb-6">
+<div class="w-14 h-14 bg-surface-container-low rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="cloud_download">cloud_download</span>
+</div>
+<h2 class="text-2xl font-headline font-bold text-on-surface mb-3">Import from Airbnb</h2>
+<p class="text-on-surface-variant leading-relaxed">Sync your existing listing details, photos, and amenities instantly. We'll handle the heavy lifting for you.</p>
+</div>
+<div class="mt-auto space-y-4">
+<div class="relative">
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2 ml-1">Listing URL</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-4 focus:ring-2 focus:ring-tertiary-container/50 transition-all text-sm outline-none" placeholder="https://www.airbnb.com/rooms/..." type="text"/>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-on-surface transition-colors shadow-lg shadow-primary/10">
+                                Import Listing
+                                <span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Option 2: Manual -->
+<section class="flex flex-col h-full bg-surface-container-low p-8 rounded-xl border border-outline-variant/10 group cursor-pointer hover:bg-surface-container-lowest transition-all duration-300">
+<div class="mb-6">
+<div class="w-14 h-14 bg-surface-container-highest rounded-xl flex items-center justify-center mb-6 group-hover:bg-tertiary-fixed transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="edit_note">edit_note</span>
+</div>
+<h2 class="text-2xl font-headline font-bold text-on-surface mb-3">Create Manually</h2>
+<p class="text-on-surface-variant leading-relaxed">Start with a blank canvas. Perfect for exclusive new properties not yet listed elsewhere.</p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/20">
+<div class="flex items-center justify-between text-primary font-bold group-hover:translate-x-2 transition-transform duration-300">
+<span>Get Started Manually</span>
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Explanation Section (Asymmetric Bento-ish Style) -->
+<section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-1 bg-[#f4f4ef] p-6 rounded-xl flex flex-col justify-center">
+<span class="text-tertiary font-bold text-xs tracking-widest uppercase mb-2">The Process</span>
+<h3 class="text-xl font-headline font-bold text-primary mb-2">How it works</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Our curated onboarding ensures your villa meets the Funduq Heritage standards of excellence.</p>
+</div>
+<div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="p-6 bg-surface-container-lowest rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1" data-icon="verified_user">verified_user</span>
+<div>
+<h4 class="font-bold text-sm mb-1">Curation Review</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Every property undergoes a quality assessment by our concierge team.</p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1" data-icon="auto_awesome">auto_awesome</span>
+<div>
+<h4 class="font-bold text-sm mb-1">AI Enhancement</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">We automatically optimize your descriptions for high-end travelers.</p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1" data-icon="visibility">visibility</span>
+<div>
+<h4 class="font-bold text-sm mb-1">Global Visibility</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Your listing is broadcasted to our network of premium luxury partners.</p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1" data-icon="support">support</span>
+<div>
+<h4 class="font-bold text-sm mb-1">Expert Support</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">24/7 dedicated hosting support for any listing inquiries.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

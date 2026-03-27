@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-gold: #C5A059;
+  --color-gold-light: #DFCDA4;
+  --color-gold-dark: #A37F3F;
+  --color-charcoal: #1A1A1A;
+  --color-offwhite: #FAFAFA;
+  --color-surface: #FFFFFF;
+  
+  /* Fonts */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "DM Sans", system-ui, -apple-system, sans-serif;
+
+  /* Transitions */
+  --transition-luxury: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-luxury: 400ms;
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .display-font {
+  font-family: var(--font-display);
+}
+
+.luxury-shadow {
+  box-shadow: 0 4px 20px -5px rgba(197, 160, 89, 0.15);
+}
+
+.luxury-border {
+  border: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #C5A059 0%, #A37F3F 100%);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── react-day-picker v9 — Funduq theme overrides ─── */
+.rdp-funduq {
+  --rdp-accent-color: #C5A059;
+  --rdp-accent-background-color: rgba(197, 160, 89, 0.1);
+  --rdp-background-color: transparent;
+  --rdp-day-height: 2.5rem;
+  --rdp-day-width: 2.5rem;
+  font-family: var(--font-sans);
+}
+.rdp-funduq .rdp-root {
+  --rdp-accent-color: #C5A059;
+}
+.rdp-funduq .rdp-day.rdp-selected {
+  background-color: #C5A059;
+  color: #fff;
+  font-weight: 700;
+}
+.rdp-funduq .rdp-day.rdp-range_middle {
+  background-color: rgba(197, 160, 89, 0.1);
+  color: #A37F3F;
+}
+.rdp-funduq .rdp-day.rdp-today {
+  font-weight: 900;
+  color: #A37F3F;
+}
+.rdp-funduq .rdp-day.rdp-disabled {
+  color: rgba(26, 26, 26, 0.15);
+  text-decoration: line-through;
+}
+.rdp-funduq .rdp-nav button {
+  color: #A37F3F;
+}
+.rdp-funduq .rdp-nav button:hover {
+  background-color: rgba(197, 160, 89, 0.1);
+}

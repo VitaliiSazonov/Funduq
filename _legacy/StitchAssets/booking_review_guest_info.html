@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Review &amp; Guest Information | LUXE ALTA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#fed65b",
+              "on-secondary-container": "#745c00",
+              "primary": "#5f5e5e",
+              "tertiary-fixed": "#ffe088",
+              "on-primary": "#ffffff",
+              "background": "#fafaf5",
+              "on-tertiary-container": "#554300",
+              "primary-fixed": "#e5e2e1",
+              "tertiary-container": "#d4af37",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#c8c6c5",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#574500",
+              "inverse-surface": "#2f312e",
+              "tertiary": "#735c00",
+              "secondary-fixed-dim": "#e9c349",
+              "secondary": "#735c00",
+              "outline-variant": "#d0c5af",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#e3e3de",
+              "surface-container-high": "#e8e8e3",
+              "secondary-fixed": "#ffe088",
+              "error-container": "#ffdad6",
+              "surface-container": "#eeeee9",
+              "surface": "#fafaf5",
+              "surface-tint": "#5f5e5e",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#474746",
+              "on-primary-container": "#454545",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#c8c6c5",
+              "on-secondary-fixed-variant": "#574500",
+              "inverse-on-surface": "#f1f1ec",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1a1c19",
+              "surface-bright": "#fafaf5",
+              "tertiary-fixed-dim": "#e9c349",
+              "surface-dim": "#dadad5",
+              "surface-variant": "#e3e3de",
+              "outline": "#7f7663",
+              "on-tertiary-fixed": "#241a00",
+              "on-surface-variant": "#4d4635",
+              "on-primary-fixed": "#1c1b1b",
+              "on-background": "#1a1c19",
+              "surface-container-low": "#f4f4ef",
+              "primary-container": "#b4b2b2",
+              "on-secondary-fixed": "#241a00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+      }
+      .glass-effect {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-tertiary-container selection:text-on-tertiary-container">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 bg-[#fafaf5]/80 dark:bg-stone-900/80 backdrop-blur-xl border-b border-[#d0c5af]/30 dark:border-stone-800 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-6 py-4 max-w-full mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">arrow_back</span>
+<span class="font-headline text-xl font-bold tracking-tighter text-[#5f5e5e] dark:text-stone-100 uppercase">LUXE ALTA</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-headline tracking-tight">
+<span class="text-[#5f5e5e] dark:text-stone-400 hover:text-[#d4af37] transition-colors duration-300 cursor-pointer">Destinations</span>
+<span class="text-[#5f5e5e] dark:text-stone-400 hover:text-[#d4af37] transition-colors duration-300 cursor-pointer">Concierge</span>
+<span class="text-[#d4af37] font-semibold">Booking</span>
+</div>
+<div class="flex items-center gap-4 text-[#5f5e5e]">
+<span class="material-symbols-outlined cursor-pointer hover:text-[#d4af37] transition-colors duration-300">help</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#d4af37] transition-colors duration-300">close</span>
+</div>
+</div>
+</header>
+<main class="pt-28 pb-20 px-6 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left Side: Guest Information Form -->
+<div class="lg:col-span-7 space-y-10">
+<section>
+<h1 class="font-headline text-4xl font-bold text-primary tracking-tight mb-2">Review &amp; Guest Information</h1>
+<p class="text-on-surface-variant font-light">Confirm your stay details and provide travel documents for a seamless arrival.</p>
+</section>
+<div class="space-y-8">
+<!-- Section Header -->
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline text-sm font-bold">01</span>
+<h2 class="font-headline text-xl font-semibold text-primary uppercase tracking-widest">Primary Guest Details</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Full Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container-lowest transition-all border-b-2 border-transparent focus:border-tertiary-container placeholder:text-outline/50" placeholder="As it appears on passport" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email Address</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container-lowest transition-all border-b-2 border-transparent focus:border-tertiary-container placeholder:text-outline/50" placeholder="for booking confirmation" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Phone Number</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container-lowest transition-all border-b-2 border-transparent focus:border-tertiary-container placeholder:text-outline/50" placeholder="+971 00 000 0000" type="tel"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Passport ID</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container-lowest transition-all border-b-2 border-transparent focus:border-tertiary-container placeholder:text-outline/50" placeholder="Passport number" type="text"/>
+</div>
+</div>
+<!-- Passport Upload Area -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Travel Documents</label>
+<div class="border-2 border-dashed border-outline-variant/50 rounded-xl p-8 bg-surface-container-low flex flex-col items-center justify-center text-center group hover:border-tertiary-container/50 transition-colors cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">upload_file</span>
+</div>
+<p class="text-on-surface font-medium mb-1">Upload Passport Photo</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-wider">JPEG, PNG or PDF (Max 5MB)</p>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline text-sm font-bold">02</span>
+<h2 class="font-headline text-xl font-semibold text-primary uppercase tracking-widest">Policies &amp; Verification</h2>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 space-y-4">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<p class="text-sm font-bold text-primary uppercase tracking-tight">Verified by Funduq</p>
+<p class="text-sm text-on-surface-variant leading-relaxed">This property has been inspected by our luxury concierge team to ensure it meets the highest standards of the Funduq Heritage collection.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary">info</span>
+<div>
+<p class="text-sm font-bold text-primary uppercase tracking-tight">No charges will be applied yet</p>
+<p class="text-sm text-on-surface-variant leading-relaxed">Your credit card will only be pre-authorized. Payment is processed once the host accepts your request within 24 hours.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Stay Summary Card (Sticky) -->
+<div class="lg:col-span-5 lg:sticky lg:top-28">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/30">
+<div class="relative h-48 w-full">
+<img alt="Luxury villa exterior" class="w-full h-full object-cover" data-alt="Modern architectural villa in Dubai with infinity pool and palm trees under a bright clear sky at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpv4FvuKfJtVAzbKKODj_eLDEcIL4NlHvbuGIz0ms2Qqqub4JkaiET_LiKPsZcVwk0aSeRfNTntcq9UM9SkQ48pH8rP95zEzmOSgu6iJoZyM9fELEaOFmsaUi8fQYuNPQCk8VkKH9qSDBF06DhJNG7GC20gqPL92GMKJPTSAB7MmZ_Ix52LHEghAAqe1F_MCvBtzVEQ_5UsdOnxeZdzNZGlPkoWrjzlig6rd64w_n2YJFBZ-T0mbLSI1ZQZwC7_ctJIJFxPdw-oyU"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">Verified Villa</span>
+</div>
+</div>
+<div class="p-8 space-y-8">
+<div>
+<h3 class="font-headline text-2xl font-bold text-primary tracking-tight">The Palm Sanctuary</h3>
+<p class="text-on-surface-variant text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Palm Jumeirah, Dubai
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-6 py-6 border-y border-outline-variant/20">
+<div class="space-y-1">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Dates</p>
+<p class="text-sm font-semibold text-primary">Sep 12 - Sep 19, 2024</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Guests</p>
+<p class="text-sm font-semibold text-primary">10 Guests</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<p class="text-sm text-on-surface-variant">Villa Rental (7 nights)</p>
+<p class="text-sm font-semibold text-primary">AED 56,000</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm text-on-surface-variant">Service Fee</p>
+<p class="text-sm font-semibold text-primary">AED 2,500</p>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<p class="font-headline text-lg font-bold text-primary uppercase tracking-tight">Total Estimate</p>
+<div class="text-right">
+<p class="font-headline text-2xl font-extrabold text-primary tracking-tighter">AED 58,500</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Inclusive of taxes</p>
+</div>
+</div>
+</div>
+<button class="w-full py-5 bg-primary text-on-primary rounded-lg font-headline font-bold uppercase tracking-[0.2em] text-sm hover:bg-stone-800 transition-all shadow-md active:scale-[0.98]">
+                            Request to Book
+                        </button>
+<div class="text-center">
+<p class="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] leading-relaxed">
+                                By clicking 'Request to Book', you agree to our <a class="underline hover:text-tertiary-container" href="#">Guest Guarantee</a> and <a class="underline hover:text-tertiary-container" href="#">House Rules</a>.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full py-12 px-8 bg-[#f4f4ef] dark:bg-stone-950">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="font-body text-xs uppercase tracking-widest text-[#5f5e5e] dark:text-stone-400">© 2024 LUXE ALTA. A Curated Horizon Experience.</p>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-body text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-colors" href="#">Terms of Service</a>
+<a class="font-body text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-colors" href="#">Privacy Policy</a>
+<a class="font-body text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-colors" href="#">Cookie Settings</a>
+<a class="font-body text-xs uppercase tracking-widest text-[#5f5e5e]/70 hover:text-[#d4af37] underline-offset-4 hover:underline transition-colors" href="#">Guest Guarantee</a>
+</div>
+</div>
+</footer>
+</body></html>
