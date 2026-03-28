@@ -6,12 +6,18 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   const next = searchParams.get('next');
+  const type = searchParams.get('type');
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // ── Password recovery flow → send to update-password page ──
+      if (type === 'recovery') {
+        return NextResponse.redirect(`${origin}/update-password`);
+      }
+
       // If a `next` param was provided, use it; otherwise route by role
       if (next) {
         return NextResponse.redirect(`${origin}${next}`);
