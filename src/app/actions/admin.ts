@@ -1,9 +1,12 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/email/sendEmail";
 import PropertyApprovedEmail from "@/lib/email/templates/PropertyApprovedEmail";
 import PropertySuspendedEmail from "@/lib/email/templates/PropertySuspendedEmail";
+import PassportApprovedEmail from "@/lib/email/templates/PassportApprovedEmail";
+import PassportRejectedEmail from "@/lib/email/templates/PassportRejectedEmail";
 
 // ─── Types ─────────────────────────────────────────────────────
 
@@ -333,4 +336,181 @@ export async function getAllAdminProperties(
     created_at: row.created_at as string,
     owner: row.owner as { id: string; full_name: string | null; avatar_url: string | null },
   }));
+}
+
+// ─── Passport Verification ─────────────────────────────────────
+
+export interface UserWithPassport {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  passport_url: string | null;
+  passport_verified: boolean;
+  passport_submitted_at: string | null;
+}
+
+/**
+ * Admin: list users who have submitted a passport but are not yet verified.
+ */
+export async function getPendingPassports(): Promise<UserWithPassport[]> {
+  const auth = await verifyAdmin();
+  if (!auth.isAdmin) return [];
+
+  const adminDb = createAdminClient();
+
+  const { data, error } = await adminDb
+    .from("profiles")
+    .select("id, full_name, email, passport_url, passport_verified, passport_submitted_at")
+    .not("passport_url", "is", null)
+    .eq("passport_verified", false)
+    .order("passport_submitted_at", { ascending: false });
+
+  if (error) {
+    console.error("[Admin] Failed to fetch pending passports:", error);
+    return [];
+  }
+
+  return (data || []) as UserWithPassport[];
+}
+
+/**
+ * Admin: approve a guest's passport verification.
+ * Uses service-role client to bypass RLS.
+ */
+export async function verifyPassport(userId: string): Promise<ActionResult> {
+  const auth = await verifyAdmin();
+  if (!auth.isAdmin) return { success: false, error: auth.error };
+
+  const adminDb = createAdminClient();
+
+  const { error } = await adminDb
+    .from("profiles")
+    .update({ passport_verified: true })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("[Admin] Failed to verify passport:", error);
+    return { success: false, error: "Failed to verify passport." };
+  }
+
+  // Fire-and-forget email to the guest
+  void (async () => {
+    try {
+      const { data: profile } = await adminDb
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", userId)
+        .single();
+
+      if (!profile?.email) return;
+
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.com";
+
+      await sendEmail({
+        to: profile.email,
+        subject: "✅ Your identity has been verified — Funduq",
+        react: PassportApprovedEmail({
+          guestName: profile.full_name || "Guest",
+          baseUrl,
+        }),
+      });
+    } catch (err) {
+      console.error("[Admin] Email send failed (passport approve):", err);
+    }
+  })();
+
+  return { success: true };
+}
+
+/**
+ * Admin: reject a guest's passport submission.
+ * Clears passport data so the guest can re-submit.
+ * Uses service-role client to bypass RLS.
+ */
+export async function rejectPassport(
+  userId: string,
+  reason?: string
+): Promise<ActionResult> {
+  const auth = await verifyAdmin();
+  if (!auth.isAdmin) return { success: false, error: auth.error };
+
+  const adminDb = createAdminClient();
+
+  const { error } = await adminDb
+    .from("profiles")
+    .update({
+      passport_url: null,
+      passport_submitted_at: null,
+      passport_verified: false,
+    })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("[Admin] Failed to reject passport:", error);
+    return { success: false, error: "Failed to reject passport." };
+  }
+
+  // Fire-and-forget email to the guest
+  void (async () => {
+    try {
+      const { data: profile } = await adminDb
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", userId)
+        .single();
+
+      if (!profile?.email) return;
+
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.com";
+
+      await sendEmail({
+        to: profile.email,
+        subject: "Action needed: Re-submit your identity document — Funduq",
+        react: PassportRejectedEmail({
+          guestName: profile.full_name || "Guest",
+          reason: reason || undefined,
+          baseUrl,
+        }),
+      });
+    } catch (err) {
+      console.error("[Admin] Email send failed (passport reject):", err);
+    }
+  })();
+
+  return { success: true };
+}
+
+/**
+ * Admin: generate a signed URL for viewing a passport document.
+ * The URL is valid for 60 seconds.
+ */
+export async function getPassportSignedUrl(
+  userId: string
+): Promise<{ url: string | null; error?: string }> {
+  const auth = await verifyAdmin();
+  if (!auth.isAdmin) return { url: null, error: auth.error };
+
+  const adminDb = createAdminClient();
+
+  // Get the user's passport path
+  const { data: profile } = await adminDb
+    .from("profiles")
+    .select("passport_url")
+    .eq("id", userId)
+    .single();
+
+  if (!profile?.passport_url) {
+    return { url: null, error: "No document found for this user." };
+  }
+
+  const { data, error } = await adminDb.storage
+    .from("passport-documents")
+    .createSignedUrl(profile.passport_url, 60);
+
+  if (error || !data?.signedUrl) {
+    console.error("[Admin] Failed to create signed URL:", error);
+    return { url: null, error: "Failed to generate document URL." };
+  }
+
+  return { url: data.signedUrl };
 }

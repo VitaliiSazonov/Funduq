@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { getDisabledDates } from "@/app/actions/ical";
 import { createBooking } from "@/app/actions/bookings";
+import { checkVerificationStatus } from "@/app/actions/passport";
+import PassportVerificationModal from "@/components/guest/PassportVerificationModal";
 
 // ─────────────────────────────────────────────────────────────
 // Props
@@ -52,6 +54,10 @@ export default function BookingWidget({
     success: boolean;
     message: string;
   } | null>(null);
+  const [showVerification, setShowVerification] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<
+    "none" | "pending" | "verified"
+  >("none");
 
   // ─── Fetch disabled dates ───
   const fetchDates = useCallback(async () => {
@@ -95,6 +101,19 @@ export default function BookingWidget({
     setIsSubmitting(true);
     setResult(null);
 
+    // ── Passport verification gate ──
+    try {
+      const status = await checkVerificationStatus();
+      setVerificationStatus(status);
+      if (status !== "verified") {
+        setShowVerification(true);
+        setIsSubmitting(false);
+        return; // Block booking until verified
+      }
+    } catch {
+      // If check fails (e.g. not logged in), let createBooking handle auth
+    }
+
     const res = await createBooking({
       propertyId,
       checkIn: format(range.from, "yyyy-MM-dd"),
@@ -116,6 +135,17 @@ export default function BookingWidget({
       fetchDates();
     } else {
       setResult({ success: false, message: res.error || "Something went wrong." });
+    }
+  }
+
+  // ─── Handle verification complete ───
+  async function handleVerificationClose() {
+    setShowVerification(false);
+    // Re-check status — if now verified, auto-retry booking
+    const status = await checkVerificationStatus();
+    setVerificationStatus(status);
+    if (status === "verified" && range?.from && range?.to) {
+      handleSubmit();
     }
   }
 
@@ -279,6 +309,14 @@ export default function BookingWidget({
             )}
             {result.message}
           </div>
+        )}
+
+        {/* ─── Passport Verification Modal ─── */}
+        {showVerification && (
+          <PassportVerificationModal
+            initialStatus={verificationStatus}
+            onClose={handleVerificationClose}
+          />
         )}
       </div>
     </div>

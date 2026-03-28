@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "explore": "Коллекция",
+    "listProperty": "Разместить объект",
+    "login": "Войти",
+    "myBookings": "Мои бронирования"
+  },
+  "home": {
+    "hero_badge": "Резиденции премиум-класса",
+    "hero_title": "Откройте для себя",
+    "hero_title_accent": "Роскошный отдых",
+    "hero_subtitle": "Эксклюзивные виллы, пентхаусы и пустынные резорты по всем Эмиратам для самых взыскательных гостей.",
+    "featured_badge": "Избранная коллекция",
+    "featured_title": "Рекомендуемые резиденции",
+    "featured_viewAll": "Смотреть всю коллекцию",
+    "featured_empty": "В данный момент нет доступных объектов.",
+    "search_location": "Локация",
+    "search_location_placeholder": "Куда вы направляетесь?",
+    "search_dates": "Даты",
+    "search_dates_placeholder": "Заезд / Выезд",
+    "search_guests": "Гости",
+    "search_guests_placeholder": "Количество гостей",
+    "search_button": "Найти",
+    "scroll": "Листайте"
+  },
+  "villas": {
+    "title": "Эксклюзивная коллекция",
+    "subtitle": "Тщательно отобранные виллы и пентхаусы класса люкс для краткосрочного проживания в ОАЭ.",
+    "perNight": "/ночь",
+    "guests": "Гостей",
+    "bedrooms": "Спален",
+    "capacity": "Вместимость",
+    "rooms": "комн.",
+    "filters": "Фильтры",
+    "allProperties": "Все объекты",
+    "villasTab": "Виллы",
+    "penthouses": "Пентхаусы",
+    "desertResorts": "Резорты",
+    "searchPlaceholder": "Поиск по локации...",
+    "propertiesFound": "объектов найдено",
+    "priceLowHigh": "Цена: по возрастанию",
+    "noResults": "По вашему запросу ничего не найдено.",
+    "from": "От",
+    "estimatedRange": "Ориентировочная стоимость",
+    "concierge_title": "Не нашли подходящий вариант?",
+    "concierge_subtitle": "Наши консьержи доступны круглосуточно, чтобы подобрать идеальную резиденцию для вашего пребывания в Дубае и ОАЭ.",
+    "concierge_button": "Связаться с консьержем"
+  },
+  "property": {
+    "bookNow": "Забронировать",
+    "showAllPhotos": "Все фотографии",
+    "amenities": "Удобства",
+    "availability": "Доступные даты",
+    "houseRules": "Правила проживания",
+    "similarProperties": "Похожие объекты",
+    "verifiedHost": "Проверенный хозяин",
+    "hostSince": "Принимает гостей с"
+  },
+  "booking": {
+    "pending": "Ожидает подтверждения",
+    "confirmed": "Подтверждено",
+    "declined": "Отклонено",
+    "checkIn": "Заезд",
+    "checkOut": "Выезд",
+    "requestSent": "Ваш запрос на бронирование отправлен"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signUp": "Создать аккаунт",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "iAmGuest": "Я гость",
+    "iAmHost": "Я владелец",
+    "continueWithGoogle": "Продолжить через Google"
+  },
+  "errors": {
+    "notFound": "Страница не найдена",
+    "unauthorized": "Доступ к данной странице ограничен",
+    "generic": "Произошла ошибка. Пожалуйста, попробуйте снова."
+  }
+}

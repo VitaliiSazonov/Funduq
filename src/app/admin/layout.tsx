@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Shield,
+  ShieldCheck,
 } from "lucide-react";
 import { createBrowserClient } from "@supabase/ssr";
 
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/properties", label: "Properties", icon: Building2 },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
+  { href: "/admin/verifications", label: "Verifications", icon: ShieldCheck },
   { href: "/admin/users", label: "Users", icon: Users },
 ] as const;
 

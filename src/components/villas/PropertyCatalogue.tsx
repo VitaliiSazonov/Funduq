@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { SlidersHorizontal, ArrowDownZA, LayoutGrid, List, Search } from "lucide-react";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { Property } from "@/app/actions/properties";
+import { useTranslations } from "next-intl";
 
 interface PropertyCatalogueProps {
   initialProperties: Property[];
@@ -12,6 +13,7 @@ interface PropertyCatalogueProps {
 
 export default function PropertyCatalogue({ initialProperties }: PropertyCatalogueProps) {
   const [search, setSearch] = useState("");
+  const t = useTranslations("villas");
 
   const filteredProperties = initialProperties.filter((p) => 
     p.title.toLowerCase().includes(search.toLowerCase()) || 
@@ -24,14 +26,14 @@ export default function PropertyCatalogue({ initialProperties }: PropertyCatalog
       <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-gray-100 shadow-sm py-4 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full md:w-auto pb-1 md:pb-0">
-             <button className="px-4 py-2 bg-charcoal text-white rounded-full text-sm font-bold shadow-md">All Properties</button>
-             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">Villas</button>
-             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">Penthouses</button>
-             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">Desert Resorts</button>
+             <button className="px-4 py-2 bg-charcoal text-white rounded-full text-sm font-bold shadow-md">{t("allProperties")}</button>
+             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">{t("villasTab")}</button>
+             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">{t("penthouses")}</button>
+             <button className="px-4 py-2 hover:bg-offwhite rounded-full text-sm font-medium text-muted transition-colors">{t("desertResorts")}</button>
              <div className="w-px h-6 bg-gray-200 mx-2" />
              <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full text-sm font-bold text-charcoal hover:border-gold transition-colors">
                 <SlidersHorizontal className="w-4 h-4" />
-                <span>Filters</span>
+                <span>{t("filters")}</span>
              </button>
           </div>
           
@@ -40,7 +42,7 @@ export default function PropertyCatalogue({ initialProperties }: PropertyCatalog
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-hover:text-gold transition-colors" />
                 <input 
                   type="text" 
-                  placeholder="Search location..." 
+                  placeholder={t("searchPlaceholder")} 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full pl-11 pr-4 py-2.5 bg-offwhite rounded-full text-sm font-medium border-transparent focus:border-gold/50 focus:ring-0 transition-all outline-none" 
@@ -58,10 +60,10 @@ export default function PropertyCatalogue({ initialProperties }: PropertyCatalog
       <section className="py-12 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-             <span className="text-xs font-black text-muted uppercase tracking-[0.2em]">{filteredProperties.length} Properties Found</span>
+             <span className="text-xs font-black text-muted uppercase tracking-[0.2em]">{filteredProperties.length} {t("propertiesFound")}</span>
              <button className="flex items-center gap-2 text-sm font-bold text-charcoal hover:text-gold transition-colors group">
                 <ArrowDownZA className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>Price: Low to High</span>
+                <span>{t("priceLowHigh")}</span>
              </button>
           </div>
 
@@ -80,7 +82,7 @@ export default function PropertyCatalogue({ initialProperties }: PropertyCatalog
               ))
             ) : (
                 <div className="col-span-full py-20 text-center">
-                    <p className="text-muted text-lg font-medium">No properties found matching your criteria.</p>
+                    <p className="text-muted text-lg font-medium">{t("noResults")}</p>
                 </div>
             )}
           </div>

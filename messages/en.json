@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "explore": "Explore",
+    "listProperty": "List Your Property",
+    "login": "Sign In",
+    "myBookings": "My Bookings"
+  },
+  "home": {
+    "hero_badge": "Premium Short-Term Rentals",
+    "hero_title": "Discover Elegant",
+    "hero_title_accent": "Stay Experiences",
+    "hero_subtitle": "Curated villas, penthouses, and desert resorts across the UAE for the discerning traveler.",
+    "featured_badge": "Selected Portfolio",
+    "featured_title": "Featured Retreats",
+    "featured_viewAll": "View All Collection",
+    "featured_empty": "No featured properties available at the moment.",
+    "search_location": "Location",
+    "search_location_placeholder": "Where are you going?",
+    "search_dates": "Dates",
+    "search_dates_placeholder": "Check-in / Check-out",
+    "search_guests": "Guests",
+    "search_guests_placeholder": "Add guests",
+    "search_button": "Search",
+    "scroll": "Scroll"
+  },
+  "villas": {
+    "title": "Exclusive Collection",
+    "subtitle": "Explore our curated selection of ultra-luxury villas and penthouses available for short-term stays across the UAE.",
+    "perNight": "/night",
+    "guests": "Guests",
+    "bedrooms": "Bedrooms",
+    "capacity": "Capacity",
+    "rooms": "Rooms",
+    "filters": "Filters",
+    "allProperties": "All Properties",
+    "villasTab": "Villas",
+    "penthouses": "Penthouses",
+    "desertResorts": "Desert Resorts",
+    "searchPlaceholder": "Search location...",
+    "propertiesFound": "Properties Found",
+    "priceLowHigh": "Price: Low to High",
+    "noResults": "No properties found matching your criteria.",
+    "from": "From",
+    "estimatedRange": "Estimated range",
+    "concierge_title": "Can't find what you're looking for?",
+    "concierge_subtitle": "Our concierges are available 24/7 to help you find the perfect villa for your stay in Dubai and across the UAE.",
+    "concierge_button": "Chat with Concierge"
+  },
+  "property": {
+    "bookNow": "Book Now",
+    "showAllPhotos": "Show All Photos",
+    "amenities": "Amenities",
+    "availability": "Availability",
+    "houseRules": "House Rules",
+    "similarProperties": "Similar Properties",
+    "verifiedHost": "Verified Host",
+    "hostSince": "Host since"
+  },
+  "booking": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "declined": "Declined",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "requestSent": "Your booking request has been sent"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "iAmGuest": "I'm a Guest",
+    "iAmHost": "I'm a Host",
+    "continueWithGoogle": "Continue with Google"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "unauthorized": "You don't have access to this page",
+    "generic": "Something went wrong. Please try again."
+  }
+}

@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
+// ─── next-intl Integration ───
+import createNextIntlPlugin from "next-intl/plugin";
+
 // ─── Sentry Integration ───
 import { withSentryConfig } from "@sentry/nextjs";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   // ── SSR required (do NOT set output: 'export') ──
@@ -74,8 +79,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-// ─── Export (with Sentry) ───
-export default withSentryConfig(nextConfig, {
+// ─── Export (with next-intl + Sentry) ───
+export default withSentryConfig(withNextIntl(nextConfig), {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   silent: !process.env.CI,

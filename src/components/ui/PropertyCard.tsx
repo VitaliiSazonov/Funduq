@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Bed, Users, MapPin, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 interface PropertyProps {
   id: string;
@@ -24,6 +25,8 @@ export default function PropertyCard({
   priceRange,
   imageUrl,
 }: PropertyProps) {
+  const t = useTranslations("villas");
+
   return (
     <Link href={`/villas/${id}`} data-testid="property-card">
       <motion.div
@@ -52,7 +55,7 @@ export default function PropertyCard({
           
           {/* Price Tag - Floating */}
           <div className="absolute top-4 left-4 glass px-4 py-2 rounded-full border border-white/50 luxury-shadow flex items-center gap-2">
-             <span className="text-[10px] font-bold uppercase tracking-widest text-gold-dark">From</span>
+             <span className="text-[10px] font-bold uppercase tracking-widest text-gold-dark">{t("from")}</span>
              <span className="text-sm font-bold text-charcoal">{priceRange.split('-')[0].trim()}</span>
           </div>
         </div>
@@ -79,8 +82,8 @@ export default function PropertyCard({
                 <Bed className="w-4.5 h-4.5 text-gold-dark" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted font-bold uppercase">Bedrooms</span>
-                <span className="text-charcoal font-bold text-sm">{bedrooms} Rooms</span>
+                <span className="text-[10px] text-muted font-bold uppercase">{t("bedrooms")}</span>
+                <span className="text-charcoal font-bold text-sm">{bedrooms} {t("rooms")}</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -88,8 +91,8 @@ export default function PropertyCard({
                 <Users className="w-4.5 h-4.5 text-gold-dark" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted font-bold uppercase">Capacity</span>
-                <span className="text-charcoal font-bold text-sm">{maxGuests} Guests</span>
+                <span className="text-[10px] text-muted font-bold uppercase">{t("capacity")}</span>
+                <span className="text-charcoal font-bold text-sm">{maxGuests} {t("guests")}</span>
               </div>
             </div>
           </div>
@@ -97,7 +100,7 @@ export default function PropertyCard({
           {/* Footer */}
           <div className="mt-auto flex justify-between items-center">
             <div className="flex flex-col">
-              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Estimated range</span>
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">{t("estimatedRange")}</span>
               <span className="text-charcoal font-black text-lg">{priceRange}</span>
             </div>
             <motion.div
