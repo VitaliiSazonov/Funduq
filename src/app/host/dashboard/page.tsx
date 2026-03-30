@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getHostProperties } from "@/app/actions/properties";
 import PropertyCard from "@/components/ui/PropertyCard";
 import Link from "next/link";
-import { Plus, CalendarDays } from "lucide-react";
+import { Plus, CalendarDays, LogOut } from "lucide-react";
+import { signOutAction } from "@/app/actions/auth";
 
 export default async function HostDashboardPage() {
   const supabase = await createClient();
@@ -55,9 +56,20 @@ export default async function HostDashboardPage() {
                     <p className="text-sm text-muted">You have {properties.length} active listings on Funduq.</p>
                 </div>
             </div>
-            <div className="text-right hidden md:block">
-                <span className="text-[10px] uppercase font-black tracking-widest text-muted block mb-1">Status</span>
-                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">Verified Host</span>
+            <div className="flex items-center gap-4 hidden md:flex">
+                <div className="text-right">
+                    <span className="text-[10px] uppercase font-black tracking-widest text-muted block mb-1">Status</span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">Verified Host</span>
+                </div>
+                <form action={signOutAction}>
+                    <button
+                        type="submit"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full border border-charcoal/10 text-charcoal/50 text-xs font-bold uppercase tracking-wider hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all duration-300 cursor-pointer"
+                    >
+                        <LogOut className="w-3.5 h-3.5" />
+                        Sign Out
+                    </button>
+                </form>
             </div>
         </div>
 
