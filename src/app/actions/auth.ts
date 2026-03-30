@@ -54,61 +54,57 @@ export async function signUpAction(formData: {
   phone: string;
   role: UserRole;
 }): Promise<AuthResult> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      data: {
-        role: formData.role,
-        full_name: formData.fullName,
-        phone: formData.phone,
-      },
-    },
-  });
-
-  if (error) {
-    return {
-      success: false,
-      error: friendlyAuthError(error.message),
-    };
-  }
-
-  // Insert profile row immediately after signup
-  if (data.user) {
-    const { error: profileError } = await supabase.from('profiles').upsert({
-      id: data.user.id,
-      role: formData.role,
-      full_name: formData.fullName,
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
-      phone: formData.phone,
+      password: formData.password,
+      options: {
+        data: {
+          role: formData.role,
+          full_name: formData.fullName,
+          phone: formData.phone,
+        },
+      },
     });
 
-    if (profileError) {
-      console.error('Profile insert error:', profileError);
-      // Don't fail the signup — the trigger/next login can retry
+    if (error) {
+      console.error('[Funduq Auth] SignUp error:', error.message, error);
+      return {
+        success: false,
+        error: friendlyAuthError(error.message),
+      };
     }
 
-    // ── Email: send welcome email (fire-and-forget) ──
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const firstName = formData.fullName.split(' ')[0] || 'there';
-    void sendEmail({
-      to: formData.email,
-      subject: 'Welcome to Funduq',
-      react: WelcomeEmail({
-        firstName,
-        role: formData.role as 'guest' | 'host',
-        baseUrl,
-      }),
-    });
-  }
+    // Profile is created automatically by the DB trigger (handle_new_user).
+    // We only send the welcome email here.
+    if (data.user) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      const firstName = formData.fullName.split(' ')[0] || 'there';
+      void sendEmail({
+        to: formData.email,
+        subject: 'Welcome to Funduq',
+        react: WelcomeEmail({
+          firstName,
+          role: formData.role as 'guest' | 'host',
+          baseUrl,
+        }),
+      });
+    }
 
-  return {
-    success: true,
-    message:
-      'Account created! Please check your email to confirm your account.',
-  };
+    return {
+      success: true,
+      message:
+        'Account created! Please check your email to confirm your account.',
+    };
+  } catch (err) {
+    console.error('[Funduq Auth] Unexpected signup error:', err);
+    return {
+      success: false,
+      error: 'Something went wrong. Please try again.',
+    };
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
