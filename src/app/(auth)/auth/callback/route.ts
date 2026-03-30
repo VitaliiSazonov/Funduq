@@ -8,9 +8,25 @@ export async function GET(request: Request) {
   const next = searchParams.get('next');
   const type = searchParams.get('type');
 
+  console.log('[Funduq Auth Callback] Received callback:', {
+    hasCode: !!code,
+    next,
+    type,
+    origin,
+    url: request.url,
+  });
+
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      console.error('[Funduq Auth Callback] exchangeCodeForSession error:', {
+        message: error.message,
+        status: error.status,
+        name: error.name,
+      });
+    }
 
     if (!error) {
       // ── Password recovery flow → send to update-password page ──
@@ -24,8 +40,11 @@ export async function GET(request: Request) {
       }
 
       const redirectPath = await getPostAuthRedirect();
+      console.log('[Funduq Auth Callback] Success, redirecting to:', redirectPath);
       return NextResponse.redirect(`${origin}${redirectPath}`);
     }
+  } else {
+    console.error('[Funduq Auth Callback] No code received. Search params:', Object.fromEntries(searchParams.entries()));
   }
 
   // Auth error — redirect to login with error state
