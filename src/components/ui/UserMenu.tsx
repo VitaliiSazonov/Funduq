@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, CalendarCheck, User, LogOut } from "lucide-react";
+import { ChevronDown, CalendarCheck, User, LogOut, LayoutDashboard, Shield, Building2 } from "lucide-react";
 import NextLink from "next/link";
 import { signOutAction } from "@/app/actions/auth";
 
 interface UserMenuProps {
   email: string;
   fullName?: string | null;
+  role?: string | null;
 }
 
-export default function UserMenu({ email, fullName }: UserMenuProps) {
+export default function UserMenu({ email, fullName, role }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +44,10 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
+  // Role label
+  const roleLabel =
+    role === "admin" ? "Администратор" : role === "host" ? "Хост" : "Гость";
+
   return (
     <div ref={menuRef} className="user-menu-wrapper">
       {/* Trigger */}
@@ -63,12 +68,16 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
       {/* Dropdown */}
       {open && (
         <div className="user-menu-dropdown">
-          {/* Email info */}
+          {/* User info */}
           <div className="user-menu-info">
             <span className="user-menu-info-email">{email}</span>
+            <span className="user-menu-info-role">{roleLabel}</span>
           </div>
 
           <div className="user-menu-divider" />
+
+          {/* ── Quick Navigation ── */}
+          <div className="user-menu-section-label">Быстрый переход</div>
 
           <NextLink
             href="/guest/bookings"
@@ -76,8 +85,30 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <CalendarCheck size={15} />
-            <span>My Bookings</span>
+            <span>Мои бронирования</span>
           </NextLink>
+
+          <NextLink
+            href="/host/dashboard"
+            className="user-menu-item"
+            onClick={() => setOpen(false)}
+          >
+            <Building2 size={15} />
+            <span>Панель хоста</span>
+          </NextLink>
+
+          {role === "admin" && (
+            <NextLink
+              href="/admin"
+              className="user-menu-item user-menu-item--admin"
+              onClick={() => setOpen(false)}
+            >
+              <Shield size={15} />
+              <span>Админ-панель</span>
+            </NextLink>
+          )}
+
+          <div className="user-menu-divider" />
 
           <NextLink
             href="/guest/profile"
@@ -85,7 +116,7 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <User size={15} />
-            <span>My Profile</span>
+            <span>Мой профиль</span>
           </NextLink>
 
           <div className="user-menu-divider" />
@@ -93,7 +124,7 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
           <form action={signOutAction}>
             <button type="submit" className="user-menu-item user-menu-item--danger">
               <LogOut size={15} />
-              <span>Sign Out</span>
+              <span>Выйти</span>
             </button>
           </form>
         </div>
@@ -161,10 +192,10 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
           position: absolute;
           top: calc(100% + 8px);
           right: 0;
-          min-width: 220px;
+          min-width: 240px;
           background: #1a1a1a;
           border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
+          border-radius: 14px;
           padding: 6px;
           box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
           z-index: 100;
@@ -184,11 +215,31 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
 
         .user-menu-info {
           padding: 10px 12px 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
         }
         .user-menu-info-email {
           font-size: 12px;
           color: rgba(255, 255, 255, 0.4);
           letter-spacing: 0.02em;
+        }
+        .user-menu-info-role {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #C9A84C;
+          margin-top: 2px;
+        }
+
+        .user-menu-section-label {
+          padding: 8px 12px 4px;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: rgba(255, 255, 255, 0.25);
         }
 
         .user-menu-divider {
@@ -215,6 +266,14 @@ export default function UserMenu({ email, fullName }: UserMenuProps) {
         }
         .user-menu-item:hover {
           background: rgba(201, 168, 76, 0.08);
+          color: #C9A84C;
+        }
+
+        .user-menu-item--admin {
+          color: rgba(201, 168, 76, 0.8);
+        }
+        .user-menu-item--admin:hover {
+          background: rgba(201, 168, 76, 0.12);
           color: #C9A84C;
         }
 

@@ -60,6 +60,17 @@ export default async function LocaleLayout({ children, params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Fetch user role for navigation
+  let userRole: string | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    userRole = profile?.role ?? null;
+  }
+
   // Serialize only what the Header needs (avoid passing full Supabase User)
   const headerUser = user
     ? {
@@ -67,6 +78,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         user_metadata: {
           full_name: (user.user_metadata?.full_name as string) ?? undefined,
         },
+        role: userRole,
       }
     : null;
 

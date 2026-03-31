@@ -12,6 +12,7 @@ import { signOutAction } from "@/app/actions/auth";
 interface HeaderProps {
   user?: {
     email?: string;
+    role?: string | null;
     user_metadata?: {
       full_name?: string;
       [key: string]: unknown;
@@ -32,6 +33,7 @@ export default function Header({ user }: HeaderProps) {
 
   const userEmail = user?.email ?? "";
   const userFullName = user?.user_metadata?.full_name ?? null;
+  const userRole = user?.role ?? null;
 
   return (
     <header
@@ -75,7 +77,7 @@ export default function Header({ user }: HeaderProps) {
         <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
           {user ? (
-            <UserMenu email={userEmail} fullName={userFullName} />
+            <UserMenu email={userEmail} fullName={userFullName} role={userRole} />
           ) : (
             <NextLink
               href="/login"
