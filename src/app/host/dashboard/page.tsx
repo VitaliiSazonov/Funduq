@@ -36,7 +36,7 @@ export default async function HostDashboardPage() {
               <span>Bookings</span>
             </Link>
             <Link 
-              href="/host/create" 
+              href="/host/properties/new" 
               className="flex items-center gap-3 bg-charcoal text-white px-8 py-4 rounded-full font-black hover:bg-gold transition-all duration-300 luxury-shadow group"
             >
               <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -86,7 +86,7 @@ export default async function HostDashboardPage() {
                </div>
                <h3 className="text-xl font-bold text-charcoal mb-2">No listings yet</h3>
                <p className="text-muted max-w-xs mb-8">Start your journey as a host by listing your first luxury property today.</p>
-               <Link href="/host/create" className="text-gold font-bold hover:underline">Get Started</Link>
+               <Link href="/host/properties/new" className="text-gold font-bold hover:underline">Get Started</Link>
             </div>
           )}
         </div>
