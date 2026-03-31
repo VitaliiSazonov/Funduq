@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, CalendarCheck, User, LogOut, LayoutDashboard, Shield, Building2 } from "lucide-react";
+import { ChevronDown, CalendarCheck, User, LogOut, Shield, Building2 } from "lucide-react";
 import NextLink from "next/link";
+import { useTranslations } from "next-intl";
 import { signOutAction } from "@/app/actions/auth";
 
 interface UserMenuProps {
@@ -12,6 +13,7 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ email, fullName, role }: UserMenuProps) {
+  const t = useTranslations("userMenu");
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +48,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
 
   // Role label
   const roleLabel =
-    role === "admin" ? "Администратор" : role === "host" ? "Хост" : "Гость";
+    role === "admin" ? t("roleAdmin") : role === "host" ? t("roleHost") : t("roleGuest");
 
   return (
     <div ref={menuRef} className="user-menu-wrapper">
@@ -77,7 +79,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
           <div className="user-menu-divider" />
 
           {/* ── Quick Navigation ── */}
-          <div className="user-menu-section-label">Быстрый переход</div>
+          <div className="user-menu-section-label">{t("quickNav")}</div>
 
           <NextLink
             href="/guest/bookings"
@@ -85,7 +87,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <CalendarCheck size={15} />
-            <span>Мои бронирования</span>
+            <span>{t("myBookings")}</span>
           </NextLink>
 
           <NextLink
@@ -94,7 +96,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <Building2 size={15} />
-            <span>Панель хоста</span>
+            <span>{t("hostDashboard")}</span>
           </NextLink>
 
           {role === "admin" && (
@@ -104,7 +106,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
               onClick={() => setOpen(false)}
             >
               <Shield size={15} />
-              <span>Админ-панель</span>
+              <span>{t("adminPanel")}</span>
             </NextLink>
           )}
 
@@ -116,7 +118,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
             onClick={() => setOpen(false)}
           >
             <User size={15} />
-            <span>Мой профиль</span>
+            <span>{t("myProfile")}</span>
           </NextLink>
 
           <div className="user-menu-divider" />
@@ -124,7 +126,7 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
           <form action={signOutAction}>
             <button type="submit" className="user-menu-item user-menu-item--danger">
               <LogOut size={15} />
-              <span>Выйти</span>
+              <span>{t("signOut")}</span>
             </button>
           </form>
         </div>

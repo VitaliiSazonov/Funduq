@@ -92,5 +92,16 @@
     "address": "Dubai, United Arab Emirates",
     "rights": "All rights reserved.",
     "madeIn": "Made with ♥ in UAE"
+  },
+  "userMenu": {
+    "roleAdmin": "Administrator",
+    "roleHost": "Host",
+    "roleGuest": "Guest",
+    "quickNav": "Quick Navigation",
+    "myBookings": "My Bookings",
+    "hostDashboard": "Host Dashboard",
+    "adminPanel": "Admin Panel",
+    "myProfile": "My Profile",
+    "signOut": "Sign Out"
   }
 }
