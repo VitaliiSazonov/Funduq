@@ -17,17 +17,8 @@ export default async function HostLayout({
     redirect("/login");
   }
 
-  // Check host (or admin) role in profiles table
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  // Only host and admin can access host panel
-  if (!profile || (profile.role !== "host" && profile.role !== "admin")) {
-    redirect("/");
-  }
-
+  // Any authenticated user can access host pages.
+  // The "List your property" flow is available to all roles —
+  // role upgrade from 'guest' to 'host' happens when they submit a property.
   return <>{children}</>;
 }
