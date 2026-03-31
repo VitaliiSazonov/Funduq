@@ -202,8 +202,19 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
       title: importedData?.title || "",
       description: importedData?.description || "",
       type: "Villa",
-      location_emirate: "",
-      location_district: "",
+      location_emirate:
+        importedData?.locationEmirate &&
+        EMIRATES.includes(importedData.locationEmirate)
+          ? importedData.locationEmirate
+          : "",
+      location_district:
+        importedData?.locationDistrict &&
+        importedData?.locationEmirate &&
+        (
+          EMIRATE_DISTRICTS[importedData.locationEmirate] || []
+        ).includes(importedData.locationDistrict)
+          ? importedData.locationDistrict
+          : "",
       bedrooms: importedData?.bedrooms || 1,
       bathrooms: importedData?.bathrooms || 1,
       max_guests: importedData?.maxGuests || 2,
