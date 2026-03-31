@@ -13,6 +13,7 @@ export interface AirbnbScrapedData {
   maxGuests: number;
   imageUrls: string[];
   pricePerNight: number;
+  amenities: string[];
 }
 
 export interface ImportResult {
@@ -23,21 +24,30 @@ export interface ImportResult {
 
 // ─────────────────────────────────────────────────────────────
 // Helper: Download external images → Upload to Supabase Storage
+// Downloads ALL images concurrently (up to 30) for speed
 // ─────────────────────────────────────────────────────────────
 export async function downloadAndUploadToSupabase(
   imageUrls: string[],
   propertyId: string
 ): Promise<string[]> {
   const supabase = await createClient();
-  const uploadedUrls: string[] = [];
 
-  for (let i = 0; i < imageUrls.length; i++) {
+  // Process up to 30 images
+  const urlsToProcess = imageUrls.slice(0, 30);
+
+  // Upload images concurrently for better performance
+  const uploadPromises = urlsToProcess.map(async (url, i) => {
     try {
       // Fetch the external image
-      const response = await fetch(imageUrls[i]);
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        },
+      });
       if (!response.ok) {
         console.error(`Failed to download image ${i}: ${response.statusText}`);
-        continue;
+        return null;
       }
 
       const blob = await response.blob();
@@ -64,7 +74,7 @@ export async function downloadAndUploadToSupabase(
 
       if (uploadError) {
         console.error(`Failed to upload image ${i}:`, uploadError.message);
-        continue;
+        return null;
       }
 
       // Get the public URL
@@ -72,14 +82,21 @@ export async function downloadAndUploadToSupabase(
         data: { publicUrl },
       } = supabase.storage.from("properties-images").getPublicUrl(filePath);
 
-      uploadedUrls.push(publicUrl);
+      return { index: i, url: publicUrl };
     } catch (err) {
       console.error(`Error processing image ${i}:`, err);
-      continue;
+      return null;
     }
-  }
+  });
 
-  return uploadedUrls;
+  // Wait for all concurrent uploads
+  const results = await Promise.all(uploadPromises);
+
+  // Sort by original index to maintain order, filter nulls
+  return results
+    .filter((r): r is { index: number; url: string } => r !== null)
+    .sort((a, b) => a.index - b.index)
+    .map((r) => r.url);
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -96,6 +113,7 @@ async function scrapeAirbnbListing(url: string): Promise<AirbnbScrapedData> {
   }
 
   // Return mock data that matches our expected JSON structure
+  // In production, this would be an API response from Apify/ScrapingBee
   return {
     title: "Stunning Marina View Penthouse with Private Pool",
     description:
@@ -109,8 +127,27 @@ async function scrapeAirbnbListing(url: string): Promise<AirbnbScrapedData> {
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=1200&q=80",
     ],
     pricePerNight: 4500,
+    amenities: [
+      "Private Pool",
+      "Ocean View",
+      "Chef Kitchen",
+      "Gym",
+      "Spa",
+      "Jacuzzi",
+      "Smart Home",
+      "Concierge",
+      "EV Charging",
+      "BBQ Area",
+    ],
   };
 }
 
@@ -119,13 +156,13 @@ async function scrapeAirbnbListing(url: string): Promise<AirbnbScrapedData> {
 // ─────────────────────────────────────────────────────────────
 export async function importFromAirbnb(url: string): Promise<ImportResult> {
   try {
-    // 1. Scrape the listing data
+    // 1. Scrape the listing data (including all photos + amenities)
     const scrapedData = await scrapeAirbnbListing(url);
 
     // 2. Generate a temporary property ID for storage organization
     const tempPropertyId = crypto.randomUUID();
 
-    // 3. Download external images → Upload to Supabase Storage
+    // 3. Download ALL external images → Upload to Supabase Storage
     const uploadedImageUrls = await downloadAndUploadToSupabase(
       scrapedData.imageUrls,
       tempPropertyId

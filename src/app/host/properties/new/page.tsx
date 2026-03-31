@@ -21,7 +21,8 @@ import ListingWizard from "@/components/host/ListingWizard";
 // ─────────────────────────────────────────────────────────────
 const IMPORT_STAGES = [
   { label: "Connecting to Airbnb...", duration: 800 },
-  { label: "Fetching property details...", duration: 1200 },
+  { label: "Fetching property details...", duration: 1000 },
+  { label: "Importing amenities & features...", duration: 800 },
   { label: "Downloading gallery images...", duration: 1500 },
   { label: "Uploading to secure storage...", duration: 1000 },
   { label: "Preparing your listing...", duration: 500 },
@@ -162,8 +163,9 @@ export default function NewPropertyPage() {
 
                   <p className="text-sm text-charcoal/50 leading-relaxed mb-8">
                     Paste your Airbnb listing URL and we&apos;ll automatically
-                    import the title, description, photos, pricing, and room
-                    details. You can review and edit everything before publishing.
+                    import the title, description, all photos, amenities (Pool,
+                    Spa, Gym, etc.), pricing, and room details. You can review
+                    and edit everything before publishing.
                   </p>
 
                   {/* URL Input */}

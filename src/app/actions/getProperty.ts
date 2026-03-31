@@ -34,6 +34,7 @@ export interface PropertyDetail {
   location_district: string;
   main_image_url: string | null;
   amenities: string[] | null;
+  gallery_urls: string[] | null;
   created_at: string;
   host: PropertyHost;
   images: PropertyImage[];
@@ -91,7 +92,14 @@ export async function getProperty(
     }
   }
 
-  // If no images from storage, use main_image_url as fallback
+  // If no images from storage, use gallery_urls from database
+  if (images.length === 0 && property.gallery_urls && property.gallery_urls.length > 0) {
+    property.gallery_urls.forEach((url: string, i: number) => {
+      images.push({ url, order: i });
+    });
+  }
+
+  // If still no images, use main_image_url as fallback
   if (images.length === 0 && property.main_image_url) {
     images.push({ url: property.main_image_url, order: 0 });
   }
@@ -118,6 +126,7 @@ export async function getProperty(
     location_district: property.location_district,
     main_image_url: property.main_image_url,
     amenities: property.amenities,
+    gallery_urls: property.gallery_urls,
     created_at: property.created_at,
     host,
     images,

@@ -86,7 +86,11 @@ export default withSentryConfig(withNextIntl(nextConfig), {
   silent: !process.env.CI,
   authToken: process.env.SENTRY_AUTH_TOKEN,
   widenClientFileUpload: true,
-  disableLogger: true,
-  autoInstrumentAppDirectory: true,
-  autoInstrumentMiddleware: true,
+  webpack: {
+    autoInstrumentMiddleware: true,
+    autoInstrumentAppDirectory: true,
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
 });

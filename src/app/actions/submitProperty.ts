@@ -61,6 +61,8 @@ export async function submitProperty(
         price_min: payload.price_min,
         price_max: payload.price_max,
         main_image_url: mainImageUrl,
+        amenities: payload.amenities,
+        gallery_urls: payload.imageUrls,
         status: "pending_review",
       })
       .select("id")

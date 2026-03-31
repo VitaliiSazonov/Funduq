@@ -24,7 +24,7 @@ import AmenitiesGrid from "@/components/property/AmenitiesGrid";
 import AvailabilityCalendar from "@/components/property/AvailabilityCalendar";
 import ShareButton from "@/components/property/ShareButton";
 import PropertyCard from "@/components/ui/PropertyCard";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 
 // ─────────────────────────────────────────────────────────────
 // Params interface (Next.js 15+: params is a Promise)
@@ -92,6 +92,7 @@ function buildJsonLd(property: NonNullable<Awaited<ReturnType<typeof getProperty
 export default async function PropertyDetailPage({ params }: PageProps) {
   const { id, locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations("villa");
 
   const property = await getProperty(id);
 
@@ -126,8 +127,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             className="flex items-center gap-2 text-sm font-semibold text-charcoal/50 hover:text-charcoal transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Back to Collection</span>
-            <span className="sm:hidden">Back</span>
+            <span className="hidden sm:inline">{t("backToCollection")}</span>
+            <span className="sm:hidden">{t("back")}</span>
           </Link>
           <Link
             href="/"
@@ -169,19 +170,19 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   <div className="flex flex-wrap items-center gap-3 text-sm text-charcoal/60 font-medium">
                     <span className="inline-flex items-center gap-1.5">
                       <BedDouble className="w-4 h-4 text-gold-dark" />
-                      {property.bedrooms} Bedroom
-                      {property.bedrooms !== 1 ? "s" : ""}
+                      {property.bedrooms}{" "}
+                      {property.bedrooms !== 1 ? t("bedrooms") : t("bedroom")}
                     </span>
                     <span className="text-charcoal/20">·</span>
                     <span className="inline-flex items-center gap-1.5">
                       <Bath className="w-4 h-4 text-gold-dark" />
-                      {property.bathrooms} Bathroom
-                      {property.bathrooms !== 1 ? "s" : ""}
+                      {property.bathrooms}{" "}
+                      {property.bathrooms !== 1 ? t("bathrooms") : t("bathroom")}
                     </span>
                     <span className="text-charcoal/20">·</span>
                     <span className="inline-flex items-center gap-1.5">
                       <Users className="w-4 h-4 text-gold-dark" />
-                      Up to {property.max_guests} Guests
+                      {t("upToGuests", { count: property.max_guests })}
                     </span>
                   </div>
                 </div>
@@ -194,7 +195,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   {/* Share Button */}
                   <ShareButton
                     title={property.title}
-                    text={`Check out ${property.title} on Funduq — Luxury Villas in the UAE`}
+                    text={t("shareText", { title: property.title })}
                   />
                 </div>
               </div>
@@ -225,18 +226,18 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                   <h3 className="text-lg font-bold text-charcoal truncate">
-                    Hosted by {property.host.full_name || "Host"}
+                    {t("hostedBy", { name: property.host.full_name || "Host" })}
                   </h3>
                   {property.host.verified && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold uppercase rounded-full flex-shrink-0">
                       <BadgeCheck className="w-3 h-3" />
-                      Verified
+                      {t("verified")}
                     </span>
                   )}
                 </div>
                 {memberSince && (
                   <p className="text-xs text-charcoal/40 font-medium">
-                    Member since {memberSince}
+                    {t("memberSince", { date: memberSince })}
                   </p>
                 )}
               </div>
@@ -245,7 +246,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             {/* ═══ SECTION 4 — Description ═══ */}
             <section>
               <h2 className="text-xl font-black display-font text-charcoal mb-4">
-                About This Property
+                {t("aboutProperty")}
               </h2>
               <DescriptionToggle text={property.description || ""} />
             </section>
@@ -254,7 +255,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             {property.amenities && property.amenities.length > 0 && (
               <section>
                 <h2 className="text-xl font-black display-font text-charcoal mb-4">
-                  What This Place Offers
+                  {t("whatThisPlaceOffers")}
                 </h2>
                 <AmenitiesGrid amenities={property.amenities} />
               </section>
@@ -269,7 +270,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <section>
               <h2 className="text-xl font-black display-font text-charcoal mb-4 flex items-center gap-2">
                 <MapPinned className="w-5 h-5 text-gold" />
-                Location
+                {t("location")}
               </h2>
               <div className="bg-charcoal/[0.03] rounded-2xl border border-charcoal/5 p-8 flex flex-col items-center justify-center text-center min-h-[240px]">
                 <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-4">
@@ -279,8 +280,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   {property.location_district}, {property.location_emirate}
                 </p>
                 <p className="text-sm text-charcoal/40 max-w-sm">
-                  Exact address shared after booking confirmation for your
-                  privacy and security.
+                  {t("addressShared")}
                 </p>
               </div>
             </section>
@@ -288,34 +288,34 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             {/* ═══ SECTION 8 — House Rules ═══ */}
             <section>
               <h2 className="text-xl font-black display-font text-charcoal mb-4">
-                House Rules
+                {t("houseRules")}
               </h2>
               <div className="bg-white rounded-2xl border border-charcoal/5 p-5 md:p-6 space-y-4">
                 {[
                   {
                     icon: Clock,
-                    label: "Check-in",
-                    value: "After 15:00",
+                    label: t("checkIn"),
+                    value: t("checkInValue"),
                   },
                   {
                     icon: Clock,
-                    label: "Check-out",
-                    value: "Before 11:00",
+                    label: t("checkOut"),
+                    value: t("checkOutValue"),
                   },
                   {
                     icon: Ban,
-                    label: "Smoking",
-                    value: "Not allowed",
+                    label: t("smoking"),
+                    value: t("smokingValue"),
                   },
                   {
                     icon: PartyPopper,
-                    label: "Parties",
-                    value: "Not allowed",
+                    label: t("parties"),
+                    value: t("partiesValue"),
                   },
                   {
                     icon: PawPrint,
-                    label: "Pets",
-                    value: "On request",
+                    label: t("pets"),
+                    value: t("petsValue"),
                   },
                 ].map((rule) => (
                   <div
@@ -342,7 +342,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             {similarProperties.length > 0 && (
               <section data-testid="similar-properties">
                 <h2 className="text-xl font-black display-font text-charcoal mb-6">
-                  Similar Properties Nearby
+                  {t("similarProperties")}
                 </h2>
                 <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide lg:grid lg:grid-cols-3 lg:overflow-visible">
                   {similarProperties.map((sp) => (

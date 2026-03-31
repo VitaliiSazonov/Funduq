@@ -41,7 +41,7 @@ const propertySchema = z.object({
   location_emirate: z.string().min(1, "Please select an emirate"),
   location_district: z
     .string()
-    .min(2, "District must be at least 2 characters"),
+    .min(1, "Please select a district"),
   bedrooms: z.number().min(0, "Must be 0 or more").max(20),
   bathrooms: z.number().min(0, "Must be 0 or more").max(20),
   max_guests: z.number().min(1, "Must accommodate at least 1 guest").max(50),
@@ -57,15 +57,87 @@ type FormValues = z.infer<typeof propertySchema>;
 // ─────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────
-const EMIRATES = [
-  "Dubai",
-  "Abu Dhabi",
-  "Sharjah",
-  "Ajman",
-  "Ras Al Khaimah",
-  "Fujairah",
-  "Umm Al Quwain",
-];
+const EMIRATE_DISTRICTS: Record<string, string[]> = {
+  Dubai: [
+    "Palm Jumeirah",
+    "Downtown Dubai",
+    "Dubai Marina",
+    "Jumeirah Beach Residence",
+    "Jumeirah",
+    "Al Barari",
+    "Emirates Hills",
+    "Arabian Ranches",
+    "Damac Hills",
+    "Dubai Hills Estate",
+    "Business Bay",
+    "DIFC",
+    "Bluewaters Island",
+    "Dubai Creek Harbour",
+    "MBR City",
+    "Al Sufouh",
+    "Umm Suqeim",
+    "Mirdif",
+  ],
+  "Abu Dhabi": [
+    "Saadiyat Island",
+    "Yas Island",
+    "Al Reem Island",
+    "Corniche Area",
+    "Al Raha Beach",
+    "Khalifa City",
+    "Al Maryah Island",
+    "Nurai Island",
+    "Jubail Island",
+    "Al Shamkha",
+    "Mohammed Bin Zayed City",
+  ],
+  Sharjah: [
+    "Al Majaz",
+    "Al Khan",
+    "Al Nahda",
+    "Al Taawun",
+    "Muwaileh",
+    "University City",
+    "Al Mamzar",
+    "Sharjah Waterfront City",
+    "Aljada",
+  ],
+  Ajman: [
+    "Al Rashidiya",
+    "Al Nuaimiya",
+    "Al Jurf",
+    "Corniche Ajman",
+    "Al Rawda",
+    "Emirates City",
+    "Al Helio",
+  ],
+  "Ras Al Khaimah": [
+    "Al Hamra Village",
+    "Al Marjan Island",
+    "Mina Al Arab",
+    "Dafan Al Nakheel",
+    "Khuzam",
+    "Al Jazeera Al Hamra",
+    "Wadi Shah",
+  ],
+  Fujairah: [
+    "Al Fujairah City",
+    "Dibba Al Fujairah",
+    "Merashid",
+    "Al Faseel",
+    "Sakamkam",
+    "Al Aqah",
+  ],
+  "Umm Al Quwain": [
+    "Old Town",
+    "Al Salamah",
+    "Al Raas",
+    "Umm Al Quwain Marina",
+    "Al Dar Al Baida",
+  ],
+};
+
+const EMIRATES = Object.keys(EMIRATE_DISTRICTS);
 
 const AMENITIES = [
   "Private Pool",
@@ -122,6 +194,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
     control,
     trigger,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(propertySchema),
@@ -138,9 +211,14 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
       price_max: importedData?.pricePerNight
         ? importedData.pricePerNight * 1.5
         : 2000,
-      amenities: [],
+      amenities: importedData?.amenities
+        ? importedData.amenities.filter((a) => AMENITIES.includes(a))
+        : [],
     },
   });
+
+  // Watch selected emirate to dynamically update district options
+  const selectedEmirate = watch("location_emirate");
 
   // ─── Step Navigation ───
   const fieldsPerStep: (keyof FormValues)[][] = [
@@ -168,7 +246,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
 
   // ─── Image Management ───
   function addImage() {
-    if (newImageUrl.trim() && imageUrls.length < 10) {
+    if (newImageUrl.trim() && imageUrls.length < 30) {
       setImageUrls((prev) => [...prev, newImageUrl.trim()]);
       setNewImageUrl("");
     }
@@ -290,7 +368,9 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
                   Emirate
                 </label>
                 <select
-                  {...register("location_emirate")}
+                  {...register("location_emirate", {
+                    onChange: () => setValue("location_district", ""),
+                  })}
                   className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none"
                 >
                   <option value="">Select...</option>
@@ -310,11 +390,20 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
                 <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
                   District
                 </label>
-                <input
+                <select
                   {...register("location_district")}
-                  placeholder="e.g. Palm Jumeirah"
-                  className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
-                />
+                  disabled={!selectedEmirate}
+                  className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <option value="">
+                    {selectedEmirate ? "Select district..." : "Select emirate first"}
+                  </option>
+                  {(EMIRATE_DISTRICTS[selectedEmirate] || []).map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
                 {errors.location_district && (
                   <p className="text-red-500 text-xs mt-1.5">
                     {errors.location_district.message}
@@ -482,7 +571,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
               <button
                 type="button"
                 onClick={addImage}
-                disabled={imageUrls.length >= 10 || !newImageUrl.trim()}
+                disabled={imageUrls.length >= 30 || !newImageUrl.trim()}
                 className="px-5 py-3 gold-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ImagePlus className="w-5 h-5" />
@@ -533,7 +622,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
             )}
 
             <p className="text-xs text-charcoal/30 text-right">
-              {imageUrls.length}/10 images
+              {imageUrls.length}/30 images
             </p>
           </div>
         );

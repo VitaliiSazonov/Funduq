@@ -53,7 +53,7 @@ export default async function HostDashboardPage() {
                 </div>
                 <div>
                     <h2 className="text-lg font-bold text-charcoal">Welcome back, {user.email?.split('@')[0]}!</h2>
-                    <p className="text-sm text-muted">You have {properties.length} active listings on Funduq.</p>
+                    <p className="text-sm text-muted">You have {properties.length} listing{properties.length !== 1 ? 's' : ''} on Funduq.</p>
                 </div>
             </div>
             <div className="flex items-center gap-4 hidden md:flex">

@@ -10,6 +10,7 @@ export interface Property {
   maxGuests: number;
   priceRange: string;
   imageUrl: string;
+  status?: string;
 }
 
 /**
@@ -25,6 +26,7 @@ function transformProperty(row: any): Property {
     maxGuests: row.max_guests,
     priceRange: `AED ${new Intl.NumberFormat().format(row.price_min)} - ${new Intl.NumberFormat().format(row.price_max)}`,
     imageUrl: row.main_image_url || "/images/props/placeholder.png", // Fallback to placeholder
+    status: row.status,
   }
 }
 
