@@ -19,7 +19,7 @@ export default async function HostDashboardPage() {
   const properties = await getHostProperties();
 
   return (
-    <div className="min-h-screen bg-offwhite py-32 px-6 md:px-12">
+    <div className="min-h-screen bg-offwhite pt-12 pb-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
           <div className="flex flex-col gap-4">
