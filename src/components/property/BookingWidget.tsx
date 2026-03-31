@@ -191,16 +191,6 @@ export default function BookingWidget({
                 numberOfMonths={1}
                 startMonth={new Date()}
                 endMonth={addMonths(new Date(), 12)}
-                classNames={{
-                  root: "text-sm",
-                  day: "rounded-xl transition-colors",
-                  selected: "bg-gold text-white font-bold",
-                  range_start: "bg-gold text-white rounded-l-xl",
-                  range_end: "bg-gold text-white rounded-r-xl",
-                  range_middle: "bg-gold/10 text-gold-dark",
-                  disabled: "text-charcoal/15 line-through",
-                  today: "font-black text-gold-dark",
-                }}
               />
             </div>
           )}

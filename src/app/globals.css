@@ -63,38 +63,104 @@ h1, h2, h3, h4, .display-font {
 
 /* ─── react-day-picker v9 — Funduq theme overrides ─── */
 .rdp-funduq {
-  --rdp-accent-color: #C5A059;
-  --rdp-accent-background-color: rgba(197, 160, 89, 0.1);
-  --rdp-background-color: transparent;
-  --rdp-day-height: 2.5rem;
-  --rdp-day-width: 2.5rem;
   font-family: var(--font-sans);
 }
+
+/* Override CSS variables on .rdp-root where RDP v9 reads them */
 .rdp-funduq .rdp-root {
   --rdp-accent-color: #C5A059;
+  --rdp-accent-background-color: rgba(197, 160, 89, 0.1);
+  --rdp-today-color: #A37F3F;
+  --rdp-day-height: 2.75rem;
+  --rdp-day-width: 2.75rem;
+  --rdp-day_button-height: 2.5rem;
+  --rdp-day_button-width: 2.5rem;
+  --rdp-day_button-border-radius: 0.75rem;
+  --rdp-selected-border: 2px solid #C5A059;
+  --rdp-range_start-date-background-color: #C5A059;
+  --rdp-range_end-date-background-color: #C5A059;
+  --rdp-range_middle-background-color: rgba(197, 160, 89, 0.1);
+  --rdp-range_middle-color: #A37F3F;
+  --rdp-range_start-color: #fff;
+  --rdp-range_end-color: #fff;
+  --rdp-months-gap: 1.5rem;
+  font-size: 0.875rem;
 }
-.rdp-funduq .rdp-day.rdp-selected {
+
+/* Month caption styling */
+.rdp-funduq .rdp-month_caption {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1rem;
+  color: #1A1A1A;
+}
+
+/* Weekday header styling */
+.rdp-funduq .rdp-weekday {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(26, 26, 26, 0.45);
+  padding: 0.5rem 0;
+}
+
+/* Day cell grid spacing */
+.rdp-funduq .rdp-day {
+  width: var(--rdp-day-width);
+  height: var(--rdp-day-height);
+  text-align: center;
+}
+
+/* Day button (clickable area) */
+.rdp-funduq .rdp-day_button {
+  width: var(--rdp-day_button-width);
+  height: var(--rdp-day_button-height);
+  border-radius: var(--rdp-day_button-border-radius);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Focusable day hover */
+.rdp-funduq .rdp-focusable:not(.rdp-disabled):not(.rdp-selected):hover .rdp-day_button {
+  background-color: rgba(197, 160, 89, 0.08);
+}
+
+/* Selected day button */
+.rdp-funduq .rdp-selected .rdp-day_button {
   background-color: #C5A059;
   color: #fff;
   font-weight: 700;
+  border-color: #C5A059;
 }
-.rdp-funduq .rdp-day.rdp-range_middle {
-  background-color: rgba(197, 160, 89, 0.1);
+
+/* Range middle */
+.rdp-funduq .rdp-range_middle .rdp-day_button {
   color: #A37F3F;
 }
-.rdp-funduq .rdp-day.rdp-today {
+
+/* Today marker */
+.rdp-funduq .rdp-today:not(.rdp-outside) {
   font-weight: 900;
   color: #A37F3F;
 }
-.rdp-funduq .rdp-day.rdp-disabled {
-  color: rgba(26, 26, 26, 0.15);
+
+/* Disabled days */
+.rdp-funduq .rdp-disabled:not(.rdp-selected) {
+  opacity: 0.3;
+}
+.rdp-funduq .rdp-disabled:not(.rdp-selected) .rdp-day_button {
   text-decoration: line-through;
+  cursor: default;
 }
-.rdp-funduq .rdp-nav button {
-  color: #A37F3F;
+
+/* Navigation chevron */
+.rdp-funduq .rdp-chevron {
+  fill: #A37F3F;
 }
-.rdp-funduq .rdp-nav button:hover {
+
+/* Nav button hover */
+.rdp-funduq .rdp-button_next:hover,
+.rdp-funduq .rdp-button_previous:hover {
   background-color: rgba(197, 160, 89, 0.1);
+  border-radius: 0.5rem;
 }
 
 /* ─── Passport Verification Modal Animations ─── */

@@ -65,11 +65,7 @@ export default function AvailabilityCalendar({
             startMonth={new Date()}
             endMonth={addMonths(new Date(), 12)}
             classNames={{
-              root: "text-sm",
               months: "flex flex-col md:flex-row gap-6",
-              day: "rounded-xl transition-colors",
-              disabled: "text-charcoal/15 line-through",
-              today: "font-black text-gold-dark",
             }}
           />
           <div className="flex items-center gap-6 mt-4 pt-4 border-t border-charcoal/5">
