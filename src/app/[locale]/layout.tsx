@@ -5,6 +5,8 @@ import { routing } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/ui/Header";
 
+import Footer from "@/components/ui/Footer";
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -85,6 +87,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <NextIntlClientProvider messages={messages}>
         <Header user={headerUser} />
         {children}
+        <Footer />
       </NextIntlClientProvider>
     </>
   );

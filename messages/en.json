@@ -77,5 +77,20 @@
     "notFound": "Page not found",
     "unauthorized": "You don't have access to this page",
     "generic": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "tagline": "Luxury living, redefined. Curated short-term rentals across the UAE.",
+    "navTitle": "Navigation",
+    "explore": "Explore Collection",
+    "listProperty": "List Your Property",
+    "signIn": "Sign In",
+    "legalTitle": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "contactTitle": "Contact",
+    "address": "Dubai, United Arab Emirates",
+    "rights": "All rights reserved.",
+    "madeIn": "Made with ♥ in UAE"
   }
 }
