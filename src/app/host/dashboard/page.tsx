@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getHostProperties } from "@/app/actions/properties";
-import PropertyCard from "@/components/ui/PropertyCard";
+import HostPropertyCard from "@/components/host/HostPropertyCard";
 import Link from "next/link";
 import { Plus, CalendarDays, LogOut } from "lucide-react";
 import { signOutAction } from "@/app/actions/auth";
@@ -77,7 +77,7 @@ export default async function HostDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {properties.length > 0 ? (
             properties.map((property) => (
-              <PropertyCard key={property.id} {...property} />
+              <HostPropertyCard key={property.id} {...property} />
             ))
           ) : (
             <div className="col-span-full py-40 flex flex-col items-center text-center bg-white rounded-3xl border border-dashed border-gray-200">
