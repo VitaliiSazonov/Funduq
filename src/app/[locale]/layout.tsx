@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale, getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/ui/Header";
 
 type Props = {
@@ -51,6 +52,22 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   const messages = await getMessages();
 
+  // ── Fetch authenticated user (server-side) ──
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Serialize only what the Header needs (avoid passing full Supabase User)
+  const headerUser = user
+    ? {
+        email: user.email,
+        user_metadata: {
+          full_name: (user.user_metadata?.full_name as string) ?? undefined,
+        },
+      }
+    : null;
+
   return (
     <>
       {/* Set lang attribute on <html> — the root layout has suppressHydrationWarning */}
@@ -66,7 +83,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <link rel="alternate" hrefLang="x-default" href="https://funduq.vercel.app" />
 
       <NextIntlClientProvider messages={messages}>
-        <Header />
+        <Header user={headerUser} />
         {children}
       </NextIntlClientProvider>
     </>

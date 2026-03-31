@@ -6,8 +6,20 @@ import { Link as IntlLink } from "@/i18n/navigation";
 import NextLink from "next/link";
 import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import UserMenu from "@/components/ui/UserMenu";
+import { signOutAction } from "@/app/actions/auth";
 
-export default function Header() {
+interface HeaderProps {
+  user?: {
+    email?: string;
+    user_metadata?: {
+      full_name?: string;
+      [key: string]: unknown;
+    };
+  } | null;
+}
+
+export default function Header({ user }: HeaderProps) {
   const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,6 +29,9 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const userEmail = user?.email ?? "";
+  const userFullName = user?.user_metadata?.full_name ?? null;
 
   return (
     <header
@@ -56,16 +71,19 @@ export default function Header() {
           </NextLink>
         </nav>
 
-        {/* Right side: Language switcher + Login */}
+        {/* Right side: Language switcher + Login / UserMenu */}
         <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
-          {/* /login lives OUTSIDE [locale] → use next/link */}
-          <NextLink
-            href="/login"
-            className="px-6 py-2.5 rounded-full bg-gold text-white text-sm font-black uppercase tracking-wider hover:bg-gold-dark transition-all duration-300 luxury-shadow"
-          >
-            {t("login")}
-          </NextLink>
+          {user ? (
+            <UserMenu email={userEmail} fullName={userFullName} />
+          ) : (
+            <NextLink
+              href="/login"
+              className="px-6 py-2.5 rounded-full bg-gold text-white text-sm font-black uppercase tracking-wider hover:bg-gold-dark transition-all duration-300 luxury-shadow"
+            >
+              {t("login")}
+            </NextLink>
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -100,13 +118,33 @@ export default function Header() {
               {t("listProperty")}
             </NextLink>
             <hr className="border-white/10 my-2" />
-            <NextLink
-              href="/login"
-              className="inline-flex justify-center px-6 py-3 rounded-full bg-gold text-white text-sm font-black uppercase tracking-wider hover:bg-gold-dark transition-all duration-300"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("login")}
-            </NextLink>
+            {user ? (
+              <>
+                <NextLink
+                  href="/guest/bookings"
+                  className="text-white/70 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors py-2"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t("myBookings")}
+                </NextLink>
+                <form action={signOutAction}>
+                  <button
+                    type="submit"
+                    className="w-full text-left text-red-400 hover:text-red-300 text-sm font-bold uppercase tracking-wider transition-colors py-2 cursor-pointer"
+                  >
+                    Sign Out
+                  </button>
+                </form>
+              </>
+            ) : (
+              <NextLink
+                href="/login"
+                className="inline-flex justify-center px-6 py-3 rounded-full bg-gold text-white text-sm font-black uppercase tracking-wider hover:bg-gold-dark transition-all duration-300"
+                onClick={() => setMobileOpen(false)}
+              >
+                {t("login")}
+              </NextLink>
+            )}
           </div>
         </div>
       )}

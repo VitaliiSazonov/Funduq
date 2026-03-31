@@ -1,8 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import AdminShell from "./AdminShell";
 
-export default async function AdminLayout({
+export default async function HostLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -18,18 +17,17 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
-  // Check admin role in profiles table
+  // Check host (or admin) role in profiles table
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
 
-  // Not admin → homepage
-  if (!profile || profile.role !== "admin") {
+  // Only host and admin can access host panel
+  if (!profile || (profile.role !== "host" && profile.role !== "admin")) {
     redirect("/");
   }
 
-  // ── Authenticated admin → render shell ──
-  return <AdminShell>{children}</AdminShell>;
+  return <>{children}</>;
 }
