@@ -39,7 +39,7 @@ export async function getFeaturedProperties(): Promise<Property[]> {
   const { data, error } = await supabase
     .from("properties")
     .select("*")
-    .eq("status", "active")
+    .in("status", ["active", "pending_review"])
     .order("created_at", { ascending: false })
     .limit(6);
 

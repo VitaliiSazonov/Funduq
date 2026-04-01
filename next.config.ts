@@ -68,7 +68,7 @@ const nextConfig: NextConfig = {
               // Fonts: Google Fonts CDN
               "font-src 'self' https://fonts.gstatic.com data:",
               // Images: self + Supabase Storage + Unsplash + data URIs + blobs
-              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com data: blob:",
+              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com data: blob:",
               // Connect: self + Supabase APIs + Resend + Google OAuth + Sentry
               "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io",
               // Frames: Google OAuth popup

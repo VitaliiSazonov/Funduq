@@ -12,7 +12,7 @@ export default function HomeHero() {
       {/* Background Visual Overlay */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--color-gold)_0%,_transparent_100%)]" />
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-transparent to-charcoal/80" />
-      
+
       <div className="relative z-10 w-full max-w-6xl flex flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -23,8 +23,8 @@ export default function HomeHero() {
             {t("hero_badge")}
           </span>
         </motion.div>
-        
-        <motion.h1 
+
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
@@ -32,8 +32,8 @@ export default function HomeHero() {
         >
           {t("hero_title")} <br /> <span className="text-gold">{t("hero_title_accent")}</span>
         </motion.h1>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
@@ -43,50 +43,50 @@ export default function HomeHero() {
         </motion.p>
 
         {/* Search Bar Skeleton */}
-        <motion.div 
-           initial={{ opacity: 0, y: 40 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 1, delay: 0.6, ease: [0.23, 1, 0.32, 1] }}
-           className="w-full max-w-4xl glass rounded-[2rem] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-4 luxury-shadow border border-white/20"
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full max-w-4xl glass rounded-[2rem] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-4 luxury-shadow border border-white/20"
         >
           <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200">
-             <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
-                <MapPin className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
-                <div className="flex flex-col items-start">
-                   <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_location")}</span>
-                   <span className="text-charcoal font-bold text-sm">{t("search_location_placeholder")}</span>
-                </div>
-             </button>
-             <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
-                <Calendar className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
-                <div className="flex flex-col items-start">
-                   <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_dates")}</span>
-                   <span className="text-charcoal font-bold text-sm">{t("search_dates_placeholder")}</span>
-                </div>
-             </button>
-             <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
-                <Users className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
-                <div className="flex flex-col items-start">
-                   <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_guests")}</span>
-                   <span className="text-charcoal font-bold text-sm">{t("search_guests_placeholder")}</span>
-                </div>
-             </button>
+            <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
+              <MapPin className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_location")}</span>
+                <span className="text-charcoal font-bold text-sm">{t("search_location_placeholder")}</span>
+              </div>
+            </button>
+            <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
+              <Calendar className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_dates")}</span>
+                <span className="text-charcoal font-bold text-sm">{t("search_dates_placeholder")}</span>
+              </div>
+            </button>
+            <button className="flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-white/40 rounded-2xl transition-all group outline-none">
+              <Users className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-black uppercase text-muted tracking-widest">{t("search_guests")}</span>
+                <span className="text-charcoal font-bold text-sm">{t("search_guests_placeholder")}</span>
+              </div>
+            </button>
           </div>
           <button className="w-full md:w-auto bg-gold text-white px-10 py-5 rounded-[1.5rem] font-black flex items-center justify-center gap-3 hover:bg-gold-dark transition-all duration-300 luxury-shadow">
-             <Search className="w-5 h-5" />
-             <span className="md:inline">{t("search_button")}</span>
+            <Search className="w-5 h-5" />
+            <span className="md:inline">{t("search_button")}</span>
           </button>
         </motion.div>
       </div>
-      
+
       {/* Scroll Indicator */}
-      <motion.div 
+      <motion.div
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-40"
       >
-         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white">{t("scroll")}</span>
-         <div className="w-px h-12 bg-gradient-to-b from-white to-transparent" />
+        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white">{t("scroll")}</span>
+        <div className="w-px h-12 bg-gradient-to-b from-white to-transparent" />
       </motion.div>
     </section>
   );
