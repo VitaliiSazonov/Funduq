@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { approveProperty, suspendProperty } from "@/app/actions/admin";
+import { approveProperty, suspendProperty, toggleSignatureProperty } from "@/app/actions/admin";
 import type { PropertyWithHost } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import {
@@ -9,6 +9,7 @@ import {
   Ban,
   ExternalLink,
   Loader2,
+  Star,
 } from "lucide-react";
 
 interface PropertyModerationRowProps {
@@ -58,7 +59,7 @@ export default function PropertyModerationRow({
 }: PropertyModerationRowProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [actionType, setActionType] = useState<"approve" | "suspend" | null>(null);
+  const [actionType, setActionType] = useState<"approve" | "suspend" | "signature" | null>(null);
 
   const handleApprove = () => {
     setActionType("approve");
@@ -78,6 +79,21 @@ export default function PropertyModerationRow({
       const result = await suspendProperty(property.id);
       if (!result.success) {
         console.error("Suspend failed:", result.error);
+      }
+      router.refresh();
+      setActionType(null);
+    });
+  };
+
+  const handleToggleSignature = () => {
+    setActionType("signature");
+    startTransition(async () => {
+      const result = await toggleSignatureProperty(
+        property.id,
+        !(property as any).is_signature
+      );
+      if (!result.success) {
+        console.error("Signature toggle failed:", result.error);
       }
       router.refresh();
       setActionType(null);
@@ -136,6 +152,29 @@ export default function PropertyModerationRow({
       {/* Actions */}
       <td style={{ ...cellStyle, textAlign: "right" }}>
         <div style={actionsContainer}>
+          {/* Signature Collection Toggle */}
+          <button
+            onClick={handleToggleSignature}
+            disabled={isPending}
+            style={{
+              ...btnBase,
+              background: (property as any).is_signature
+                ? "rgba(197, 160, 89, 0.15)"
+                : "rgba(197, 160, 89, 0.06)",
+              color: (property as any).is_signature ? "#C5A059" : "#6A6A6A",
+            }}
+            title={(property as any).is_signature ? "Remove from Signature Collection" : "Add to Signature Collection"}
+          >
+            {isPending && actionType === "signature" ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <Star
+                size={14}
+                fill={(property as any).is_signature ? "#C5A059" : "none"}
+              />
+            )}
+          </button>
+
           {property.status !== "active" && (
             <button
               onClick={handleApprove}

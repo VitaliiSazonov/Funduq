@@ -37,6 +37,7 @@ export interface PropertyWithHost {
   price_min: number;
   price_max: number;
   created_at: string;
+  is_signature: boolean;
   owner: {
     id: string;
     full_name: string | null;
@@ -253,7 +254,7 @@ export async function getPendingProperties(): Promise<PropertyWithHost[]> {
       `
       id, title, description, type, status, location_emirate, location_district,
       main_image_url, bedrooms, bathrooms, max_guests, price_min, price_max,
-      created_at,
+      created_at, is_signature,
       owner:profiles!properties_owner_id_fkey (
         id, full_name, avatar_url
       )
@@ -282,6 +283,7 @@ export async function getPendingProperties(): Promise<PropertyWithHost[]> {
     price_min: row.price_min as number,
     price_max: row.price_max as number,
     created_at: row.created_at as string,
+    is_signature: (row.is_signature as boolean) || false,
     owner: row.owner as { id: string; full_name: string | null; avatar_url: string | null },
   }));
 }
@@ -300,7 +302,7 @@ export async function getAllAdminProperties(
       `
       id, title, description, type, status, location_emirate, location_district,
       main_image_url, bedrooms, bathrooms, max_guests, price_min, price_max,
-      created_at,
+      created_at, is_signature,
       owner:profiles!properties_owner_id_fkey (
         id, full_name, avatar_url
       )
@@ -334,6 +336,7 @@ export async function getAllAdminProperties(
     price_min: row.price_min as number,
     price_max: row.price_max as number,
     created_at: row.created_at as string,
+    is_signature: (row.is_signature as boolean) || false,
     owner: row.owner as { id: string; full_name: string | null; avatar_url: string | null },
   }));
 }
@@ -513,4 +516,75 @@ export async function getPassportSignedUrl(
   }
 
   return { url: data.signedUrl };
+}
+
+// ─── Signature Collection ──────────────────────────────────────
+
+/**
+ * Admin: toggle a property's `is_signature` flag.
+ * Properties flagged as signature appear in the homepage Signature Collections showcase.
+ */
+export async function toggleSignatureProperty(
+  propertyId: string,
+  isSignature: boolean
+): Promise<ActionResult> {
+  const auth = await verifyAdmin();
+  if (!auth.isAdmin) return { success: false, error: auth.error };
+
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("properties")
+    .update({ is_signature: isSignature, updated_at: new Date().toISOString() })
+    .eq("id", propertyId);
+
+  if (error) {
+    console.error("[Admin] Failed to toggle signature:", error);
+    return { success: false, error: "Failed to update signature status." };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Public: fetch active properties marked for the Signature Collection.
+ * Returns up to 5 properties for the homepage scroll-driven showcase.
+ */
+export async function getSignatureProperties(): Promise<
+  {
+    id: string;
+    title: string;
+    location: string;
+    imageUrl: string;
+    priceRange: string;
+    bedrooms: number;
+    maxGuests: number;
+    type: string;
+  }[]
+> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("properties")
+    .select("id, title, location_district, location_emirate, main_image_url, price_min, price_max, bedrooms, max_guests, type")
+    .eq("status", "active")
+    .eq("is_signature", true)
+    .order("updated_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("[Admin] Failed to fetch signature properties:", error);
+    return [];
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    title: row.title,
+    location: `${row.location_district}, ${row.location_emirate}`,
+    imageUrl: row.main_image_url || "/images/props/placeholder.png",
+    priceRange: `AED ${new Intl.NumberFormat().format(row.price_min)} - ${new Intl.NumberFormat().format(row.price_max)}`,
+    bedrooms: row.bedrooms,
+    maxGuests: row.max_guests,
+    type: row.type,
+  }));
 }
