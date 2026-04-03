@@ -4,14 +4,28 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function VillasPage({ params }: Props) {
+export default async function VillasPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const resolvedSearchParams = await searchParams;
 
   const t = await getTranslations("villas");
-  const properties = await getAllProperties();
+
+  // Extract filters from URL search params
+  const locationFilter = typeof resolvedSearchParams.location === "string" ? resolvedSearchParams.location : undefined;
+  const bedroomsFilter = typeof resolvedSearchParams.bedrooms === "string" ? parseInt(resolvedSearchParams.bedrooms, 10) : undefined;
+  const typeFilter = typeof resolvedSearchParams.type === "string" ? resolvedSearchParams.type : undefined;
+  const eventsFilter = typeof resolvedSearchParams.events === "string" ? resolvedSearchParams.events : undefined;
+
+  const properties = await getAllProperties({
+    location: locationFilter,
+    bedrooms: bedroomsFilter && !isNaN(bedroomsFilter) ? bedroomsFilter : undefined,
+    type: typeFilter,
+    events: eventsFilter,
+  });
 
   return (
     <div className="min-h-screen bg-offwhite flex flex-col">
@@ -28,7 +42,13 @@ export default async function VillasPage({ params }: Props) {
       </section>
 
       {/* Main Catalogue */}
-      <PropertyCatalogue initialProperties={properties} />
+      <PropertyCatalogue
+        initialProperties={properties}
+        initialLocation={locationFilter}
+        initialBedrooms={bedroomsFilter}
+        initialType={typeFilter}
+        initialEvents={eventsFilter}
+      />
 
       {/* Footer CTA */}
       <section className="py-20 border-t border-gray-100 mt-12 bg-white">

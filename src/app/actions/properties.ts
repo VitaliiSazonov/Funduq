@@ -6,11 +6,14 @@ export interface Property {
   id: string;
   title: string;
   location: string;
+  locationCountry: string;
   bedrooms: number;
   maxGuests: number;
   priceRange: string;
   imageUrl: string;
   status?: string;
+  type: string;
+  eventsAllowed: boolean;
 }
 
 /**
@@ -22,11 +25,14 @@ function transformProperty(row: any): Property {
     id: row.id,
     title: row.title,
     location: `${row.location_district}, ${row.location_emirate}`,
+    locationCountry: row.location_country || "UAE",
     bedrooms: row.bedrooms,
     maxGuests: row.max_guests,
     priceRange: `AED ${new Intl.NumberFormat().format(row.price_min)} - ${new Intl.NumberFormat().format(row.price_max)}`,
     imageUrl: row.main_image_url || "/images/props/placeholder.png", // Fallback to placeholder
     status: row.status,
+    type: row.type || "Villa",
+    eventsAllowed: row.events_allowed || false,
   }
 }
 
@@ -78,10 +84,17 @@ export async function getLatestArrivals(): Promise<Property[]> {
   return (data || []).map(transformProperty);
 }
 
+export interface PropertyFilters {
+  location?: string;
+  bedrooms?: number;
+  type?: string;
+  events?: string;
+}
+
 /**
  * Fetches active properties for the Catalogue page, with optional filtering.
  */
-export async function getAllProperties(filters?: { emirate?: string }): Promise<Property[]> {
+export async function getAllProperties(filters?: PropertyFilters): Promise<Property[]> {
   const supabase = await createClient();
 
   let query = supabase
@@ -90,8 +103,26 @@ export async function getAllProperties(filters?: { emirate?: string }): Promise<
     .eq("status", "active")
     .order("created_at", { ascending: false });
 
-  if (filters?.emirate) {
-    query = query.eq("location_emirate", filters.emirate);
+  // Location filter — match against location_country
+  if (filters?.location) {
+    query = query.ilike("location_country", filters.location);
+  }
+
+  // Bedrooms filter — exact match
+  if (filters?.bedrooms) {
+    query = query.eq("bedrooms", filters.bedrooms);
+  }
+
+  // Type filter — case-insensitive match (Villa, Penthouse, Resort)
+  if (filters?.type) {
+    query = query.ilike("type", filters.type);
+  }
+
+  // Events filter — boolean
+  if (filters?.events === "yes") {
+    query = query.eq("events_allowed", true);
+  } else if (filters?.events === "no") {
+    query = query.eq("events_allowed", false);
   }
 
   const { data, error } = await query;
