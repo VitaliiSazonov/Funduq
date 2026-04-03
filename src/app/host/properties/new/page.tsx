@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -16,19 +17,27 @@ import { importFromAirbnb } from "@/app/actions/importAirbnb";
 import type { AirbnbScrapedData } from "@/app/actions/importAirbnb";
 import ListingWizard from "@/components/host/ListingWizard";
 
-// ─────────────────────────────────────────────────────────────
-// Progress stages for the import loader
-// ─────────────────────────────────────────────────────────────
-const IMPORT_STAGES = [
-  { label: "Connecting to Airbnb...", duration: 800 },
-  { label: "Fetching property details...", duration: 1000 },
-  { label: "Importing amenities & features...", duration: 800 },
-  { label: "Downloading gallery images...", duration: 1500 },
-  { label: "Uploading to secure storage...", duration: 1000 },
-  { label: "Preparing your listing...", duration: 500 },
-];
-
 export default function NewPropertyPage() {
+  const t = useTranslations("host");
+
+  // ─── Progress stages for the import loader ───
+  const IMPORT_STAGES = [
+    { label: t("stageConnecting"), duration: 800 },
+    { label: t("stageFetching"), duration: 1000 },
+    { label: t("stageImportingAmenities"), duration: 800 },
+    { label: t("stageDownloading"), duration: 1500 },
+    { label: t("stageUploading"), duration: 1000 },
+    { label: t("stagePreparing"), duration: 500 },
+  ];
+
+  const WIZARD_STEPS = [
+    t("stepBasics"),
+    t("stepDetails"),
+    t("stepAmenities"),
+    t("stepGallery"),
+    t("stepPricing"),
+  ];
+
   const [mode, setMode] = useState<"choose" | "import-loading" | "wizard">(
     "choose"
   );
@@ -90,10 +99,10 @@ export default function NewPropertyPage() {
             </Link>
             <div>
               <h1 className="text-lg font-black display-font text-charcoal">
-                New Listing
+                {t("newListing")}
               </h1>
               <p className="text-xs text-charcoal/40 font-medium">
-                Create or import a property
+                {t("createOrImport")}
               </p>
             </div>
           </div>
@@ -126,14 +135,13 @@ export default function NewPropertyPage() {
                   transition={{ delay: 0.15 }}
                 >
                   <span className="inline-block text-xs font-black uppercase tracking-[0.25em] text-gold mb-4">
-                    List Your Property
+                    {t("listYourProperty")}
                   </span>
                   <h2 className="text-4xl md:text-5xl font-black display-font text-charcoal mb-4 tracking-tight">
-                    How would you like to start?
+                    {t("howToStart")}
                   </h2>
                   <p className="text-charcoal/45 max-w-xl mx-auto text-lg">
-                    Import an existing Airbnb listing instantly, or build your
-                    showcase from scratch.
+                    {t("howToStartDesc")}
                   </p>
                 </motion.div>
               </div>
@@ -153,19 +161,16 @@ export default function NewPropertyPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black display-font text-charcoal">
-                        Import from Airbnb
+                        {t("importFromAirbnb")}
                       </h3>
                       <p className="text-xs text-charcoal/40 font-medium">
-                        Auto-fill your listing in seconds
+                        {t("autoFill")}
                       </p>
                     </div>
                   </div>
 
                   <p className="text-sm text-charcoal/50 leading-relaxed mb-8">
-                    Paste your Airbnb listing URL and we&apos;ll automatically
-                    import the title, description, all photos, amenities (Pool,
-                    Spa, Gym, etc.), pricing, and room details. You can review
-                    and edit everything before publishing.
+                    {t("importDesc")}
                   </p>
 
                   {/* URL Input */}
@@ -209,7 +214,7 @@ export default function NewPropertyPage() {
                       className="w-full py-3.5 gold-gradient text-white rounded-xl font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Download className="w-4 h-4" />
-                      Import Listing
+                      {t("importListing")}
                     </button>
                   </div>
                 </motion.div>
@@ -227,19 +232,16 @@ export default function NewPropertyPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black display-font text-charcoal">
-                        Create Manually
+                        {t("createManually")}
                       </h3>
                       <p className="text-xs text-charcoal/40 font-medium">
-                        Craft your listing step by step
+                        {t("craftListing")}
                       </p>
                     </div>
                   </div>
 
                   <p className="text-sm text-charcoal/50 leading-relaxed mb-8">
-                    Use our guided wizard to create your luxury listing from
-                    scratch. Add rich descriptions, upload high-resolution
-                    photos, set amenities, and configure pricing — all with a
-                    premium editorial experience.
+                    {t("manualDesc")}
                   </p>
 
                   <div className="mt-auto">
@@ -249,25 +251,20 @@ export default function NewPropertyPage() {
                       className="w-full py-3.5 bg-charcoal text-white rounded-xl font-bold text-sm hover:bg-charcoal/90 transition-colors cursor-pointer flex items-center justify-center gap-2"
                     >
                       <PenLine className="w-4 h-4" />
-                      Start from Scratch
+                      {t("startFromScratch")}
                     </button>
                   </div>
 
                   {/* Visual flair */}
                   <div className="mt-6 grid grid-cols-5 gap-2">
-                    {["Basics", "Details", "Amenities", "Gallery", "Pricing"].map(
-                      (step, i) => (
-                        <div
-                          key={step}
-                          className="text-center"
-                        >
-                          <div className="w-full h-1 rounded-full bg-charcoal/5 mb-1.5" />
-                          <span className="text-[9px] uppercase tracking-wider text-charcoal/25 font-semibold">
-                            {step}
-                          </span>
-                        </div>
-                      )
-                    )}
+                    {WIZARD_STEPS.map((step) => (
+                      <div key={step} className="text-center">
+                        <div className="w-full h-1 rounded-full bg-charcoal/5 mb-1.5" />
+                        <span className="text-[9px] uppercase tracking-wider text-charcoal/25 font-semibold">
+                          {step}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </motion.div>
               </div>
@@ -328,7 +325,7 @@ export default function NewPropertyPage() {
               </div>
 
               <p className="text-xs text-charcoal/30 mt-4 font-medium">
-                This usually takes a few seconds
+                {t("usuallyFewSeconds")}
               </p>
             </motion.div>
           )}
@@ -351,7 +348,7 @@ export default function NewPropertyPage() {
                 >
                   <span className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 text-gold-dark text-xs font-bold uppercase tracking-wider rounded-full border border-gold/20">
                     <Download className="w-3.5 h-3.5" />
-                    Imported from Airbnb — Review & Edit
+                    {t("importedReview")}
                   </span>
                 </motion.div>
               )}

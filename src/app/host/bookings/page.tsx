@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getHostBookings } from "@/app/actions/bookings";
+import { getHostLocale, getHostMessages } from "@/lib/getHostLocale";
 import BookingActions from "./BookingActions";
 import {
   CalendarDays,
@@ -9,11 +10,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
-
-export const metadata = {
-  title: "Incoming Bookings | Funduq Host",
-  description: "Review, approve, or decline guest booking requests for your luxury properties.",
-};
 
 function statusBadge(status: string) {
   const map: Record<string, string> = {
@@ -35,6 +31,11 @@ export default async function HostBookingsPage() {
 
   const bookings = await getHostBookings();
 
+  // ── Load translations ──
+  const locale = await getHostLocale();
+  const messages = await getHostMessages(locale);
+  const h = messages.host;
+
   return (
     <div className="min-h-screen bg-offwhite py-32 px-6 md:px-12">
       <div className="max-w-6xl mx-auto">
@@ -45,23 +46,23 @@ export default async function HostBookingsPage() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal/40 hover:text-charcoal transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            {h.backToDashboard}
           </Link>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
               <span className="text-sm font-black text-gold uppercase tracking-[0.2em] display-font">
-                Manage
+                {h.manage}
               </span>
               <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font tracking-tight">
-                Incoming Bookings
+                {h.incomingBookings}
               </h1>
               <p className="text-charcoal/40 font-medium mt-2">
-                Review and respond to guest requests for your properties.
+                {h.bookingsSubtitle}
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm text-charcoal/50 bg-white px-4 py-2 rounded-full border border-charcoal/5">
               <CalendarDays className="w-4 h-4 text-gold" />
-              {bookings.length} request{bookings.length !== 1 ? "s" : ""}
+              {bookings.length} {bookings.length !== 1 ? h.requests : h.request}
             </div>
           </div>
         </header>
@@ -73,10 +74,10 @@ export default async function HostBookingsPage() {
               <Inbox className="w-8 h-8 text-charcoal/20" />
             </div>
             <h3 className="text-xl font-bold text-charcoal mb-2">
-              No booking requests yet
+              {h.noBookingsTitle}
             </h3>
             <p className="text-charcoal/40 max-w-xs mx-auto">
-              When guests request to book your properties, they'll appear here.
+              {h.noBookingsDesc}
             </p>
           </div>
         ) : (
@@ -110,9 +111,9 @@ export default async function HostBookingsPage() {
                         {format(parseISO(booking.check_out), "MMM d, yyyy")}
                       </span>
                       <span>
-                        {booking.total_guests} guest{booking.total_guests !== 1 ? "s" : ""}
+                        {booking.total_guests} {booking.total_guests !== 1 ? h.guestPlural : h.guest}
                       </span>
-                      <span>Guest: {booking.guest.email}</span>
+                      <span>{h.guestLabel}: {booking.guest.email}</span>
                     </div>
 
                     {booking.message && (

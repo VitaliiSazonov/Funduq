@@ -45,9 +45,12 @@ export default function HostCTA() {
             >
               {t("host_cta_button")}
             </NextLink>
-            <button className="px-8 py-4 border border-white/30 text-white display-font font-bold rounded-lg hover:bg-white/10 transition-all cursor-pointer">
+            <NextLink
+              href="/villas"
+              className="px-8 py-4 border border-white/30 text-white display-font font-bold rounded-lg hover:bg-white/10 transition-all cursor-pointer"
+            >
               {t("host_cta_learn")}
-            </button>
+            </NextLink>
           </div>
         </motion.div>
       </div>

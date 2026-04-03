@@ -6,6 +6,9 @@ import WhyFunduq from "@/components/home/WhyFunduq";
 import HostCTA from "@/components/home/HostCTA";
 import SignatureCollections from "@/components/home/SignatureCollections";
 import { getLatestArrivals, getSignatureProperties } from "@/app/actions/properties";
+import { getPopularProperties } from "@/app/actions/popularity";
+import { getWishlistedIds } from "@/app/actions/wishlist";
+import { getSearchLocations } from "@/app/actions/locations";
 import { setRequestLocale } from "next-intl/server";
 
 type Props = {
@@ -16,15 +19,18 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [latestProperties, signatureProperties] = await Promise.all([
+  const [latestProperties, signatureProperties, popularProperties, wishlistedIds, locations] = await Promise.all([
     getLatestArrivals(),
     getSignatureProperties(),
+    getPopularProperties(8),
+    getWishlistedIds(),
+    getSearchLocations(),
   ]);
 
   return (
     <div className="flex flex-col">
       {/* Hero with Search */}
-      <HomeHero />
+      <HomeHero locations={locations} />
 
       {/* Why Funduq — Guest USPs */}
       <WhyFunduq />
@@ -32,8 +38,8 @@ export default async function HomePage({ params }: Props) {
       {/* Curated Destinations */}
       <Destinations />
 
-      {/* Popular — Airbnb-style cards with ratings */}
-      <Popular />
+      {/* Popular — DB-driven, ranked by popularity score */}
+      <Popular properties={popularProperties} wishlistedIds={wishlistedIds} />
 
       {/* Latest Arrivals — DB-driven, shows villas confirmed in last 24h (max 20) */}
       <LatestArrivals properties={latestProperties} />

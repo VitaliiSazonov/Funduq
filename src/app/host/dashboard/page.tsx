@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getHostProperties } from "@/app/actions/properties";
+import { getHostLocale, getHostMessages } from "@/lib/getHostLocale";
 import HostPropertyCard from "@/components/host/HostPropertyCard";
 import Link from "next/link";
 import { Plus, CalendarDays, LogOut } from "lucide-react";
@@ -18,14 +19,19 @@ export default async function HostDashboardPage() {
 
   const properties = await getHostProperties();
 
+  // ── Load translations ──
+  const locale = await getHostLocale();
+  const messages = await getHostMessages(locale);
+  const h = messages.host;
+
   return (
     <div className="min-h-screen bg-offwhite pt-12 pb-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
           <div className="flex flex-col gap-4">
-            <span className="text-sm font-black text-gold uppercase tracking-[0.2em] display-font">Properties Owned</span>
-            <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font tracking-tight">Host Dashboard</h1>
-            <p className="text-muted font-medium max-w-lg">Manage your luxury listings, track performance, and welcome your next guests.</p>
+            <span className="text-sm font-black text-gold uppercase tracking-[0.2em] display-font">{h.propertiesOwned}</span>
+            <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font tracking-tight">{h.dashboard}</h1>
+            <p className="text-muted font-medium max-w-lg">{h.dashboardSubtitle}</p>
           </div>
           <div className="flex items-center gap-3">
             <Link
@@ -33,14 +39,14 @@ export default async function HostDashboardPage() {
               className="flex items-center gap-3 bg-white text-charcoal border border-charcoal/10 px-8 py-4 rounded-full font-black hover:border-gold hover:text-gold transition-all duration-300 group"
             >
               <CalendarDays className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span>Bookings</span>
+              <span>{h.bookingsBtn}</span>
             </Link>
             <Link 
               href="/host/properties/new" 
               className="flex items-center gap-3 bg-charcoal text-white px-8 py-4 rounded-full font-black hover:bg-gold transition-all duration-300 luxury-shadow group"
             >
               <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span>List New Property</span>
+              <span>{h.listNewProperty}</span>
             </Link>
           </div>
         </header>
@@ -52,14 +58,18 @@ export default async function HostDashboardPage() {
                     {user.email?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-charcoal">Welcome back, {user.email?.split('@')[0]}!</h2>
-                    <p className="text-sm text-muted">You have {properties.length} listing{properties.length !== 1 ? 's' : ''} on Funduq.</p>
+                    <h2 className="text-lg font-bold text-charcoal">
+                      {h.welcomeBack.replace('{name}', user.email?.split('@')[0] || '')}
+                    </h2>
+                    <p className="text-sm text-muted">
+                      {h.listingsCount.replace('{count}', String(properties.length))}
+                    </p>
                 </div>
             </div>
             <div className="flex items-center gap-4 hidden md:flex">
                 <div className="text-right">
-                    <span className="text-[10px] uppercase font-black tracking-widest text-muted block mb-1">Status</span>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">Verified Host</span>
+                    <span className="text-[10px] uppercase font-black tracking-widest text-muted block mb-1">{h.statusLabel}</span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">{h.verifiedHost}</span>
                 </div>
                 <form action={signOutAction}>
                     <button
@@ -67,7 +77,7 @@ export default async function HostDashboardPage() {
                         className="flex items-center gap-2 px-4 py-2 rounded-full border border-charcoal/10 text-charcoal/50 text-xs font-bold uppercase tracking-wider hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all duration-300 cursor-pointer"
                     >
                         <LogOut className="w-3.5 h-3.5" />
-                        Sign Out
+                        {h.signOut}
                     </button>
                 </form>
             </div>
@@ -84,9 +94,9 @@ export default async function HostDashboardPage() {
                <div className="w-20 h-20 bg-offwhite rounded-full flex items-center justify-center mb-6">
                   <Plus className="w-8 h-8 text-muted" />
                </div>
-               <h3 className="text-xl font-bold text-charcoal mb-2">No listings yet</h3>
-               <p className="text-muted max-w-xs mb-8">Start your journey as a host by listing your first luxury property today.</p>
-               <Link href="/host/properties/new" className="text-gold font-bold hover:underline">Get Started</Link>
+               <h3 className="text-xl font-bold text-charcoal mb-2">{h.noListingsTitle}</h3>
+               <p className="text-muted max-w-xs mb-8">{h.noListingsDesc}</p>
+               <Link href="/host/properties/new" className="text-gold font-bold hover:underline">{h.getStarted}</Link>
             </div>
           )}
         </div>

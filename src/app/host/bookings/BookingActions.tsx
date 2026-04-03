@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { approveBooking, declineBooking } from "@/app/actions/bookings";
 import { Check, X, Loader2 } from "lucide-react";
 
@@ -10,6 +11,7 @@ interface BookingActionsProps {
 }
 
 export default function BookingActions({ bookingId }: BookingActionsProps) {
+  const t = useTranslations("host");
   const router = useRouter();
   const [loading, setLoading] = useState<"approve" | "decline" | null>(null);
 
@@ -44,7 +46,7 @@ export default function BookingActions({ bookingId }: BookingActionsProps) {
         ) : (
           <Check className="w-4 h-4" />
         )}
-        Approve
+        {t("approve")}
       </button>
       <button
         onClick={handleDecline}
@@ -57,7 +59,7 @@ export default function BookingActions({ bookingId }: BookingActionsProps) {
         ) : (
           <X className="w-4 h-4" />
         )}
-        Decline
+        {t("decline")}
       </button>
     </div>
   );

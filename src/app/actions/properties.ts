@@ -9,6 +9,7 @@ export interface Property {
   locationCountry: string;
   bedrooms: number;
   maxGuests: number;
+  priceMin: number;
   priceRange: string;
   imageUrl: string;
   status?: string;
@@ -28,6 +29,7 @@ function transformProperty(row: any): Property {
     locationCountry: row.location_country || "UAE",
     bedrooms: row.bedrooms,
     maxGuests: row.max_guests,
+    priceMin: row.price_min || 0,
     priceRange: `AED ${new Intl.NumberFormat().format(row.price_min)} - ${new Intl.NumberFormat().format(row.price_max)}`,
     imageUrl: row.main_image_url || "/images/props/placeholder.png", // Fallback to placeholder
     status: row.status,
@@ -84,11 +86,14 @@ export async function getLatestArrivals(): Promise<Property[]> {
   return (data || []).map(transformProperty);
 }
 
+export type SortOption = "price_asc" | "price_desc" | "newest";
+
 export interface PropertyFilters {
   location?: string;
-  bedrooms?: number;
+  bedrooms?: number | number[];
   type?: string;
   events?: string;
+  sort?: SortOption;
 }
 
 /**
@@ -97,20 +102,53 @@ export interface PropertyFilters {
 export async function getAllProperties(filters?: PropertyFilters): Promise<Property[]> {
   const supabase = await createClient();
 
+  // Determine sort order
+  const sort = filters?.sort || "newest";
+
   let query = supabase
     .from("properties")
     .select("*")
-    .eq("status", "active")
-    .order("created_at", { ascending: false });
+    .eq("status", "active");
+
+  // Apply sort order
+  if (sort === "price_asc") {
+    query = query.order("price_min", { ascending: true });
+  } else if (sort === "price_desc") {
+    query = query.order("price_min", { ascending: false });
+  } else {
+    query = query.order("created_at", { ascending: false });
+  }
 
   // Location filter — match against location_country
   if (filters?.location) {
     query = query.ilike("location_country", filters.location);
   }
 
-  // Bedrooms filter — exact match
+  // Bedrooms filter — supports single value (gte for 1-3 & 6+, exact for 4-5) or multi-select array
   if (filters?.bedrooms) {
-    query = query.eq("bedrooms", filters.bedrooms);
+    const bed = filters.bedrooms;
+    if (Array.isArray(bed)) {
+      // Multi-select: split into exact matches and gte(6)
+      const exactValues = bed.filter((b) => b < 6);
+      const hasGte6 = bed.includes(6);
+      if (exactValues.length > 0 && hasGte6) {
+        // Combine: bedrooms IN (exactValues) OR bedrooms >= 6
+        query = query.or(`bedrooms.in.(${exactValues.join(',')}),bedrooms.gte.6`);
+      } else if (exactValues.length > 0) {
+        query = query.in("bedrooms", exactValues);
+      } else if (hasGte6) {
+        query = query.gte("bedrooms", 6);
+      }
+    } else if (bed <= 3) {
+      // 1+, 2+, 3+ — at least N bedrooms
+      query = query.gte("bedrooms", bed);
+    } else if (bed === 6) {
+      // 6+ — at least 6 bedrooms
+      query = query.gte("bedrooms", 6);
+    } else {
+      // 4 or 5 — exact match
+      query = query.eq("bedrooms", bed);
+    }
   }
 
   // Type filter — case-insensitive match (Villa, Penthouse, Resort)

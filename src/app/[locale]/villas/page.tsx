@@ -1,11 +1,13 @@
 import PropertyCatalogue from "@/components/villas/PropertyCatalogue";
-import { getAllProperties } from "@/app/actions/properties";
+import { getAllProperties, SortOption } from "@/app/actions/properties";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+const VALID_SORTS: SortOption[] = ["price_asc", "price_desc", "newest"];
 
 export default async function VillasPage({ params, searchParams }: Props) {
   const { locale } = await params;
@@ -16,15 +18,34 @@ export default async function VillasPage({ params, searchParams }: Props) {
 
   // Extract filters from URL search params
   const locationFilter = typeof resolvedSearchParams.location === "string" ? resolvedSearchParams.location : undefined;
-  const bedroomsFilter = typeof resolvedSearchParams.bedrooms === "string" ? parseInt(resolvedSearchParams.bedrooms, 10) : undefined;
   const typeFilter = typeof resolvedSearchParams.type === "string" ? resolvedSearchParams.type : undefined;
   const eventsFilter = typeof resolvedSearchParams.events === "string" ? resolvedSearchParams.events : undefined;
 
+  // Extract sort param
+  const rawSort = typeof resolvedSearchParams.sort === "string" ? resolvedSearchParams.sort : undefined;
+  const sortFilter: SortOption | undefined = rawSort && VALID_SORTS.includes(rawSort as SortOption)
+    ? (rawSort as SortOption)
+    : undefined;
+
+  // Parse bedrooms: supports single number (e.g. "3") or comma-separated (e.g. "4,5,6")
+  let bedroomsFilter: number | number[] | undefined;
+  if (typeof resolvedSearchParams.bedrooms === "string") {
+    const raw = resolvedSearchParams.bedrooms;
+    if (raw.includes(",")) {
+      const parsed = raw.split(",").map(Number).filter((n) => !isNaN(n) && n > 0);
+      bedroomsFilter = parsed.length > 0 ? parsed : undefined;
+    } else {
+      const single = parseInt(raw, 10);
+      bedroomsFilter = !isNaN(single) && single > 0 ? single : undefined;
+    }
+  }
+
   const properties = await getAllProperties({
     location: locationFilter,
-    bedrooms: bedroomsFilter && !isNaN(bedroomsFilter) ? bedroomsFilter : undefined,
+    bedrooms: bedroomsFilter,
     type: typeFilter,
     events: eventsFilter,
+    sort: sortFilter,
   });
 
   return (
@@ -48,6 +69,7 @@ export default async function VillasPage({ params, searchParams }: Props) {
         initialBedrooms={bedroomsFilter}
         initialType={typeFilter}
         initialEvents={eventsFilter}
+        initialSort={sortFilter}
       />
 
       {/* Footer CTA */}

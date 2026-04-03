@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bed, Users, MapPin, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface HostPropertyCardProps {
   id: string;
@@ -26,10 +27,13 @@ export default function HostPropertyCard({
   imageUrl,
   status,
 }: HostPropertyCardProps) {
-  const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-    active: { label: "Active", bg: "bg-green-100", text: "text-green-700" },
-    pending_review: { label: "Pending Review", bg: "bg-amber-100", text: "text-amber-700" },
-    suspended: { label: "Suspended", bg: "bg-red-100", text: "text-red-700" },
+  const t = useTranslations("host");
+
+  const statusConfig: Record<string, { labelKey: string; bg: string; text: string }> = {
+    active: { labelKey: "statusActive", bg: "bg-green-100", text: "text-green-700" },
+    pending_review: { labelKey: "statusPending", bg: "bg-amber-100", text: "text-amber-700" },
+    suspended: { labelKey: "statusSuspended", bg: "bg-red-100", text: "text-red-700" },
+    inactive: { labelKey: "statusInactive", bg: "bg-gray-100", text: "text-gray-600" },
   };
   const st = statusConfig[status ?? "active"] ?? statusConfig.active;
 
@@ -62,7 +66,7 @@ export default function HostPropertyCard({
           {/* Status Badge */}
           <div className="absolute top-4 left-4 glass px-3 py-1.5 rounded-full border border-white/50 luxury-shadow">
             <span className={`text-[10px] font-black uppercase tracking-wider ${st.text}`}>
-              {st.label}
+              {t(st.labelKey as any)}
             </span>
           </div>
         </div>
@@ -84,7 +88,7 @@ export default function HostPropertyCard({
                 <Bed className="w-4 h-4 text-gold-dark" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted font-bold uppercase">Bedrooms</span>
+                <span className="text-[10px] text-muted font-bold uppercase">{t("bedrooms")}</span>
                 <span className="text-charcoal font-bold text-sm">{bedrooms}</span>
               </div>
             </div>
@@ -93,7 +97,7 @@ export default function HostPropertyCard({
                 <Users className="w-4 h-4 text-gold-dark" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted font-bold uppercase">Guests</span>
+                <span className="text-[10px] text-muted font-bold uppercase">{t("guests")}</span>
                 <span className="text-charcoal font-bold text-sm">{maxGuests}</span>
               </div>
             </div>
@@ -102,7 +106,7 @@ export default function HostPropertyCard({
           {/* Footer */}
           <div className="mt-auto flex justify-between items-center">
             <div className="flex flex-col">
-              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Price Range</span>
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">{t("priceRange")}</span>
               <span className="text-charcoal font-black text-lg">{priceRange}</span>
             </div>
             <motion.div

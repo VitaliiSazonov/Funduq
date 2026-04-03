@@ -87,6 +87,14 @@ h1, h2, h3, h4, .display-font {
   font-size: 0.875rem;
 }
 
+/* Force side-by-side months layout */
+.rdp-funduq .rdp-months {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 1.5rem;
+}
+
 /* Month caption styling */
 .rdp-funduq .rdp-month_caption {
   font-family: var(--font-display);

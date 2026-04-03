@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { getProperty, getSimilarProperties } from "@/app/actions/getProperty";
 import BookingWidget from "@/components/property/BookingWidget";
+import ViewTracker from "@/components/property/ViewTracker";
 import HeroGallery from "@/components/property/HeroGallery";
 import DescriptionToggle from "@/components/property/DescriptionToggle";
 import AmenitiesGrid from "@/components/property/AmenitiesGrid";
@@ -118,6 +119,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* Track property view (deduplicated) */}
+      <ViewTracker propertyId={property.id} />
 
       {/* ─── Sticky Header ─── */}
       <header className="border-b border-charcoal/5 bg-white/80 glass sticky top-0 z-40">
