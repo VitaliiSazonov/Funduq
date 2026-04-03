@@ -7,27 +7,27 @@ import { Link } from "@/i18n/navigation";
 
 const DESTINATIONS = [
   {
-    key: "palm",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBU49llHQ5_GIFlPq6tf2UM8-xte_qNu6Nxqu2FissS39lb2dwCzUVCW-t2EqRZTs-TnslkZ7sA-iWTxjJXX52-fPspovebun-uT3IqrA0m88p1RY5ojZXFs_uRGni8WfEOkM_A0eUwfGwPmIqPjgBBZ_1rC7eWdkjtwkY9GMEnmyDsaWMgFgifmf0tD0YOjINcDyCwRPsIxXPDoKZ82YOUMnqIN7Ym9vpPcnqDCmKJlVuj4uNCLD-58hAXqneieGIo81HmjnrjKX0",
-    alt: "Aerial drone view of the Palm Jumeirah in Dubai",
+    key: "uae",
+    image: "/images/destinations/uae.png",
+    alt: "Luxurious desert resort in the UAE at sunset",
     offset: false,
   },
   {
-    key: "saadiyat",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBlAFbadNPU_la8vIb2ukW6dqhdl9wbMQSqda6sCzOP-71_VCJv7wm_5Iab2lICGDym-28CSZoKc2XaL0g1eU37-37ABxE6Q2_BpQ5qJozEXT9_Bg8_oAbD34UMqHppSUb9mrGEhykZLS34mWQ7p57jJ9bUINQV0_nbAmFUvWKoBfJWbbQ-KZOQ4PC6HkAzYMggcmPpMk34TWYoMkjL7ggCjP2c5inMGByXZb0VMVq1YO1TxvTV-Qd30AmwuLzmvcPleobz34tC3sU",
-    alt: "Pristine white sand beach of Saadiyat Island Abu Dhabi",
+    key: "florianopolis",
+    image: "/images/destinations/florianopolis.png",
+    alt: "Pristine beaches of Florianópolis, Brazil",
     offset: true,
   },
   {
-    key: "marina",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDea5CWVYJN0oWDEkkcaSSNHlxpcXdA166Sv7WZY12F1_Vh7mi5bTW6XaGe6xB4vm79S01wMIDCa1iiXvpF_YVJyxGLlewUDui_3aa7UowcmY7Y7m502qfDlTQz6rPewFbMfCrt6gvcBj4VgnWALTX29sbG9MpLRMZ6ju8ft19OYBfU-OwX25zVS_Dic_A9xezjr25fX6tkQAINLpXhTTyr1WdF0ayweFWY3ans1qQWI1ZHYqws3iXIEJJPSYVNXJ0pHFLzK87Rbn8",
-    alt: "Dramatic nighttime skyline of Dubai Marina",
+    key: "italy",
+    image: "/images/destinations/italy.png",
+    alt: "Tuscany landscape with a luxury villa in Italy",
     offset: false,
   },
   {
-    key: "alzorah",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcMHQOYeelU8Qw6PJRsQsQPmCXMP4vcU3f3x2_pJvkRrH4MON6sVgw5EJqdgcXbCfeg9CCi5MVDD5XR_MIrxD_vivigdyw_xBSfoL_VkkvAzxFXWeFjsNwYIRLIqcwxFdpWrJ5XdJnhYQ7Rjt7ByRMm7INeI5XfYPQJXfniLxY_ErEe6h6PYUZ0FvenrLfYGyQDKoNXFXgA494WBg_WsPiGJNYnFkYVm4EG_a-UV_s8tS4aKcRkh7suZvQXstsayoBJ69fTAhj0nk",
-    alt: "Lush green mangroves at Al Zorah luxury resort",
+    key: "spain",
+    image: "/images/destinations/spain.png",
+    alt: "Mediterranean luxury villa in Mallorca, Spain",
     offset: true,
   },
 ];
