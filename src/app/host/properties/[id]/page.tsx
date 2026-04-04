@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
+  Pencil,
 } from "lucide-react";
 import { getProperty } from "@/app/actions/getProperty";
 import { createClient } from "@/lib/supabase/server";
@@ -390,6 +391,14 @@ export default async function HostPropertyDetailPage({ params }: PageProps) {
                     {h.viewPublicListing}
                   </Link>
                 )}
+
+                <Link
+                  href={`/host/properties/${property.id}/edit`}
+                  className="flex items-center gap-3 w-full px-5 py-3.5 rounded-xl border border-gold/30 text-gold-dark font-bold text-sm hover:bg-gold/5 hover:border-gold transition-all duration-300"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Listing
+                </Link>
 
                 <Link
                   href="/host/dashboard"

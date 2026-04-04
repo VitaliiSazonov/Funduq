@@ -306,6 +306,11 @@
     "stepDetails": "Детали",
     "stepAmenities": "Удобства",
     "stepGallery": "Галерея",
-    "stepPricing": "Цены"
+    "stepPricing": "Цены",
+    "editListing": "Редактировать",
+    "editListingDesc": "Обновите данные объекта",
+    "saveChanges": "Сохранить изменения",
+    "saving": "Сохранение...",
+    "changesSaved": "Изменения сохранены! Перенаправление..."
   }
 }

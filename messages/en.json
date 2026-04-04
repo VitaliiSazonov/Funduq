@@ -308,6 +308,11 @@
     "stepDetails": "Details",
     "stepAmenities": "Amenities",
     "stepGallery": "Gallery",
-    "stepPricing": "Pricing"
+    "stepPricing": "Pricing",
+    "editListing": "Edit Listing",
+    "editListingDesc": "Update your property details",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "changesSaved": "Changes saved successfully! Redirecting..."
   }
 }

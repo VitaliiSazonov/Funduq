@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,6 +24,7 @@ import {
   FileText,
 } from "lucide-react";
 import { submitProperty } from "@/app/actions/submitProperty";
+import { updateProperty } from "@/app/actions/updateProperty";
 import type { AirbnbScrapedData } from "@/app/actions/importAirbnb";
 
 // ─────────────────────────────────────────────────────────────
@@ -169,17 +171,38 @@ const STEPS = [
 // ─────────────────────────────────────────────────────────────
 // Props
 // ─────────────────────────────────────────────────────────────
+
+/** Data shape for editing an existing property */
+export interface EditPropertyData {
+  propertyId: string;
+  title: string;
+  description: string;
+  type: "Villa" | "Penthouse";
+  location_emirate: string;
+  location_district: string;
+  bedrooms: number;
+  bathrooms: number;
+  max_guests: number;
+  price_min: number;
+  price_max: number;
+  amenities: string[];
+  imageUrls: string[];
+}
+
 interface ListingWizardProps {
   importedData?: AirbnbScrapedData & { uploadedImageUrls: string[] };
+  editData?: EditPropertyData;
 }
 
 // ─────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────
-export default function ListingWizard({ importedData }: ListingWizardProps) {
+export default function ListingWizard({ importedData, editData }: ListingWizardProps) {
+  const isEditMode = !!editData;
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [imageUrls, setImageUrls] = useState<string[]>(
-    importedData?.uploadedImageUrls || []
+    editData?.imageUrls || importedData?.uploadedImageUrls || []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{
@@ -198,34 +221,48 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(propertySchema),
-    defaultValues: {
-      title: importedData?.title || "",
-      description: importedData?.description || "",
-      type: "Villa",
-      location_emirate:
-        importedData?.locationEmirate &&
-        EMIRATES.includes(importedData.locationEmirate)
-          ? importedData.locationEmirate
-          : "",
-      location_district:
-        importedData?.locationDistrict &&
-        importedData?.locationEmirate &&
-        (
-          EMIRATE_DISTRICTS[importedData.locationEmirate] || []
-        ).includes(importedData.locationDistrict)
-          ? importedData.locationDistrict
-          : "",
-      bedrooms: importedData?.bedrooms || 1,
-      bathrooms: importedData?.bathrooms || 1,
-      max_guests: importedData?.maxGuests || 2,
-      price_min: importedData?.pricePerNight || 1000,
-      price_max: importedData?.pricePerNight
-        ? importedData.pricePerNight * 1.5
-        : 2000,
-      amenities: importedData?.amenities
-        ? importedData.amenities.filter((a) => AMENITIES.includes(a))
-        : [],
-    },
+    defaultValues: editData
+      ? {
+          title: editData.title,
+          description: editData.description,
+          type: editData.type,
+          location_emirate: editData.location_emirate,
+          location_district: editData.location_district,
+          bedrooms: editData.bedrooms,
+          bathrooms: editData.bathrooms,
+          max_guests: editData.max_guests,
+          price_min: editData.price_min,
+          price_max: editData.price_max,
+          amenities: editData.amenities.filter((a) => AMENITIES.includes(a)),
+        }
+      : {
+          title: importedData?.title || "",
+          description: importedData?.description || "",
+          type: "Villa",
+          location_emirate:
+            importedData?.locationEmirate &&
+            EMIRATES.includes(importedData.locationEmirate)
+              ? importedData.locationEmirate
+              : "",
+          location_district:
+            importedData?.locationDistrict &&
+            importedData?.locationEmirate &&
+            (
+              EMIRATE_DISTRICTS[importedData.locationEmirate] || []
+            ).includes(importedData.locationDistrict)
+              ? importedData.locationDistrict
+              : "",
+          bedrooms: importedData?.bedrooms || 1,
+          bathrooms: importedData?.bathrooms || 1,
+          max_guests: importedData?.maxGuests || 2,
+          price_min: importedData?.pricePerNight || 1000,
+          price_max: importedData?.pricePerNight
+            ? importedData.pricePerNight * 1.5
+            : 2000,
+          amenities: importedData?.amenities
+            ? importedData.amenities.filter((a) => AMENITIES.includes(a))
+            : [],
+        },
   });
 
   // Watch selected emirate to dynamically update district options
@@ -272,7 +309,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
     setIsSubmitting(true);
     setSubmitResult(null);
 
-    const result = await submitProperty({
+    const payload = {
       title: data.title,
       description: data.description,
       type: data.type,
@@ -285,14 +322,20 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
       price_max: data.price_max,
       amenities: data.amenities,
       imageUrls,
-    });
+    };
+
+    const result = isEditMode
+      ? await updateProperty({ ...payload, propertyId: editData!.propertyId })
+      : await submitProperty(payload);
 
     setIsSubmitting(false);
 
     if (result.success) {
       setSubmitResult({
         success: true,
-        message: "Property listed successfully! Redirecting to dashboard...",
+        message: isEditMode
+          ? "Changes saved successfully! Redirecting..."
+          : "Property listed successfully! Redirecting to dashboard...",
       });
     } else {
       setSubmitResult({
@@ -703,6 +746,20 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
   }
 
   // ─── Success State ───
+  // Auto-redirect after success
+  useEffect(() => {
+    if (submitResult?.success) {
+      const timer = setTimeout(() => {
+        if (isEditMode && editData) {
+          router.push(`/host/properties/${editData.propertyId}`);
+        } else {
+          router.push("/host/dashboard");
+        }
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitResult, isEditMode, editData, router]);
+
   if (submitResult?.success) {
     return (
       <motion.div
@@ -714,7 +771,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
           <Check className="w-10 h-10 text-white" />
         </div>
         <h2 className="text-3xl font-black display-font text-charcoal mb-3">
-          Congratulations!
+          {isEditMode ? "Updated!" : "Congratulations!"}
         </h2>
         <p className="text-charcoal/50 text-lg">{submitResult.message}</p>
       </motion.div>
@@ -830,7 +887,7 @@ export default function ListingWizard({ importedData }: ListingWizardProps) {
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                Publish Listing
+                {isEditMode ? "Save Changes" : "Publish Listing"}
               </>
             )}
           </button>
