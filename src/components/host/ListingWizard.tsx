@@ -22,6 +22,10 @@ import {
   Home,
   Tag,
   FileText,
+  Building2,
+  PartyPopper,
+  Palmtree,
+  BedSingle,
 } from "lucide-react";
 import { submitProperty } from "@/app/actions/submitProperty";
 import { updateProperty } from "@/app/actions/updateProperty";
@@ -39,7 +43,8 @@ const propertySchema = z.object({
     .string()
     .min(20, "Description must be at least 20 characters")
     .max(2000, "Description must be 2000 characters or less"),
-  type: z.enum(["Villa", "Penthouse"]),
+  type: z.enum(["Villa", "Penthouse", "Resort"]),
+  rental_type: z.enum(["all", "for_stay", "for_event"]),
   location_emirate: z.string().min(1, "Please select an emirate"),
   location_district: z
     .string()
@@ -79,6 +84,9 @@ const EMIRATE_DISTRICTS: Record<string, string[]> = {
     "Al Sufouh",
     "Umm Suqeim",
     "Mirdif",
+    "Dubai Islands",
+    "The World Islands",
+    "Jumeirah Islands",
   ],
   "Abu Dhabi": [
     "Saadiyat Island",
@@ -177,7 +185,8 @@ export interface EditPropertyData {
   propertyId: string;
   title: string;
   description: string;
-  type: "Villa" | "Penthouse";
+  type: "Villa" | "Penthouse" | "Resort";
+  rental_type: "all" | "for_stay" | "for_event";
   location_emirate: string;
   location_district: string;
   bedrooms: number;
@@ -226,6 +235,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
           title: editData.title,
           description: editData.description,
           type: editData.type,
+          rental_type: editData.rental_type,
           location_emirate: editData.location_emirate,
           location_district: editData.location_district,
           bedrooms: editData.bedrooms,
@@ -239,6 +249,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
           title: importedData?.title || "",
           description: importedData?.description || "",
           type: "Villa",
+          rental_type: "all",
           location_emirate:
             importedData?.locationEmirate &&
             EMIRATES.includes(importedData.locationEmirate)
@@ -270,7 +281,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
 
   // ─── Step Navigation ───
   const fieldsPerStep: (keyof FormValues)[][] = [
-    ["title", "type", "location_emirate", "location_district"],
+    ["title", "type", "rental_type", "location_emirate", "location_district"],
     ["description", "bedrooms", "bathrooms", "max_guests"],
     ["amenities"],
     [], // gallery — manual validation
@@ -322,6 +333,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
       price_max: data.price_max,
       amenities: data.amenities,
       imageUrls,
+      events_allowed: data.rental_type === "for_event" || data.rental_type === "all",
     };
 
     const result = isEditMode
@@ -383,26 +395,30 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
                 name="type"
                 control={control}
                 render={({ field }) => (
-                  <div className="grid grid-cols-2 gap-4">
-                    {(["Villa", "Penthouse"] as const).map((type) => (
+                  <div className="grid grid-cols-3 gap-4">
+                    {([
+                      { value: "Villa" as const, label: "Villa", icon: Home },
+                      { value: "Penthouse" as const, label: "Penthouse", icon: Building2 },
+                      { value: "Resort" as const, label: "Resort", icon: Palmtree },
+                    ]).map(({ value, label, icon: Icon }) => (
                       <button
-                        key={type}
+                        key={value}
                         type="button"
-                        onClick={() => field.onChange(type)}
+                        onClick={() => field.onChange(value)}
                         className={`p-4 rounded-xl border-2 font-semibold transition-all duration-300 cursor-pointer ${
-                          field.value === type
+                          field.value === value
                             ? "border-gold bg-gold/5 text-gold-dark shadow-luxury"
                             : "border-charcoal/10 text-charcoal/60 hover:border-charcoal/20"
                         }`}
                       >
-                        <Home
+                        <Icon
                           className={`w-6 h-6 mx-auto mb-2 ${
-                            field.value === type
+                            field.value === value
                               ? "text-gold"
                               : "text-charcoal/30"
                           }`}
                         />
-                        {type}
+                        {label}
                       </button>
                     ))}
                   </div>
@@ -464,6 +480,47 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
                   </p>
                 )}
               </div>
+            </div>
+
+            {/* Rental Type */}
+            <div>
+              <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
+                Rental Type
+              </label>
+              <Controller<FormValues, "rental_type">
+                name="rental_type"
+                control={control}
+                render={({ field }) => (
+                  <div className="grid grid-cols-3 gap-4">
+                    {([
+                      { value: "all" as const, label: "All", desc: "Stay & Events", icon: Sparkles },
+                      { value: "for_stay" as const, label: "For Stay", desc: "Accommodation only", icon: BedSingle },
+                      { value: "for_event" as const, label: "For Event", desc: "Events & parties", icon: PartyPopper },
+                    ]).map(({ value, label, desc, icon: Icon }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => field.onChange(value)}
+                        className={`p-4 rounded-xl border-2 font-semibold transition-all duration-300 cursor-pointer text-center ${
+                          field.value === value
+                            ? "border-gold bg-gold/5 text-gold-dark shadow-luxury"
+                            : "border-charcoal/10 text-charcoal/60 hover:border-charcoal/20"
+                        }`}
+                      >
+                        <Icon
+                          className={`w-5 h-5 mx-auto mb-1.5 ${
+                            field.value === value
+                              ? "text-gold"
+                              : "text-charcoal/30"
+                          }`}
+                        />
+                        <span className="block text-sm">{label}</span>
+                        <span className="block text-[10px] font-normal text-charcoal/40 mt-0.5">{desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              />
             </div>
           </div>
         );

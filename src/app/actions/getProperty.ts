@@ -35,6 +35,7 @@ export interface PropertyDetail {
   main_image_url: string | null;
   amenities: string[] | null;
   gallery_urls: string[] | null;
+  events_allowed: boolean;
   created_at: string;
   host: PropertyHost;
   images: PropertyImage[];
@@ -127,6 +128,7 @@ export async function getProperty(
     main_image_url: property.main_image_url,
     amenities: property.amenities,
     gallery_urls: property.gallery_urls,
+    events_allowed: property.events_allowed || false,
     created_at: property.created_at,
     host,
     images,

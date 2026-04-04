@@ -15,6 +15,7 @@ export interface SubmitPropertyPayload {
   price_max: number;
   amenities: string[];
   imageUrls: string[];
+  events_allowed: boolean;
 }
 
 export interface SubmitResult {
@@ -63,6 +64,7 @@ export async function submitProperty(
         main_image_url: mainImageUrl,
         amenities: payload.amenities,
         gallery_urls: payload.imageUrls,
+        events_allowed: payload.events_allowed,
         status: "pending_review",
       })
       .select("id")
