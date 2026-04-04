@@ -151,7 +151,9 @@ const EMIRATES = Object.keys(EMIRATE_DISTRICTS);
 
 const AMENITIES = [
   "Private Pool",
-  "Ocean View",
+  "Water View",
+  "Mountain View",
+  "City View",
   "Gym",
   "Spa",
   "Chef Kitchen",
