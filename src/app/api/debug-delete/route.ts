@@ -1,15 +1,17 @@
-
-
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
- * DEBUG ONLY — Temporary endpoint to test property deletion.
- * DELETE /api/debug-delete?id=<property_id>
+ * DEBUG ONLY — Test property deletion via GET request.
+ * GET /api/debug-delete?id=<property_id>&confirm=yes
+ * 
+ * Without &confirm=yes it only checks if the property exists.
+ * With &confirm=yes it actually deletes.
  */
-export async function DELETE(request: Request) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const propertyId = searchParams.get("id");
+  const confirm = searchParams.get("confirm");
 
   if (!propertyId) {
     return NextResponse.json({ error: "Missing id param" }, { status: 400 });
@@ -39,7 +41,15 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Step 2: Try to delete
+    // Without confirm=yes, just show the property info
+    if (confirm !== "yes") {
+      return NextResponse.json({
+        message: "Property found. Add &confirm=yes to delete.",
+        property,
+      });
+    }
+
+    // Step 2: Actually delete
     const { error: deleteError } = await admin
       .from("properties")
       .delete()
