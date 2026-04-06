@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   MessageSquare,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { getDisabledDates } from "@/app/actions/ical";
 import { createBooking } from "@/app/actions/bookings";
 import { checkVerificationStatus } from "@/app/actions/passport";
@@ -44,6 +45,7 @@ export default function BookingWidget({
   maxGuests,
   propertyTitle,
 }: BookingWidgetProps) {
+  const t = useTranslations("bookingWidget");
   const [range, setRange] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState(1);
   const [message, setMessage] = useState("");
@@ -108,7 +110,7 @@ export default function BookingWidget({
       if (status !== "verified") {
         setShowVerification(true);
         setIsSubmitting(false);
-        return; // Block booking until verified
+        return;
       }
     } catch {
       // If check fails (e.g. not logged in), let createBooking handle auth
@@ -127,21 +129,19 @@ export default function BookingWidget({
     if (res.success) {
       setResult({
         success: true,
-        message: "Booking request sent! The host will review shortly.",
+        message: t("bookingRequestSent"),
       });
       setRange(undefined);
       setMessage("");
-      // Refresh disabled dates
       fetchDates();
     } else {
-      setResult({ success: false, message: res.error || "Something went wrong." });
+      setResult({ success: false, message: res.error || t("somethingWrong") });
     }
   }
 
   // ─── Handle verification complete ───
   async function handleVerificationClose() {
     setShowVerification(false);
-    // Re-check status — if now verified, auto-retry booking
     const status = await checkVerificationStatus();
     setVerificationStatus(status);
     if (status === "verified" && range?.from && range?.to) {
@@ -154,11 +154,11 @@ export default function BookingWidget({
       {/* ─── Header ─── */}
       <div className="gold-gradient px-6 py-5">
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-bold mb-1">
-          From
+          {t("from")}
         </p>
         <p className="text-2xl font-black text-white display-font">
           AED {new Intl.NumberFormat().format(priceMin)}
-          <span className="text-white/50 text-base font-normal"> / night</span>
+          <span className="text-white/50 text-base font-normal"> {t("perNight")}</span>
         </p>
       </div>
 
@@ -167,14 +167,14 @@ export default function BookingWidget({
         <div>
           <label className="flex items-center gap-2 text-xs font-bold text-charcoal/50 uppercase tracking-wider mb-3">
             <CalendarDays className="w-3.5 h-3.5" />
-            Select Dates
+            {t("selectDates")}
           </label>
 
           {isLoadingDates ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="w-6 h-6 text-gold animate-spin" />
               <span className="ml-2 text-sm text-charcoal/40">
-                Loading availability…
+                {t("loadingAvailability")}
               </span>
             </div>
           ) : (
@@ -204,7 +204,7 @@ export default function BookingWidget({
               </span>
               {nights > 0 && (
                 <span className="text-xs font-bold text-gold-dark bg-gold/10 px-2.5 py-1 rounded-full">
-                  {nights} night{nights !== 1 ? "s" : ""}
+                  {nights} {nights !== 1 ? t("nights") : t("night")}
                 </span>
               )}
             </div>
@@ -215,7 +215,7 @@ export default function BookingWidget({
         <div>
           <label className="flex items-center gap-2 text-xs font-bold text-charcoal/50 uppercase tracking-wider mb-2">
             <Users className="w-3.5 h-3.5" />
-            Guests
+            {t("guests")}
           </label>
           <select
             value={guests}
@@ -224,7 +224,7 @@ export default function BookingWidget({
           >
             {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>
-                {n} Guest{n !== 1 ? "s" : ""}
+                {n} {n !== 1 ? t("guestsPlural") : t("guest")}
               </option>
             ))}
           </select>
@@ -234,14 +234,14 @@ export default function BookingWidget({
         <div>
           <label className="flex items-center gap-2 text-xs font-bold text-charcoal/50 uppercase tracking-wider mb-2">
             <MessageSquare className="w-3.5 h-3.5" />
-            Message to Host
-            <span className="text-charcoal/25 font-normal normal-case">(optional)</span>
+            {t("messageToHost")}
+            <span className="text-charcoal/25 font-normal normal-case">{t("optional")}</span>
           </label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={3}
-            placeholder="Introduce yourself or mention any special requests…"
+            placeholder={t("messagePlaceholder")}
             className="w-full px-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/25 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all resize-none"
           />
         </div>
@@ -251,14 +251,14 @@ export default function BookingWidget({
           <div className="bg-offwhite rounded-2xl p-4 space-y-2">
             <div className="flex justify-between text-sm text-charcoal/60">
               <span>
-                AED {new Intl.NumberFormat().format(Math.round((priceMin + priceMax) / 2))} × {nights} nights
+                AED {new Intl.NumberFormat().format(Math.round((priceMin + priceMax) / 2))} × {nights} {nights !== 1 ? t("nights") : t("night")}
               </span>
               <span className="font-semibold text-charcoal">
                 AED {new Intl.NumberFormat().format(Math.round(estimatedTotal))}
               </span>
             </div>
             <p className="text-[10px] text-charcoal/30 uppercase tracking-wider">
-              Estimated total · Final price confirmed by host
+              {t("estimatedTotal")}
             </p>
           </div>
         )}
@@ -274,10 +274,10 @@ export default function BookingWidget({
           {isSubmitting ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Requesting…
+              {t("requesting")}
             </>
           ) : (
-            "Request to Book"
+            t("requestToBook")
           )}
         </button>
 

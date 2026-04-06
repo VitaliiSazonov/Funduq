@@ -7,33 +7,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { updatePasswordAction } from '@/app/actions/auth';
 
-// ─────────────────────────────────────────────────────────────
-// Schema
-// ─────────────────────────────────────────────────────────────
-const updatePasswordSchema = z
-  .object({
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
-
-// ─────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────
 export default function UpdatePasswordPage() {
+  const t = useTranslations('updatePassword');
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const updatePasswordSchema = z
+    .object({
+      password: z.string().min(8, t('passwordMin')),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('passwordsNoMatch'),
+      path: ['confirmPassword'],
+    });
+
+  type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
 
   const {
     register,
@@ -49,21 +45,18 @@ export default function UpdatePasswordPage() {
     setServerError(null);
 
     const result = await updatePasswordAction(values.password);
-
     setIsSubmitting(false);
 
     if (result.success) {
-      setSuccessMessage(result.message || 'Password updated!');
-      // Redirect to login after short delay
+      setSuccessMessage(result.message || t('passwordUpdated'));
       setTimeout(() => {
         router.push('/login');
       }, 2000);
     } else {
-      setServerError(result.error || 'Something went wrong.');
+      setServerError(result.error || t('somethingWrong'));
     }
   }
 
-  // ─── Success State ───
   if (successMessage) {
     return (
       <motion.div
@@ -77,10 +70,10 @@ export default function UpdatePasswordPage() {
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-black display-font text-charcoal mb-3">
-            Password Updated
+            {t('passwordUpdated')}
           </h1>
           <p className="text-charcoal/50 text-sm leading-relaxed">
-            {successMessage} Redirecting to sign in…
+            {successMessage} {t('redirecting')}
           </p>
         </div>
       </motion.div>
@@ -95,35 +88,28 @@ export default function UpdatePasswordPage() {
       className="w-full max-w-md"
     >
       <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury p-8 md:p-10">
-        {/* Header */}
         <div className="text-center mb-8">
           <span className="text-xs font-black uppercase tracking-[0.25em] text-gold mb-2 block">
-            Almost Done
+            {t('almostDone')}
           </span>
           <h1 className="text-2xl font-black display-font text-charcoal">
-            Set New Password
+            {t('setNewPassword')}
           </h1>
           <p className="text-charcoal/40 text-sm mt-2">
-            Enter your new password below.
+            {t('enterNewPassword')}
           </p>
         </div>
 
-        {/* Form */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-          noValidate
-        >
-          {/* New Password */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <div>
             <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-              New Password
+              {t('newPassword')}
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 {...register('password')}
-                placeholder="Min. 8 characters"
+                placeholder={t('passwordPlaceholder')}
                 data-testid="update-password"
                 className="w-full px-4 py-3.5 pr-12 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
               />
@@ -133,30 +119,23 @@ export default function UpdatePasswordPage() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-charcoal/30 hover:text-charcoal/60 transition-colors cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-500 text-xs mt-1.5">
-                {errors.password.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1.5">{errors.password.message}</p>
             )}
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-              Confirm New Password
+              {t('confirmNewPassword')}
             </label>
             <div className="relative">
               <input
                 type={showConfirm ? 'text' : 'password'}
                 {...register('confirmPassword')}
-                placeholder="Re-enter your password"
+                placeholder={t('confirmPlaceholder')}
                 data-testid="update-confirm-password"
                 className="w-full px-4 py-3.5 pr-12 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
               />
@@ -166,21 +145,14 @@ export default function UpdatePasswordPage() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-charcoal/30 hover:text-charcoal/60 transition-colors cursor-pointer"
                 aria-label={showConfirm ? 'Hide password' : 'Show password'}
               >
-                {showConfirm ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
+                {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1.5">
-                {errors.confirmPassword.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1.5">{errors.confirmPassword.message}</p>
             )}
           </div>
 
-          {/* Error */}
           {serverError && (
             <motion.div
               initial={{ opacity: 0, y: 5 }}
@@ -192,7 +164,6 @@ export default function UpdatePasswordPage() {
             </motion.div>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={isSubmitting}
@@ -202,12 +173,12 @@ export default function UpdatePasswordPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Updating…
+                {t('updating')}
               </>
             ) : (
               <>
                 <ShieldCheck className="w-4 h-4" />
-                Update Password
+                {t('updatePassword')}
               </>
             )}
           </button>

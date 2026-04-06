@@ -8,17 +8,8 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { signInAction, signInWithGoogleAction } from '@/app/actions/auth';
-
-// ─────────────────────────────────────────────────────────────
-// Schema
-// ─────────────────────────────────────────────────────────────
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 // ─────────────────────────────────────────────────────────────
 // Component
@@ -26,14 +17,23 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(
     searchParams.get('error') === 'auth_callback_error'
-      ? 'Authentication failed. Please try again.'
+      ? t('authFailed')
       : null
   );
+
+  // ─── Schema (with translated messages) ───
+  const loginSchema = z.object({
+    email: z.string().email(t('emailValidation')),
+    password: z.string().min(1, t('passwordRequired')),
+  });
+
+  type LoginFormValues = z.infer<typeof loginSchema>;
 
   const {
     register,
@@ -54,12 +54,11 @@ function LoginForm() {
     });
 
     if (result.success && result.redirectTo) {
-      // Use `next` search param if present (e.g. user was redirected from protected page)
       const next = searchParams.get('next');
       router.push(next || result.redirectTo);
       router.refresh();
     } else {
-      setServerError(result.error || 'Something went wrong.');
+      setServerError(result.error || t('somethingWrong'));
       setIsSubmitting(false);
     }
   }
@@ -73,7 +72,7 @@ function LoginForm() {
     if (result.success && result.url) {
       window.location.href = result.url;
     } else {
-      setServerError(result.error || 'Could not initiate Google Sign-In.');
+      setServerError(result.error || t('couldNotGoogle'));
       setIsGoogleLoading(false);
     }
   }
@@ -89,16 +88,16 @@ function LoginForm() {
         {/* Header */}
         <div className="text-center mb-8">
           <span className="text-xs font-black uppercase tracking-[0.25em] text-gold mb-2 block">
-            Welcome Back
+            {t('welcomeBack')}
           </span>
           <h1
             className="text-3xl font-black display-font text-charcoal"
             data-testid="login-heading"
           >
-            Sign In
+            {t('signIn')}
           </h1>
           <p className="text-charcoal/40 text-sm mt-2">
-            Access your Funduq account.
+            {t('accessAccount')}
           </p>
         </div>
 
@@ -132,7 +131,7 @@ function LoginForm() {
               />
             </svg>
           )}
-          Sign in with Google
+          {t('signInWithGoogle')}
         </button>
 
         {/* Divider */}
@@ -142,7 +141,7 @@ function LoginForm() {
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="bg-white px-3 text-charcoal/30 uppercase tracking-wider font-semibold">
-              or continue with email
+              {t('orContinueWithEmail')}
             </span>
           </div>
         </div>
@@ -156,7 +155,7 @@ function LoginForm() {
           {/* Email */}
           <div>
             <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-              Email
+              {t('email')}
             </label>
             <input
               type="email"
@@ -176,14 +175,14 @@ function LoginForm() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-semibold text-charcoal/70 uppercase tracking-wider">
-                Password
+                {t('password')}
               </label>
               <Link
                 href="/reset-password"
                 className="text-xs text-gold font-semibold hover:underline"
                 data-testid="login-forgot"
               >
-                Forgot password?
+                {t('forgotPassword')}
               </Link>
             </div>
             <div className="relative">
@@ -236,12 +235,12 @@ function LoginForm() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Signing in…
+                {t('signingIn')}
               </>
             ) : (
               <>
                 <LogIn className="w-4 h-4" />
-                Sign In
+                {t('signIn')}
               </>
             )}
           </button>
@@ -249,13 +248,13 @@ function LoginForm() {
 
         {/* Register Link */}
         <p className="text-center mt-6 text-sm text-charcoal/40">
-          Don&apos;t have an account?{' '}
+          {t('noAccount')}{' '}
           <Link
             href="/register"
             className="text-gold font-semibold hover:underline"
             data-testid="login-register-link"
           >
-            Create Account
+            {t('createAccount')}
           </Link>
         </p>
       </div>

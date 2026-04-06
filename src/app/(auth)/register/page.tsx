@@ -16,37 +16,17 @@ import {
   Mail,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { signUpAction } from '@/app/actions/auth';
 
-// ─────────────────────────────────────────────────────────────
-// Schema
-// ─────────────────────────────────────────────────────────────
-const registerSchema = z
-  .object({
-    fullName: z
-      .string()
-      .min(2, 'Full name must be at least 2 characters')
-      .max(80, 'Full name must be 80 characters or less'),
-    email: z.string().email('Please enter a valid email address'),
-    phone: z
-      .string()
-      .regex(
-        /^\+971\s?\d{2}\s?\d{3}\s?\d{4}$/,
-        'Please enter a valid UAE phone number'
-      )
-      .or(z.literal('')),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
-    agreeToTerms: z.literal(true, {
-      error: 'You must agree to the Terms & Privacy Policy',
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  agreeToTerms: boolean;
+};
 type UserRole = 'guest' | 'host';
 
 // ─────────────────────────────────────────────────────────────
@@ -63,12 +43,39 @@ const fadeSlide = {
 // Component
 // ─────────────────────────────────────────────────────────────
 export default function RegisterPage() {
+  const t = useTranslations('register');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // ─── Schema (with translated messages) ───
+  const registerSchema = z
+    .object({
+      fullName: z
+        .string()
+        .min(2, t('fullNameMin'))
+        .max(80, t('fullNameMax')),
+      email: z.string().email(t('emailValidation')),
+      phone: z
+        .string()
+        .regex(
+          /^\+971\s?\d{2}\s?\d{3}\s?\d{4}$/,
+          t('phoneValidation')
+        )
+        .or(z.literal('')),
+      password: z.string().min(8, t('passwordMin')),
+      confirmPassword: z.string(),
+      agreeToTerms: z.boolean().refine((val) => val === true, {
+        message: t('termsRequired'),
+      }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('passwordsNoMatch'),
+      path: ['confirmPassword'],
+    });
 
   const {
     register,
@@ -104,10 +111,10 @@ export default function RegisterPage() {
 
     if (result.success) {
       setSuccessMessage(
-        result.message || 'Account created! Check your email to confirm.'
+        result.message || t('accountCreated')
       );
     } else {
-      setServerError(result.error || 'Something went wrong.');
+      setServerError(result.error || t('somethingWrong'));
     }
   }
 
@@ -128,7 +135,7 @@ export default function RegisterPage() {
             className="text-2xl font-black display-font text-charcoal mb-3"
             data-testid="register-success-heading"
           >
-            Check Your Email
+            {t('checkYourEmail')}
           </h1>
           <p className="text-charcoal/50 text-sm leading-relaxed mb-6">
             {successMessage}
@@ -137,7 +144,7 @@ export default function RegisterPage() {
             href="/login"
             className="inline-block px-8 py-3 gold-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-opacity text-sm"
           >
-            Go to Sign In
+            {t('goToSignIn')}
           </Link>
         </div>
       </motion.div>
@@ -153,13 +160,13 @@ export default function RegisterPage() {
       >
         <div className="text-center mb-10">
           <span className="text-xs font-black uppercase tracking-[0.25em] text-gold mb-2 block">
-            Join Funduq
+            {t('joinFunduq')}
           </span>
           <h1 className="text-3xl md:text-4xl font-black display-font text-charcoal">
-            How will you use Funduq?
+            {t('howWillYouUse')}
           </h1>
           <p className="text-charcoal/40 text-sm mt-3">
-            Choose your path to get started.
+            {t('choosePath')}
           </p>
         </div>
 
@@ -175,10 +182,10 @@ export default function RegisterPage() {
               <Palmtree className="w-7 h-7 text-gold" />
             </div>
             <h3 className="text-lg font-bold display-font text-charcoal mb-2">
-              I&apos;m looking for a villa
+              {t('lookingForVilla')}
             </h3>
             <p className="text-sm text-charcoal/40 leading-relaxed">
-              Browse and book luxury properties across the UAE.
+              {t('browseAndBook')}
             </p>
             <div className="absolute top-4 right-4 w-5 h-5 border-2 border-charcoal/10 rounded-full group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300" />
           </button>
@@ -194,22 +201,22 @@ export default function RegisterPage() {
               <Building2 className="w-7 h-7 text-gold" />
             </div>
             <h3 className="text-lg font-bold display-font text-charcoal mb-2">
-              I want to list my property
+              {t('wantToListProperty')}
             </h3>
             <p className="text-sm text-charcoal/40 leading-relaxed">
-              Showcase your property to premium travelers.
+              {t('showcaseProperty')}
             </p>
             <div className="absolute top-4 right-4 w-5 h-5 border-2 border-charcoal/10 rounded-full group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300" />
           </button>
         </div>
 
         <p className="text-center mt-8 text-sm text-charcoal/40">
-          Already have an account?{' '}
+          {t('alreadyHaveAccount')}{' '}
           <Link
             href="/login"
             className="text-gold font-semibold hover:underline"
           >
-            Sign In
+            {t('signIn')}
           </Link>
         </p>
       </motion.div>
@@ -235,7 +242,7 @@ export default function RegisterPage() {
             className="flex items-center gap-1.5 text-sm text-charcoal/40 hover:text-charcoal transition-colors mb-6 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
-            Change role
+            {t('changeRole')}
           </button>
 
           {/* Header */}
@@ -247,14 +254,14 @@ export default function RegisterPage() {
                 <Building2 className="w-4 h-4 text-gold" />
               )}
               <span className="text-xs font-bold text-gold-dark uppercase tracking-wider">
-                {selectedRole === 'guest' ? 'Guest' : 'Host'} Account
+                {selectedRole === 'guest' ? t('guestAccount') : t('hostAccount')}
               </span>
             </div>
             <h1
               className="text-2xl font-black display-font text-charcoal"
               data-testid="register-heading"
             >
-              Create Your Account
+              {t('createYourAccount')}
             </h1>
           </div>
 
@@ -267,11 +274,11 @@ export default function RegisterPage() {
             {/* Full Name */}
             <div>
               <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                Full Name
+                {t('fullName')}
               </label>
               <input
                 {...register('fullName')}
-                placeholder="e.g. Ahmed Al Maktoum"
+                placeholder={t('fullNamePlaceholder')}
                 data-testid="register-fullname"
                 className="w-full px-4 py-3.5 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
               />
@@ -285,7 +292,7 @@ export default function RegisterPage() {
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                Email
+                {t('email')}
               </label>
               <input
                 type="email"
@@ -304,7 +311,7 @@ export default function RegisterPage() {
             {/* Phone */}
             <div>
               <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                Phone <span className="text-charcoal/30 normal-case">(UAE)</span>
+                {t('phone')} <span className="text-charcoal/30 normal-case">{t('phoneUae')}</span>
               </label>
               <input
                 type="tel"
@@ -323,13 +330,13 @@ export default function RegisterPage() {
             {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                Password
+                {t('password')}
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   {...register('password')}
-                  placeholder="Min. 8 characters"
+                  placeholder={t('passwordPlaceholder')}
                   data-testid="register-password"
                   className="w-full px-4 py-3.5 pr-12 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
                 />
@@ -356,13 +363,13 @@ export default function RegisterPage() {
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                Confirm Password
+                {t('confirmPassword')}
               </label>
               <div className="relative">
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   {...register('confirmPassword')}
-                  placeholder="Re-enter your password"
+                  placeholder={t('confirmPasswordPlaceholder')}
                   data-testid="register-confirm-password"
                   className="w-full px-4 py-3.5 pr-12 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
                 />
@@ -401,13 +408,13 @@ export default function RegisterPage() {
                 htmlFor="agreeToTerms"
                 className="text-sm text-charcoal/60 leading-relaxed cursor-pointer"
               >
-                I agree to the{' '}
+                {t('agreeToTerms')}{' '}
                 <span className="text-gold font-semibold hover:underline">
-                  Terms of Service
+                  {t('termsOfService')}
                 </span>{' '}
                 &{' '}
                 <span className="text-gold font-semibold hover:underline">
-                  Privacy Policy
+                  {t('privacyPolicy')}
                 </span>
               </label>
             </div>
@@ -439,12 +446,12 @@ export default function RegisterPage() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating account…
+                  {t('creatingAccount')}
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="w-4 h-4" />
-                  Create Account
+                  {t('createAccount')}
                 </>
               )}
             </button>
@@ -452,12 +459,12 @@ export default function RegisterPage() {
 
           {/* Login Link */}
           <p className="text-center mt-6 text-sm text-charcoal/40">
-            Already have an account?{' '}
+            {t('alreadyHaveAccount')}{' '}
             <Link
               href="/login"
               className="text-gold font-semibold hover:underline"
             >
-              Sign In
+              {t('signIn')}
             </Link>
           </p>
         </div>

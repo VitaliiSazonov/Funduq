@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Pencil, Save, Loader2, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ProfileFormProps {
   initialName: string;
@@ -9,6 +10,7 @@ interface ProfileFormProps {
 }
 
 export default function ProfileForm({ initialName, updateProfileAction }: ProfileFormProps) {
+  const t = useTranslations("profileForm");
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(initialName);
   const [isPending, startTransition] = useTransition();
@@ -18,11 +20,11 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
     startTransition(async () => {
       const result = await updateProfileAction(formData);
       if (result.success) {
-        setFeedback({ type: "success", message: "Profile updated successfully!" });
+        setFeedback({ type: "success", message: t("profileUpdated") });
         setEditing(false);
         setName(formData.get("full_name") as string);
       } else {
-        setFeedback({ type: "error", message: result.error || "Something went wrong." });
+        setFeedback({ type: "error", message: result.error || t("updateFailed") });
       }
       setTimeout(() => setFeedback(null), 4000);
     });
@@ -47,7 +49,7 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
       <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 md:p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xs font-black text-white/30 uppercase tracking-[0.2em]">
-            Personal Information
+            {t("personalInfo")}
           </h2>
           {!editing && (
             <button
@@ -55,7 +57,7 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/10 text-white/60 text-xs font-bold uppercase tracking-wider hover:border-[#C9A84C]/40 hover:text-[#C9A84C] transition-all duration-300 cursor-pointer"
             >
               <Pencil className="w-3.5 h-3.5" />
-              Edit
+              {t("edit")}
             </button>
           )}
         </div>
@@ -67,7 +69,7 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
                 htmlFor="full_name"
                 className="block text-[11px] font-bold text-white/40 uppercase tracking-widest mb-2"
               >
-                Full Name
+                {t("fullName")}
               </label>
               <input
                 id="full_name"
@@ -78,7 +80,7 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
                 minLength={2}
                 maxLength={100}
                 className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-medium placeholder:text-white/20 focus:outline-none focus:border-[#C9A84C]/50 focus:ring-1 focus:ring-[#C9A84C]/20 transition-all"
-                placeholder="Enter your full name"
+                placeholder={t("enterFullName")}
               />
             </div>
 
@@ -93,14 +95,14 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
                 ) : (
                   <Save className="w-4 h-4" />
                 )}
-                {isPending ? "Saving..." : "Save Changes"}
+                {isPending ? t("saving") : t("saveChanges")}
               </button>
               <button
                 type="button"
                 onClick={() => setEditing(false)}
                 className="px-5 py-3 rounded-full bg-white/[0.05] border border-white/10 text-white/50 text-xs font-bold uppercase tracking-wider hover:text-white/80 transition-all cursor-pointer"
               >
-                Cancel
+                {t("cancel")}
               </button>
             </div>
           </form>
@@ -108,10 +110,10 @@ export default function ProfileForm({ initialName, updateProfileAction }: Profil
           <div className="space-y-4">
             <div>
               <span className="block text-[11px] font-bold text-white/30 uppercase tracking-widest mb-1">
-                Full Name
+                {t("fullName")}
               </span>
               <span className="text-white font-semibold text-lg">
-                {name || "Not set"}
+                {name || t("notSet")}
               </span>
             </div>
           </div>

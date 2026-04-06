@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, type DragEvent, type ChangeEvent } from "react";
 import { uploadPassport, checkVerificationStatus, type PassportStatus } from "@/app/actions/passport";
+import { useTranslations } from "next-intl";
 
 // ─── Props ─────────────────────────────────────────────────────
 
@@ -24,6 +25,7 @@ export default function PassportVerificationModal({
   initialStatus,
   onClose,
 }: PassportVerificationModalProps) {
+  const t = useTranslations("passportModal");
   const [status, setStatus] = useState<PassportStatus>(initialStatus);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,10 +40,10 @@ export default function PassportVerificationModal({
 
   const validateFile = (f: File): string | null => {
     if (!ACCEPTED_TYPES.includes(f.type)) {
-      return "Only JPG, PNG, or PDF files are accepted.";
+      return t("onlyAccepted");
     }
     if (f.size > MAX_SIZE_BYTES) {
-      return `File size must be under ${MAX_SIZE_MB} MB.`;
+      return t("fileSizeLimit", { size: String(MAX_SIZE_MB) });
     }
     return null;
   };
@@ -96,7 +98,7 @@ export default function PassportVerificationModal({
       const result = await uploadPassport(formData);
 
       if (!result.success) {
-        setError(result.error || "Upload failed.");
+        setError(result.error || t("uploadFailed"));
         setUploading(false);
         return;
       }
@@ -106,7 +108,7 @@ export default function PassportVerificationModal({
       setStatus(newStatus);
       setFile(null);
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t("unexpectedError"));
     } finally {
       setUploading(false);
     }
@@ -151,9 +153,9 @@ export default function PassportVerificationModal({
           </div>
 
           {/* Headings */}
-          <h2 style={styles.heading}>Verify your identity to continue</h2>
+          <h2 style={styles.heading}>{t("verifyIdentity")}</h2>
           <p style={styles.subheading}>
-            UAE law requires identity verification for all guests before booking
+            {t("uaeLawRequires")}
           </p>
 
           {/* Drop zone */}
@@ -206,10 +208,10 @@ export default function PassportVerificationModal({
                   </svg>
                 </div>
                 <p style={styles.dropText}>
-                  {isDragging ? "Drop your file here" : "Drag & drop or click to upload"}
+                  {isDragging ? t("dropFileHere") : t("dragAndDrop")}
                 </p>
                 <p style={styles.dropHint}>
-                  JPG, PNG, or PDF · Max {MAX_SIZE_MB} MB
+                  {t("fileTypes", { size: String(MAX_SIZE_MB) })}
                 </p>
               </>
             )}
@@ -240,17 +242,16 @@ export default function PassportVerificationModal({
             {uploading ? (
               <span style={styles.spinnerWrap}>
                 <span style={styles.spinner} />
-                Uploading…
+                {t("uploading")}
               </span>
             ) : (
-              "Upload Document"
+              t("uploadDocument")
             )}
           </button>
 
           {/* Privacy note */}
           <p style={styles.privacyNote}>
-            🔒 Your document is encrypted and stored securely. Only verified
-            Funduq administrators can access it.
+            🔒 {t("privacyNote")}
           </p>
         </div>
       </div>
@@ -281,20 +282,19 @@ export default function PassportVerificationModal({
           </div>
 
           {/* Status badge */}
-          <div style={styles.pendingBadge}>Under Review</div>
+          <div style={styles.pendingBadge}>{t("underReview")}</div>
 
           {/* Headings */}
-          <h2 style={styles.heading}>Document under review</h2>
+          <h2 style={styles.heading}>{t("documentUnderReview")}</h2>
           <p style={styles.subheading}>
-            Our team is reviewing your identity document. We&apos;ll notify you via
-            email within 24 hours once verified.
+            {t("reviewNotice")}
           </p>
 
           {/* Timeline */}
           <div style={styles.timeline}>
             <div style={styles.timelineItem}>
               <div style={styles.timelineDotDone} />
-              <span style={styles.timelineText}>Document uploaded</span>
+              <span style={styles.timelineText}>{t("documentUploaded")}</span>
               <span style={styles.timelineCheck}>✓</span>
             </div>
             <div style={styles.timelineConnector} />
@@ -302,12 +302,12 @@ export default function PassportVerificationModal({
               <div style={styles.timelineDotActive}>
                 <div style={styles.timelinePulse} />
               </div>
-              <span style={styles.timelineText}>Admin review in progress</span>
+              <span style={styles.timelineText}>{t("adminReviewInProgress")}</span>
             </div>
             <div style={styles.timelineConnector} />
             <div style={styles.timelineItem}>
               <div style={styles.timelineDotPending} />
-              <span style={styles.timelineTextMuted}>Verification complete</span>
+              <span style={styles.timelineTextMuted}>{t("verificationComplete")}</span>
             </div>
           </div>
 
@@ -317,7 +317,7 @@ export default function PassportVerificationModal({
             onClick={onClose}
             id="passport-close-btn"
           >
-            Got it
+            {t("gotIt")}
           </button>
         </div>
       </div>

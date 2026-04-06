@@ -62,7 +62,7 @@ export default function HomeHero({ locations }: HomeHeroProps) {
       <motion.div
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-40"
+        className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-40"
       >
         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white">{t("scroll")}</span>
         <div className="w-px h-12 bg-gradient-to-b from-white to-transparent" />

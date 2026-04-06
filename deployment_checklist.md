@@ -36,8 +36,16 @@
     1. `20260326000000_initial_schema.sql`
     2. `005_bookings_and_rls.sql`
     3. `006_admin_moderation.sql`
+    4. `007_passport_verification.sql`
+    5. `008_fix_profile_roles.sql`
+    6. `009_activate_existing_properties.sql`
+    7. `010_add_amenities_and_gallery.sql`
+    8. `011_signature_collection.sql`
+    9. `012_location_country_and_events.sql`
+    10. `013_popularity_and_wishlists.sql`
 - [ ] **SQL Query** - Grant admin role:
     ```sql
+    -- Replace with your production email
     UPDATE profiles SET role = 'admin' WHERE email = '7460201@email.com';
     ```
 

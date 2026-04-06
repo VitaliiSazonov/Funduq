@@ -397,7 +397,7 @@ export default async function HostPropertyDetailPage({ params }: PageProps) {
                   className="flex items-center gap-3 w-full px-5 py-3.5 rounded-xl border border-gold/30 text-gold-dark font-bold text-sm hover:bg-gold/5 hover:border-gold transition-all duration-300"
                 >
                   <Pencil className="w-4 h-4" />
-                  Edit Listing
+                  {h.editListingBtn}
                 </Link>
 
                 <Link
