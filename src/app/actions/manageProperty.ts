@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 // ─────────────────────────────────────────────────────────────
@@ -98,45 +99,63 @@ export async function republishProperty(
 export async function deleteProperty(
   propertyId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const result = await verifyOwnership(propertyId);
-
-  if (result.error || !result.supabase) {
-    return { success: false, error: result.error ?? "Unknown error" };
-  }
-
-  // 1. Try to delete images from storage bucket (non-blocking)
   try {
-    const { data: storageFiles } = await result.supabase.storage
-      .from("properties-images")
-      .list(propertyId);
+    // 1. Verify ownership using the authenticated user's client
+    const result = await verifyOwnership(propertyId);
 
-    if (storageFiles && storageFiles.length > 0) {
-      const filePaths = storageFiles.map((f) => `${propertyId}/${f.name}`);
-      await result.supabase.storage
-        .from("properties-images")
-        .remove(filePaths);
+    if (result.error || !result.supabase) {
+      return { success: false, error: result.error ?? "Unknown error" };
     }
-  } catch (storageErr) {
-    // Storage cleanup failure should not block property deletion
-    console.warn("Non-critical: failed to clean up storage images:", storageErr);
+
+    // 2. Use admin client (service role) for the actual deletion to bypass RLS
+    //    Fall back to regular client if service role key is not configured
+    let dbClient;
+    try {
+      dbClient = createAdminClient();
+    } catch {
+      // Service role key not configured — fall back to regular client
+      console.warn("Admin client unavailable, using regular client for deletion");
+      dbClient = result.supabase;
+    }
+
+    // 3. Try to delete images from storage bucket (non-blocking)
+    try {
+      const { data: storageFiles } = await dbClient.storage
+        .from("properties-images")
+        .list(propertyId);
+
+      if (storageFiles && storageFiles.length > 0) {
+        const filePaths = storageFiles.map((f) => `${propertyId}/${f.name}`);
+        await dbClient.storage
+          .from("properties-images")
+          .remove(filePaths);
+      }
+    } catch (storageErr) {
+      // Storage cleanup failure should not block property deletion
+      console.warn("Non-critical: failed to clean up storage images:", storageErr);
+    }
+
+    // 4. Delete the property record
+    const { error } = await dbClient
+      .from("properties")
+      .delete()
+      .eq("id", propertyId);
+
+    if (error) {
+      console.error("Error deleting property:", error);
+      return { success: false, error: "Failed to delete property: " + error.message };
+    }
+
+    // 5. Revalidate all relevant paths so Next.js doesn't serve stale cache
+    revalidatePath("/host/dashboard");
+    revalidatePath(`/host/properties/${propertyId}`);
+    revalidatePath("/en/villas");
+    revalidatePath("/ru/villas");
+
+    return { success: true };
+  } catch (err: unknown) {
+    console.error("Unexpected error in deleteProperty:", err);
+    const message = err instanceof Error ? err.message : "Unexpected error";
+    return { success: false, error: message };
   }
-
-  // 2. Delete the property record
-  const { error } = await result.supabase
-    .from("properties")
-    .delete()
-    .eq("id", propertyId);
-
-  if (error) {
-    console.error("Error deleting property:", error);
-    return { success: false, error: "Failed to delete property" };
-  }
-
-  // 3. Revalidate all relevant paths so Next.js doesn't serve stale cache
-  revalidatePath("/host/dashboard");
-  revalidatePath(`/host/properties/${propertyId}`);
-  revalidatePath("/en/villas");
-  revalidatePath("/ru/villas");
-
-  return { success: true };
 }
