@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -11,10 +11,6 @@ import {
   AlertTriangle,
   X,
 } from "lucide-react";
-import {
-  unpublishProperty,
-  republishProperty,
-} from "@/app/actions/manageProperty";
 
 interface PropertyManageActionsProps {
   propertyId: string;
@@ -27,7 +23,6 @@ export default function PropertyManageActions({
 }: PropertyManageActionsProps) {
   const t = useTranslations("host");
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -37,22 +32,29 @@ export default function PropertyManageActions({
   const canToggle = isActive || isInactive;
 
   // ── Toggle publish/unpublish ──
-  const handleTogglePublish = () => {
+  const handleTogglePublish = async () => {
     setError(null);
-    setActionInProgress(isActive ? "unpublish" : "republish");
+    const action = isActive ? "unpublish" : "republish";
+    setActionInProgress(action);
 
-    startTransition(async () => {
-      const result = isActive
-        ? await unpublishProperty(propertyId)
-        : await republishProperty(propertyId);
+    try {
+      const res = await fetch("/api/properties/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId, action }),
+      });
+
+      const result = await res.json();
 
       if (result.success) {
         router.refresh();
       } else {
         setError(result.error || "Something went wrong");
       }
-      setActionInProgress(null);
-    });
+    } catch {
+      setError("Network error. Please try again.");
+    }
+    setActionInProgress(null);
   };
 
   // ── Delete with confirmation ──
@@ -104,7 +106,7 @@ export default function PropertyManageActions({
         {canToggle && (
           <button
             onClick={handleTogglePublish}
-            disabled={isPending}
+            disabled={actionInProgress !== null}
             className={`flex items-center justify-center gap-3 w-full px-5 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
               isActive
                 ? "border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100"
@@ -125,7 +127,7 @@ export default function PropertyManageActions({
         {/* Delete button */}
         <button
           onClick={() => setShowDeleteModal(true)}
-          disabled={isPending || actionInProgress !== null}
+          disabled={actionInProgress !== null}
           className="flex items-center justify-center gap-3 w-full px-5 py-3.5 rounded-xl border border-red-200 bg-red-50 text-red-600 font-bold text-sm hover:bg-red-100 hover:border-red-300 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Trash2 className="w-4 h-4" />
@@ -139,15 +141,15 @@ export default function PropertyManageActions({
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-charcoal/60 backdrop-blur-sm"
-            onClick={() => !isPending && setShowDeleteModal(false)}
+            onClick={() => !(actionInProgress !== null) && setShowDeleteModal(false)}
           />
 
           {/* Modal */}
           <div className="relative bg-white rounded-3xl border border-charcoal/10 p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200">
             {/* Close button */}
             <button
-              onClick={() => !isPending && setShowDeleteModal(false)}
-              disabled={isPending}
+              onClick={() => !(actionInProgress !== null) && setShowDeleteModal(false)}
+              disabled={actionInProgress !== null}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-offwhite flex items-center justify-center text-charcoal/40 hover:text-charcoal hover:bg-charcoal/10 transition-colors cursor-pointer disabled:opacity-50"
             >
               <X className="w-4 h-4" />
@@ -170,7 +172,7 @@ export default function PropertyManageActions({
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleDelete}
-                disabled={isPending}
+                disabled={actionInProgress !== null}
                 className="flex items-center justify-center gap-3 w-full px-5 py-4 rounded-xl bg-red-600 text-white font-bold text-sm hover:bg-red-700 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionInProgress === "delete" ? (
@@ -185,7 +187,7 @@ export default function PropertyManageActions({
 
               <button
                 onClick={() => setShowDeleteModal(false)}
-                disabled={isPending}
+                disabled={actionInProgress !== null}
                 className="flex items-center justify-center w-full px-5 py-4 rounded-xl border border-charcoal/10 text-charcoal font-bold text-sm hover:border-charcoal/30 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {t("cancel")}
