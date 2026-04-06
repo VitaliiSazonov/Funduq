@@ -104,16 +104,21 @@ export async function deleteProperty(
     return { success: false, error: result.error ?? "Unknown error" };
   }
 
-  // 1. Delete images from storage bucket
-  const { data: storageFiles } = await result.supabase.storage
-    .from("properties-images")
-    .list(propertyId);
-
-  if (storageFiles && storageFiles.length > 0) {
-    const filePaths = storageFiles.map((f) => `${propertyId}/${f.name}`);
-    await result.supabase.storage
+  // 1. Try to delete images from storage bucket (non-blocking)
+  try {
+    const { data: storageFiles } = await result.supabase.storage
       .from("properties-images")
-      .remove(filePaths);
+      .list(propertyId);
+
+    if (storageFiles && storageFiles.length > 0) {
+      const filePaths = storageFiles.map((f) => `${propertyId}/${f.name}`);
+      await result.supabase.storage
+        .from("properties-images")
+        .remove(filePaths);
+    }
+  } catch (storageErr) {
+    // Storage cleanup failure should not block property deletion
+    console.warn("Non-critical: failed to clean up storage images:", storageErr);
   }
 
   // 2. Delete the property record
@@ -127,8 +132,11 @@ export async function deleteProperty(
     return { success: false, error: "Failed to delete property" };
   }
 
+  // 3. Revalidate all relevant paths so Next.js doesn't serve stale cache
   revalidatePath("/host/dashboard");
+  revalidatePath(`/host/properties/${propertyId}`);
   revalidatePath("/en/villas");
+  revalidatePath("/ru/villas");
 
   return { success: true };
 }

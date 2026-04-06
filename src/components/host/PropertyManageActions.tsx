@@ -65,7 +65,10 @@ export default function PropertyManageActions({
       const result = await deleteProperty(propertyId);
 
       if (result.success) {
-        router.push("/host/dashboard");
+        // Use hard redirect to avoid race condition where Next.js
+        // tries to re-render the (now deleted) property's server component
+        window.location.href = "/host/dashboard";
+        return;
       } else {
         setError(result.error || "Something went wrong");
         setActionInProgress(null);
