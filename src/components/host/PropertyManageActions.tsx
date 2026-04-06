@@ -14,7 +14,6 @@ import {
 import {
   unpublishProperty,
   republishProperty,
-  deleteProperty,
 } from "@/app/actions/manageProperty";
 
 interface PropertyManageActionsProps {
@@ -62,10 +61,16 @@ export default function PropertyManageActions({
     setActionInProgress("delete");
 
     try {
-      const result = await deleteProperty(propertyId);
+      const res = await fetch("/api/properties/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId }),
+      });
+
+      const result = await res.json();
 
       if (result.success) {
-        // Hard redirect — avoids Next.js re-rendering the deleted property page
+        // Hard redirect to dashboard after successful deletion
         window.location.href = "/host/dashboard";
         return;
       } else {
