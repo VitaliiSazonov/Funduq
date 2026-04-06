@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 // ─────────────────────────────────────────────────────────────
@@ -107,26 +106,15 @@ export async function deleteProperty(
       return { success: false, error: result.error ?? "Unknown error" };
     }
 
-    // 2. Use admin client (service role) for the actual deletion to bypass RLS
-    //    Fall back to regular client if service role key is not configured
-    let dbClient;
+    // 2. Try to delete images from storage bucket (non-blocking)
     try {
-      dbClient = createAdminClient();
-    } catch {
-      // Service role key not configured — fall back to regular client
-      console.warn("Admin client unavailable, using regular client for deletion");
-      dbClient = result.supabase;
-    }
-
-    // 3. Try to delete images from storage bucket (non-blocking)
-    try {
-      const { data: storageFiles } = await dbClient.storage
+      const { data: storageFiles } = await result.supabase.storage
         .from("properties-images")
         .list(propertyId);
 
       if (storageFiles && storageFiles.length > 0) {
         const filePaths = storageFiles.map((f) => `${propertyId}/${f.name}`);
-        await dbClient.storage
+        await result.supabase.storage
           .from("properties-images")
           .remove(filePaths);
       }
@@ -135,8 +123,9 @@ export async function deleteProperty(
       console.warn("Non-critical: failed to clean up storage images:", storageErr);
     }
 
-    // 4. Delete the property record
-    const { error } = await dbClient
+    // 3. Delete the property record using the authenticated client
+    //    RLS policy "Owners can delete own properties" allows this
+    const { error } = await result.supabase
       .from("properties")
       .delete()
       .eq("id", propertyId);
@@ -146,7 +135,7 @@ export async function deleteProperty(
       return { success: false, error: "Failed to delete property: " + error.message };
     }
 
-    // 5. Revalidate all relevant paths so Next.js doesn't serve stale cache
+    // 4. Revalidate all relevant paths
     revalidatePath("/host/dashboard");
     revalidatePath(`/host/properties/${propertyId}`);
     revalidatePath("/en/villas");
@@ -159,3 +148,4 @@ export async function deleteProperty(
     return { success: false, error: message };
   }
 }
+

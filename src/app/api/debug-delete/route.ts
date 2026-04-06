@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@supabase/supabase-js";
 
 /**
- * DEBUG ONLY — Test property deletion via GET request.
+ * DEBUG ONLY — Test property deletion with anon key (no RLS bypass).
  * GET /api/debug-delete?id=<property_id>&confirm=yes
- * 
- * Without &confirm=yes it only checks if the property exists.
- * With &confirm=yes it actually deletes.
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -17,61 +14,72 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Missing id param" }, { status: 400 });
   }
 
-  try {
-    const admin = createAdminClient();
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // Step 1: Check if the property exists
-    const { data: property, error: selectError } = await admin
+  // Report env status (not the actual values!)
+  const envStatus = {
+    SUPABASE_URL: url ? `set (${url.length} chars)` : "MISSING",
+    ANON_KEY: anonKey ? `set (${anonKey.length} chars)` : "MISSING",
+    SERVICE_ROLE_KEY: serviceKey ? `set (${serviceKey.length} chars)` : "MISSING",
+  };
+
+  if (!url || !anonKey) {
+    return NextResponse.json({ error: "Missing Supabase env vars", envStatus }, { status: 500 });
+  }
+
+  // Use anon key (no auth, just public access)
+  const supabase = createClient(url, anonKey);
+
+  try {
+    // Step 1: Try SELECT (should work for active properties due to public RLS)
+    const { data: property, error: selectError } = await supabase
       .from("properties")
       .select("id, owner_id, title, status")
       .eq("id", propertyId)
-      .single();
+      .maybeSingle();
 
     if (selectError) {
-      return NextResponse.json(
-        { step: "select", error: selectError.message, code: selectError.code },
-        { status: 500 }
-      );
+      return NextResponse.json({
+        step: "select",
+        error: selectError.message,
+        code: selectError.code,
+        envStatus,
+      });
     }
 
     if (!property) {
-      return NextResponse.json(
-        { step: "select", error: "Property not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        step: "select",
+        error: "Property not found or not visible with anon key",
+        envStatus,
+      });
     }
 
-    // Without confirm=yes, just show the property info
+    // Without confirm=yes, just report the status
     if (confirm !== "yes") {
       return NextResponse.json({
         message: "Property found. Add &confirm=yes to delete.",
         property,
+        envStatus,
       });
     }
 
-    // Step 2: Actually delete
-    const { error: deleteError } = await admin
+    // Step 2: Try DELETE with anon key
+    const { error: deleteError, count } = await supabase
       .from("properties")
-      .delete()
+      .delete({ count: "exact" })
       .eq("id", propertyId);
 
-    if (deleteError) {
-      return NextResponse.json(
-        { step: "delete", error: deleteError.message, code: deleteError.code },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json({
-      success: true,
-      deleted: property.title,
-      id: propertyId,
+      step: "delete_attempted",
+      deleteError: deleteError ? { message: deleteError.message, code: deleteError.code } : null,
+      rowsDeleted: count,
+      envStatus,
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      { step: "exception", error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ step: "exception", error: message, envStatus });
   }
 }
