@@ -57,16 +57,15 @@ export default function PropertyManageActions({
   };
 
   // ── Delete with confirmation ──
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setError(null);
     setActionInProgress("delete");
 
-    startTransition(async () => {
+    try {
       const result = await deleteProperty(propertyId);
 
       if (result.success) {
-        // Use hard redirect to avoid race condition where Next.js
-        // tries to re-render the (now deleted) property's server component
+        // Hard redirect — avoids Next.js re-rendering the deleted property page
         window.location.href = "/host/dashboard";
         return;
       } else {
@@ -74,7 +73,11 @@ export default function PropertyManageActions({
         setActionInProgress(null);
         setShowDeleteModal(false);
       }
-    });
+    } catch {
+      setError("Network error. Please try again.");
+      setActionInProgress(null);
+      setShowDeleteModal(false);
+    }
   };
 
   return (
@@ -117,7 +120,7 @@ export default function PropertyManageActions({
         {/* Delete button */}
         <button
           onClick={() => setShowDeleteModal(true)}
-          disabled={isPending}
+          disabled={isPending || actionInProgress !== null}
           className="flex items-center justify-center gap-3 w-full px-5 py-3.5 rounded-xl border border-red-200 bg-red-50 text-red-600 font-bold text-sm hover:bg-red-100 hover:border-red-300 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Trash2 className="w-4 h-4" />
