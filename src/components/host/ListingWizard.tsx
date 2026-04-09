@@ -82,6 +82,7 @@ const COUNTRY_REGION_DISTRICTS: Record<string, Record<string, string[]>> = {
       "Jumeirah",
       "Al Barari",
       "Emirates Hills",
+      "Jumeirah Park",
       "Arabian Ranches",
       "Damac Hills",
       "Dubai Hills Estate",
