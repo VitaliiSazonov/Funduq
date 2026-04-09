@@ -221,6 +221,8 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
     editData?.imageUrls || importedData?.uploadedImageUrls || []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingSubmitData, setPendingSubmitData] = useState<FormValues | null>(null);
   const [submitResult, setSubmitResult] = useState<{
     success: boolean;
     message: string;
@@ -873,6 +875,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
   }
 
   return (
+    <>
     <form 
       onSubmit={handleSubmit(onSubmit)} 
       onKeyDown={(e) => {
@@ -978,21 +981,18 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
           </button>
         ) : (
           <button
-            type="submit"
+            type="button"
             disabled={isSubmitting}
+            onClick={() => {
+              handleSubmit((data) => {
+                setPendingSubmitData(data);
+                setShowConfirmModal(true);
+              })();
+            }}
             className="flex items-center gap-2 px-8 py-3 gold-gradient text-white rounded-xl font-bold hover:opacity-90 transition-opacity disabled:opacity-60 cursor-pointer"
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Publishing...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                {isEditMode ? "Save Changes" : "Publish Listing"}
-              </>
-            )}
+            <Sparkles className="w-4 h-4" />
+            {isEditMode ? "Save Changes" : "Publish Listing"}
           </button>
         )}
       </div>
@@ -1008,5 +1008,66 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
         </motion.div>
       )}
     </form>
+
+      {/* ─── Confirm Publish Modal ─── */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowConfirmModal(false)}
+          />
+          {/* Dialog */}
+          <div className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full z-10">
+            <div className="w-16 h-16 mx-auto mb-5 gold-gradient rounded-full flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-black display-font text-charcoal text-center mb-2">
+              {isEditMode ? "Save Changes?" : "Publish Listing?"}
+            </h2>
+            <p className="text-charcoal/50 text-sm text-center mb-8">
+              {isEditMode
+                ? "Your changes will be saved and the listing will be updated immediately."
+                : "Your listing will be submitted for review and published on the platform."}
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setPendingSubmitData(null);
+                }}
+                className="flex-1 px-6 py-3 rounded-xl border border-charcoal/15 text-charcoal font-semibold hover:bg-charcoal/5 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={async () => {
+                  if (!pendingSubmitData) return;
+                  setShowConfirmModal(false);
+                  await onSubmit(pendingSubmitData);
+                  setPendingSubmitData(null);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 gold-gradient text-white rounded-xl font-bold hover:opacity-90 transition-opacity disabled:opacity-60 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {isEditMode ? "Saving..." : "Publishing..."}
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    {isEditMode ? "Yes, Save" : "Yes, Publish"}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
