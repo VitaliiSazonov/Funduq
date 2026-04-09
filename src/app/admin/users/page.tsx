@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Users, CheckCircle, XCircle } from "lucide-react";
+import { VerifyButton } from "./VerifyButton";
 
 export const dynamic = "force-dynamic";
 
@@ -122,7 +123,7 @@ export default async function AdminUsersPage() {
                     borderBottom: "1px solid rgba(197, 160, 89, 0.1)",
                   }}
                 >
-                  {["", "Name", "Role", "Verified", "Joined"].map((h, i) => (
+                  {["", "Name", "Role", "Verified", "Joined", "Actions"].map((h, i) => (
                     <th
                       key={i}
                       style={{
@@ -243,6 +244,10 @@ export default async function AdminUsersPage() {
                             year: "numeric",
                           })}
                         </p>
+                      </td>
+                      {/* Actions */}
+                      <td style={{ padding: "12px 16px" }}>
+                        <VerifyButton userId={u.id} isVerified={u.verified} />
                       </td>
                     </tr>
                   );
