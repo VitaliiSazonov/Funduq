@@ -512,5 +512,28 @@
     "fileSizeLimit": "File size must be under {size} MB.",
     "uploadFailed": "Upload failed.",
     "unexpectedError": "An unexpected error occurred. Please try again."
+  },
+  "amenities": {
+    "Бассейн / джакузи": "Pool / Jacuzzi",
+    "Высокоскоростной Wi-Fi": "High-speed Wi-Fi",
+    "Кондиционер и отопление": "Air Conditioning & Heating",
+    "Бесплатная парковка": "Free Parking",
+    "Полноценная кухня": "Full Kitchen",
+    "Стиральная и сушильная машина": "Washer & Dryer",
+    "Self check-in": "Self check-in",
+    "Smart-TV со стримингом": "Smart-TV with streaming",
+    "BBQ-зона и outdoor-лонж": "BBQ & Outdoor Lounge",
+    "King-size кровати и премиальное бельё": "King-size bed & premium linens",
+    "Выделенное рабочее место": "Dedicated workspace",
+    "Регулярная профуборка / сервис": "Regular professional cleaning",
+    "Детские удобства": "Kids amenities",
+    "Pet-friendly": "Pet-friendly",
+    "EV-зарядка": "EV charging",
+    "Фитнес-зона / доступ в спортзал": "Fitness area / Gym access",
+    "Игровая / развлекательная зона": "Gaming / Entertainment area",
+    "Усиленная безопасность": "Enhanced security",
+    "Water View": "Water View",
+    "Mountain View": "Mountain View",
+    "City View": "City View"
   }
 }

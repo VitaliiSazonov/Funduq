@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
@@ -214,6 +215,7 @@ interface ListingWizardProps {
 export default function ListingWizard({ importedData, editData }: ListingWizardProps) {
   const isEditMode = !!editData;
   const router = useRouter();
+  const tAmenities = useTranslations("amenities");
   const [currentStep, setCurrentStep] = useState(0);
   const [imageUrls, setImageUrls] = useState<string[]>(
     editData?.imageUrls || importedData?.uploadedImageUrls || []
@@ -668,7 +670,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
                       >
                         <span className="flex items-center gap-2">
                           {isSelected && <Check className="w-3.5 h-3.5" />}
-                          {amenity}
+                          {tAmenities(amenity)}
                         </span>
                       </button>
                     );

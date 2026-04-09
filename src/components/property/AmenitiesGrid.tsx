@@ -18,11 +18,36 @@ import {
   Accessibility,
   Coffee,
   Sparkles,
+  PawPrint,
+  Building2,
+  BedDouble,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-// ─── Amenity → Icon mapping ───
 const AMENITY_ICONS: Record<string, LucideIcon> = {
+  "бассейн / джакузи": Waves,
+  "высокоскоростной wi-fi": Wifi,
+  "кондиционер и отопление": Wind,
+  "бесплатная парковка": Car,
+  "полноценная кухня": UtensilsCrossed,
+  "стиральная и сушильная машина": WashingMachine,
+  "self check-in": ShieldCheck,
+  "smart-tv со стримингом": Tv,
+  "bbq-зона и outdoor-лонж": Flame,
+  "king-size кровати и премиальное бельё": BedDouble,
+  "выделенное рабочее место": Coffee,
+  "регулярная профуборка / сервис": Sparkles,
+  "детские удобства": Accessibility,
+  "pet-friendly": PawPrint,
+  "ev-зарядка": Car,
+  "фитнес-зона / доступ в спортзал": Dumbbell,
+  "игровая / развлекательная зона": Tv,
+  "усиленная безопасность": ShieldCheck,
+  "water view": Waves,
+  "mountain view": TreePine,
+  "city view": Building2,
+  // Fallbacks
   pool: Waves,
   "swimming pool": Waves,
   gym: Dumbbell,
@@ -74,6 +99,7 @@ export default function AmenitiesGrid({
   initialShowCount = 8,
 }: AmenitiesGridProps) {
   const [showAll, setShowAll] = useState(false);
+  const tAmenities = useTranslations("amenities");
 
   const visible = showAll ? amenities : amenities.slice(0, initialShowCount);
   const hasMore = amenities.length > initialShowCount;
@@ -92,7 +118,7 @@ export default function AmenitiesGrid({
                 <Icon className="w-4.5 h-4.5 text-gold-dark" />
               </div>
               <span className="text-sm font-medium text-charcoal/70 capitalize">
-                {amenity}
+                {tAmenities(amenity)}
               </span>
             </div>
           );
