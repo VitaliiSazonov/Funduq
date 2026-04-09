@@ -873,7 +873,16 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto">
+    <form 
+      onSubmit={handleSubmit(onSubmit)} 
+      onKeyDown={(e) => {
+        // Prevent accidental form submission on Enter, except for textareas
+        if (e.key === "Enter" && (e.target as HTMLElement).tagName !== "TEXTAREA") {
+          e.preventDefault();
+        }
+      }}
+      className="max-w-3xl mx-auto"
+    >
       {/* ─── Step Indicator ─── */}
       <div className="flex items-center justify-between mb-10">
         {STEPS.map((step, i) => {
