@@ -15,7 +15,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { format, parseISO, isPast } from "date-fns";
-import { NextIntlClientProvider } from "next-intl";
 
 export const metadata = {
   title: "My Bookings | Funduq",
@@ -81,8 +80,7 @@ export default async function GuestBookingsPage() {
   );
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <div className="min-h-screen bg-offwhite py-32 px-6 md:px-12">
+      <div className="min-h-screen bg-offwhite pt-12 pb-32 px-6 md:px-12">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <header className="mb-12">
@@ -233,6 +231,5 @@ export default async function GuestBookingsPage() {
           )}
         </div>
       </div>
-    </NextIntlClientProvider>
   );
 }

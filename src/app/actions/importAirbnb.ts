@@ -14,6 +14,7 @@ export interface AirbnbScrapedData {
   imageUrls: string[];
   pricePerNight: number;
   amenities: string[];
+  locationCountry: string;
   locationEmirate: string;
   locationDistrict: string;
 }
@@ -104,38 +105,68 @@ export async function downloadAndUploadToSupabase(
 // ─────────────────────────────────────────────────────────────
 // Airbnb Location → Funduq Emirate/District mapping
 // ─────────────────────────────────────────────────────────────
-const LOCATION_MAP: Record<string, { emirate: string; district: string }> = {
-  "dubai marina": { emirate: "Dubai", district: "Dubai Marina" },
-  "palm jumeirah": { emirate: "Dubai", district: "Palm Jumeirah" },
-  "downtown dubai": { emirate: "Dubai", district: "Downtown Dubai" },
-  "jumeirah beach residence": { emirate: "Dubai", district: "Jumeirah Beach Residence" },
-  jbr: { emirate: "Dubai", district: "Jumeirah Beach Residence" },
-  jumeirah: { emirate: "Dubai", district: "Jumeirah" },
-  "al barari": { emirate: "Dubai", district: "Al Barari" },
-  "emirates hills": { emirate: "Dubai", district: "Emirates Hills" },
-  "arabian ranches": { emirate: "Dubai", district: "Arabian Ranches" },
-  "damac hills": { emirate: "Dubai", district: "Damac Hills" },
-  "dubai hills": { emirate: "Dubai", district: "Dubai Hills Estate" },
-  "dubai hills estate": { emirate: "Dubai", district: "Dubai Hills Estate" },
-  "business bay": { emirate: "Dubai", district: "Business Bay" },
-  difc: { emirate: "Dubai", district: "DIFC" },
-  "bluewaters island": { emirate: "Dubai", district: "Bluewaters Island" },
-  bluewaters: { emirate: "Dubai", district: "Bluewaters Island" },
-  "dubai creek harbour": { emirate: "Dubai", district: "Dubai Creek Harbour" },
-  "mbr city": { emirate: "Dubai", district: "MBR City" },
-  "al sufouh": { emirate: "Dubai", district: "Al Sufouh" },
-  "umm suqeim": { emirate: "Dubai", district: "Umm Suqeim" },
-  mirdif: { emirate: "Dubai", district: "Mirdif" },
-  "saadiyat island": { emirate: "Abu Dhabi", district: "Saadiyat Island" },
-  "yas island": { emirate: "Abu Dhabi", district: "Yas Island" },
-  "al reem island": { emirate: "Abu Dhabi", district: "Al Reem Island" },
-  "al raha beach": { emirate: "Abu Dhabi", district: "Al Raha Beach" },
-  "nurai island": { emirate: "Abu Dhabi", district: "Nurai Island" },
-  "al marjan island": { emirate: "Ras Al Khaimah", district: "Al Marjan Island" },
-  "al hamra village": { emirate: "Ras Al Khaimah", district: "Al Hamra Village" },
+const LOCATION_MAP: Record<string, { country: string; emirate: string; district: string }> = {
+  // UAE
+  "dubai marina": { country: "UAE", emirate: "Dubai", district: "Dubai Marina" },
+  "palm jumeirah": { country: "UAE", emirate: "Dubai", district: "Palm Jumeirah" },
+  "downtown dubai": { country: "UAE", emirate: "Dubai", district: "Downtown Dubai" },
+  "jumeirah beach residence": { country: "UAE", emirate: "Dubai", district: "Jumeirah Beach Residence" },
+  jbr: { country: "UAE", emirate: "Dubai", district: "Jumeirah Beach Residence" },
+  jumeirah: { country: "UAE", emirate: "Dubai", district: "Jumeirah" },
+  "al barari": { country: "UAE", emirate: "Dubai", district: "Al Barari" },
+  "emirates hills": { country: "UAE", emirate: "Dubai", district: "Emirates Hills" },
+  "arabian ranches": { country: "UAE", emirate: "Dubai", district: "Arabian Ranches" },
+  "damac hills": { country: "UAE", emirate: "Dubai", district: "Damac Hills" },
+  "dubai hills": { country: "UAE", emirate: "Dubai", district: "Dubai Hills Estate" },
+  "dubai hills estate": { country: "UAE", emirate: "Dubai", district: "Dubai Hills Estate" },
+  "business bay": { country: "UAE", emirate: "Dubai", district: "Business Bay" },
+  difc: { country: "UAE", emirate: "Dubai", district: "DIFC" },
+  "bluewaters island": { country: "UAE", emirate: "Dubai", district: "Bluewaters Island" },
+  bluewaters: { country: "UAE", emirate: "Dubai", district: "Bluewaters Island" },
+  "dubai creek harbour": { country: "UAE", emirate: "Dubai", district: "Dubai Creek Harbour" },
+  "mbr city": { country: "UAE", emirate: "Dubai", district: "MBR City" },
+  "al sufouh": { country: "UAE", emirate: "Dubai", district: "Al Sufouh" },
+  "umm suqeim": { country: "UAE", emirate: "Dubai", district: "Umm Suqeim" },
+  mirdif: { country: "UAE", emirate: "Dubai", district: "Mirdif" },
+  "saadiyat island": { country: "UAE", emirate: "Abu Dhabi", district: "Saadiyat Island" },
+  "yas island": { country: "UAE", emirate: "Abu Dhabi", district: "Yas Island" },
+  "al reem island": { country: "UAE", emirate: "Abu Dhabi", district: "Al Reem Island" },
+  "al raha beach": { country: "UAE", emirate: "Abu Dhabi", district: "Al Raha Beach" },
+  "nurai island": { country: "UAE", emirate: "Abu Dhabi", district: "Nurai Island" },
+  "al marjan island": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Marjan Island" },
+  "al hamra village": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Hamra Village" },
+  // Brazil
+  "rio de janeiro": { country: "Brazil", emirate: "Rio de Janeiro", district: "" },
+  "são paulo": { country: "Brazil", emirate: "São Paulo", district: "" },
+  "sao paulo": { country: "Brazil", emirate: "São Paulo", district: "" },
+  "trancoso": { country: "Brazil", emirate: "Trancoso", district: "" },
+  "florianópolis": { country: "Brazil", emirate: "Florianópolis", district: "" },
+  "florianopolis": { country: "Brazil", emirate: "Florianópolis", district: "" },
+  "búzios": { country: "Brazil", emirate: "Búzios", district: "" },
+  "buzios": { country: "Brazil", emirate: "Búzios", district: "" },
+  "salvador": { country: "Brazil", emirate: "Salvador", district: "" },
+  // Spain
+  "barcelona": { country: "Spain", emirate: "Barcelona", district: "" },
+  "madrid": { country: "Spain", emirate: "Madrid", district: "" },
+  "marbella": { country: "Spain", emirate: "Marbella", district: "" },
+  "ibiza": { country: "Spain", emirate: "Ibiza", district: "" },
+  "mallorca": { country: "Spain", emirate: "Mallorca", district: "" },
+  "tenerife": { country: "Spain", emirate: "Tenerife", district: "" },
+  "valencia": { country: "Spain", emirate: "Valencia", district: "" },
+  // Italy
+  "rome": { country: "Italy", emirate: "Rome", district: "" },
+  "milan": { country: "Italy", emirate: "Milan", district: "" },
+  "venice": { country: "Italy", emirate: "Venice", district: "" },
+  "florence": { country: "Italy", emirate: "Florence", district: "" },
+  "lake como": { country: "Italy", emirate: "Lake Como", district: "" },
+  "como": { country: "Italy", emirate: "Lake Como", district: "" },
+  "amalfi coast": { country: "Italy", emirate: "Amalfi Coast", district: "" },
+  "amalfi": { country: "Italy", emirate: "Amalfi Coast", district: "" },
+  "sicily": { country: "Italy", emirate: "Sicily", district: "" },
+  "tuscany": { country: "Italy", emirate: "Tuscany", district: "" },
 };
 
-function resolveLocation(locationText: string): { emirate: string; district: string } {
+function resolveLocation(locationText: string): { country: string; emirate: string; district: string } {
   const lower = locationText.toLowerCase();
 
   // Try direct match from the map
@@ -143,18 +174,76 @@ function resolveLocation(locationText: string): { emirate: string; district: str
     if (lower.includes(key)) return value;
   }
 
-  // Try to detect emirate name at minimum
-  const emirateNames = [
+  // Detect regions for UAE
+  const uaeEmirates = [
     "Dubai", "Abu Dhabi", "Sharjah", "Ajman",
     "Ras Al Khaimah", "Fujairah", "Umm Al Quwain",
   ];
-  for (const emirate of emirateNames) {
+  for (const emirate of uaeEmirates) {
     if (lower.includes(emirate.toLowerCase())) {
-      return { emirate, district: "" };
+      return { country: "UAE", emirate, district: "" };
     }
   }
 
-  return { emirate: "", district: "" };
+  // Detect regions for Brazil
+  const brazilRegions = ["Rio de Janeiro", "São Paulo", "Trancoso", "Florianópolis", "Búzios", "Salvador"];
+  for (const region of brazilRegions) {
+    if (lower.includes(region.toLowerCase())) return { country: "Brazil", emirate: region, district: "" };
+  }
+
+  // Detect regions for Spain
+  const spainRegions = ["Barcelona", "Madrid", "Marbella", "Ibiza", "Mallorca", "Tenerife", "Valencia"];
+  for (const region of spainRegions) {
+    if (lower.includes(region.toLowerCase())) return { country: "Spain", emirate: region, district: "" };
+  }
+
+  // Detect regions for Italy
+  const italyRegions = ["Rome", "Milan", "Venice", "Florence", "Lake Como", "Amalfi Coast", "Sicily", "Tuscany"];
+  for (const region of italyRegions) {
+    if (lower.includes(region.toLowerCase())) return { country: "Italy", emirate: region, district: "" };
+  }
+
+  if (lower.includes("brazil")) return { country: "Brazil", emirate: "", district: "" };
+  if (lower.includes("spain")) return { country: "Spain", emirate: "", district: "" };
+  if (lower.includes("italy")) return { country: "Italy", emirate: "", district: "" };
+  if (lower.includes("uae") || lower.includes("united arab emirates")) return { country: "UAE", emirate: "", district: "" };
+
+  return { country: "UAE", emirate: "", district: "" };
+}
+
+// ─────────────────────────────────────────────────────────────
+// Map Airbnb Amenities to Funduq Standard (Russian/English)
+// ─────────────────────────────────────────────────────────────
+function mapAmenitiesToStandard(airbnbAmenities: string[]): string[] {
+  const mapped = new Set<string>();
+  const lowerAmens = airbnbAmenities.map(a => a.toLowerCase());
+
+  const has = (...keywords: string[]) => lowerAmens.some(a => keywords.some(k => a.includes(k)));
+
+  if (has("pool", "jacuzzi", "hot tub", "sauna")) mapped.add("Бассейн / джакузи");
+  if (has("wifi", "internet", "wi-fi", "ethernet", "wlan")) mapped.add("Высокоскоростной Wi-Fi");
+  if (has("ac", "air conditioning", "heating", "heater", "climate control")) mapped.add("Кондиционер и отопление");
+  if (has("parking", "garage", "driveway", "carport")) mapped.add("Бесплатная парковка");
+  if (has("kitchen", "stove", "oven", "refrigerator", "microwave", "cooking basics")) mapped.add("Полноценная кухня");
+  if (has("washer", "dryer", "laundry", "washing machine")) mapped.add("Стиральная и сушильная машина");
+  if (has("self check-in", "smart lock", "keypad", "lockbox", "check in")) mapped.add("Self check-in");
+  if (has("tv", "smart tv", "netflix", "apple tv", "roku", "hbo")) mapped.add("Smart-TV со стримингом");
+  if (has("bbq", "barbecue", "grill", "outdoor seating", "patio", "balcony", "outdoor dining")) mapped.add("BBQ-зона и outdoor-лонж");
+  if (has("king", "premium linens", "bed linens", "room-darkening")) mapped.add("King-size кровати и премиальное бельё");
+  if (has("workspace", "desk", "office", "monitor")) mapped.add("Выделенное рабочее место");
+  if (has("cleaning", "housekeeping", "maid", "cleaning available")) mapped.add("Регулярная профуборка / сервис");
+  if (has("crib", "high chair", "children", "baby", "cot", "pack ’n play")) mapped.add("Детские удобства");
+  if (has("pet", "dog", "cat", "animals")) mapped.add("Pet-friendly");
+  if (has("ev charger", "electric vehicle")) mapped.add("EV-зарядка");
+  if (has("gym", "fitness", "workout", "exercise", "weight")) mapped.add("Фитнес-зона / доступ в спортзал");
+  if (has("game", "console", "pool table", "ping pong", "arcade", "entertainment", "ps4", "xbox")) mapped.add("Игровая / развлекательная зона");
+  if (has("security", "safe", "camera", "alarm", "smoke", "carbon monoxide", "guard")) mapped.add("Усиленная безопасность");
+  
+  if (has("water view", "ocean view", "sea view", "beach view", "lake view", "waterfront")) mapped.add("Water View");
+  if (has("mountain view", "valley view")) mapped.add("Mountain View");
+  if (has("city view", "skyline view")) mapped.add("City View");
+
+  return Array.from(mapped);
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -249,7 +338,26 @@ async function scrapeViaApify(roomId: string): Promise<AirbnbScrapedData | null>
     title = title.replace(/\s*-\s*(Apartments|Villas|Houses|Condos|Homes).*$/i, "").trim();
 
     // ── Description ──
-    const description = listing.description || "";
+    let description = "";
+
+    // Prefer sectionedDescription which usually contains the real description
+    if (listing.sectionedDescription && typeof listing.sectionedDescription === "object") {
+      description =
+        listing.sectionedDescription.description ||
+        listing.sectionedDescription.summary ||
+        listing.sectionedDescription.space ||
+        "";
+    }
+
+    // Fallbacks if sectionedDescription is missing or contains the generic house rules
+    if (!description || description.includes("treat it with care and respect")) {
+      const fallbackDesc = listing.description || "";
+      if (!fallbackDesc.includes("treat it with care and respect")) {
+        description = fallbackDesc;
+      } else if (listing.summary && !listing.summary.includes("treat it with care and respect")) {
+        description = listing.summary;
+      }
+    }
 
     // ── Room details from subDescription.items ──
     // Format: ["4 guests", "2 bedrooms", "3 beds", "2 baths"]
@@ -331,7 +439,7 @@ async function scrapeViaApify(roomId: string): Promise<AirbnbScrapedData | null>
     // Also check title for location hints
     locationText = locationText || title;
 
-    const { emirate, district } = resolveLocation(locationText || title || description);
+    const { country, emirate, district } = resolveLocation(locationText || title || description);
 
     return {
       title: decodeHtmlEntities(title),
@@ -341,7 +449,8 @@ async function scrapeViaApify(roomId: string): Promise<AirbnbScrapedData | null>
       maxGuests: maxGuests || 2,
       imageUrls: imageUrls.slice(0, 30),
       pricePerNight,
-      amenities: [...amenitySet],
+      amenities: mapAmenitiesToStandard([...amenitySet]),
+      locationCountry: country,
       locationEmirate: emirate,
       locationDistrict: district,
     };
@@ -425,17 +534,23 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
   if (stateData) {
     title = deepFind(stateData, (k) => k === "listingTitle") || "";
 
-    const descObj = deepFind(stateData, (k) => k === "description" || k === "listingDescription");
-    if (typeof descObj === "string") {
-      description = descObj;
-    } else if (descObj && typeof descObj === "object") {
-      description = descObj.htmlDescription || descObj.description || descObj.value || descObj.content || "";
-      description = description.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
+    const allDescs = deepFindAll(stateData, (k, v) => (k === "description" || k === "listingDescription") && (typeof v === "string" || typeof v === "object"));
+    
+    for (const d of allDescs) {
+      let candidate = typeof d === "string" ? d : (d.htmlDescription || d.description || d.value || d.content || "");
+      if (candidate && !candidate.includes("treat it with care and respect")) {
+        description = candidate.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
+        if (description.length > 50) break; // found a substantial description
+      }
     }
+
     if (!description) {
       const sectionDescs = deepFindAll(stateData, (k, v) => k === "htmlDescription" && typeof v === "string");
-      if (sectionDescs.length > 0) {
-        description = sectionDescs.join("\n\n").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
+      for (const d of sectionDescs) {
+         if (!d.includes("treat it with care and respect")) {
+            description = d.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
+            if (description.length > 50) break;
+         }
       }
     }
 
@@ -528,7 +643,7 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
   }
   if (!locationText) locationText = title;
 
-  const { emirate, district } = resolveLocation(locationText || title || description);
+  const { country, emirate, district } = resolveLocation(locationText || title || description);
 
   if (!title) {
     throw new Error("Could not extract listing data. Airbnb may have blocked the request. Try again later or check the URL.");
@@ -542,7 +657,8 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
     maxGuests: maxGuests || 2,
     imageUrls,
     pricePerNight,
-    amenities,
+    amenities: mapAmenitiesToStandard(amenities),
+    locationCountry: country,
     locationEmirate: emirate,
     locationDistrict: district,
   };

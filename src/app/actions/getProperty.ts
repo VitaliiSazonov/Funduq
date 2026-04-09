@@ -30,6 +30,7 @@ export interface PropertyDetail {
   bathrooms: number;
   max_guests: number;
   status: string;
+  location_country: string;
   location_emirate: string;
   location_district: string;
   main_image_url: string | null;
@@ -123,6 +124,7 @@ export async function getProperty(
     bathrooms: property.bathrooms,
     max_guests: property.max_guests,
     status: property.status,
+    location_country: property.location_country || "UAE",
     location_emirate: property.location_emirate,
     location_district: property.location_district,
     main_image_url: property.main_image_url,

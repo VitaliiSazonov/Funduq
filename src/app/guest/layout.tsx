@@ -6,7 +6,7 @@ import { getHostLocale, getHostMessages } from "@/lib/getHostLocale";
 import HostLanguageSwitcher from "@/components/host/HostLanguageSwitcher";
 import MobileMenuButton from "@/components/ui/MobileMenuButton";
 
-export default async function HostLayout({
+export default async function GuestLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -22,12 +22,10 @@ export default async function HostLayout({
     redirect("/login");
   }
 
-  // ── Load locale & messages for host pages ──
+  // ── Load locale & messages for guest pages ──
   const locale = await getHostLocale();
   const messages = await getHostMessages(locale);
 
-  // Any authenticated user can access host pages.
-  // Role upgrade from 'guest' to 'host' happens when they submit a property.
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       {/* ── Fixed Logo Header ── */}
@@ -44,7 +42,7 @@ export default async function HostLayout({
           </Link>
           <div className="flex items-center gap-3">
             <HostLanguageSwitcher />
-            <MobileMenuButton variant="host" />
+            <MobileMenuButton variant="guest" />
           </div>
         </div>
       </header>

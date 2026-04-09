@@ -38,6 +38,7 @@ export default async function EditPropertyPage({ params }: PageProps) {
     description: property.description,
     type: property.type as "Villa" | "Penthouse" | "Resort",
     rental_type: property.events_allowed ? "for_event" : "for_stay" as "all" | "for_stay" | "for_event",
+    location_country: property.location_country || "UAE",
     location_emirate: property.location_emirate,
     location_district: property.location_district,
     bedrooms: property.bedrooms,

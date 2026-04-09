@@ -1,9 +1,22 @@
 {
   "nav": {
+    "home": "Home",
     "explore": "Explore",
     "listProperty": "List Your Property",
     "login": "Sign In",
-    "myBookings": "My Bookings"
+    "myBookings": "My Bookings",
+    "myProfile": "My Profile",
+    "signOut": "Sign Out"
+  },
+  "mobileNav": {
+    "home": "Home",
+    "explore": "Explore Collection",
+    "dashboard": "Host Dashboard",
+    "bookings": "Bookings",
+    "addProperty": "Add Property",
+    "myBookings": "My Bookings",
+    "myProfile": "My Profile",
+    "signOut": "Sign Out"
   },
   "home": {
     "hero_badge": "Premium Short-Term Rentals",

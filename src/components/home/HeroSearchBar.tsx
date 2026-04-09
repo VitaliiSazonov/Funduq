@@ -62,6 +62,15 @@ export default function HeroSearchBar({ locations }: HeroSearchBarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // ─── Detect mobile for responsive calendar ───
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // ─── Reset highlight when suggestions change ───
   useEffect(() => {
     setHighlightedIndex(-1);
@@ -391,11 +400,10 @@ export default function HeroSearchBar({ locations }: HeroSearchBarProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50"
-            style={{ minWidth: 660 }}
+            className="absolute top-full left-0 right-0 md:left-1/2 md:right-auto md:-translate-x-1/2 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50 md:min-w-[660px]"
           >
             {/* Header with check-in/check-out summary */}
-            <div className="px-8 pt-6 pb-4 border-b border-gray-100">
+            <div className="px-4 md:px-8 pt-6 pb-4 border-b border-gray-100">
               <div className="grid grid-cols-2 gap-6">
                 <div className={`p-3 rounded-xl border-2 transition-colors ${
                   !dateRange?.from ? "border-gold bg-gold/5" : "border-gray-100"
@@ -417,14 +425,12 @@ export default function HeroSearchBar({ locations }: HeroSearchBarProps) {
             </div>
 
             {/* Calendar */}
-            <div className="px-6 py-4 rdp-funduq">
+            <div className="px-3 md:px-6 py-4 rdp-funduq overflow-x-auto">
               <DayPicker
                 mode="range"
                 selected={dateRange}
                 onSelect={(range) => {
                   setDateRange(range);
-                  // Auto-advance to guests only when a real range is selected
-                  // (from and to are different dates, meaning user clicked twice)
                   if (
                     range?.from &&
                     range?.to &&
@@ -434,14 +440,14 @@ export default function HeroSearchBar({ locations }: HeroSearchBarProps) {
                   }
                 }}
                 disabled={{ before: new Date() }}
-                numberOfMonths={2}
+                numberOfMonths={isMobile ? 1 : 2}
                 startMonth={new Date()}
                 endMonth={addMonths(new Date(), 12)}
               />
             </div>
 
             {/* Footer */}
-            <div className="px-8 pb-5 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div className="px-4 md:px-8 pb-5 pt-2 border-t border-gray-100 flex items-center justify-between">
               <button
                 onClick={() => setDateRange(undefined)}
                 className="text-xs font-bold text-gray-400 hover:text-charcoal transition-colors cursor-pointer"
@@ -465,7 +471,7 @@ export default function HeroSearchBar({ locations }: HeroSearchBarProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute top-full right-0 md:right-4 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50 p-6 w-[340px]"
+            className="absolute top-full left-0 right-0 md:left-auto md:right-4 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50 p-6 md:w-[340px]"
           >
             {/* Bedrooms */}
             <div className="flex items-center justify-between mb-6">

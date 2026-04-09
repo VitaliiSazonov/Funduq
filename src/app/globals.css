@@ -23,6 +23,10 @@
   --foreground: #1A1A1A;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -186,6 +190,21 @@ h1, h2, h3, h4, .display-font {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.25s ease-out;
 }
 
 @keyframes spin {

@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   FileText,
 } from "lucide-react";
-import { NextIntlClientProvider } from "next-intl";
 
 export const metadata = {
   title: "My Profile | Funduq",
@@ -129,7 +128,6 @@ export default async function GuestProfilePage() {
   const roleLabel = role === "host" ? t.roleHost : role === "admin" ? t.roleAdmin : t.roleGuest;
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
       <div className="min-h-screen bg-[#0e0e0e] pt-12 pb-32 px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -241,6 +239,5 @@ export default async function GuestProfilePage() {
           }
         `}</style>
       </div>
-    </NextIntlClientProvider>
   );
 }

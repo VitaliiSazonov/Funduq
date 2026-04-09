@@ -45,10 +45,9 @@ const propertySchema = z.object({
     .max(2000, "Description must be 2000 characters or less"),
   type: z.enum(["Villa", "Penthouse", "Resort"]),
   rental_type: z.enum(["all", "for_stay", "for_event"]),
-  location_emirate: z.string().min(1, "Please select an emirate"),
-  location_district: z
-    .string()
-    .min(1, "Please select a district"),
+  location_country: z.string().min(1, "Please select country"),
+  location_emirate: z.string().min(1, "Please select a region"),
+  location_district: z.string().optional(),
   bedrooms: z.number().min(0, "Must be 0 or more").max(20),
   bathrooms: z.number().min(0, "Must be 0 or more").max(20),
   max_guests: z.number().min(1, "Must accommodate at least 1 guest").max(50),
@@ -57,6 +56,14 @@ const propertySchema = z.object({
   amenities: z
     .array(z.string())
     .min(1, "Select at least one amenity"),
+}).superRefine((data, ctx) => {
+  if (data.location_country === "UAE" && !data.location_district) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Please select a district",
+      path: ["location_district"]
+    });
+  }
 });
 
 type FormValues = z.infer<typeof propertySchema>;
@@ -64,110 +71,105 @@ type FormValues = z.infer<typeof propertySchema>;
 // ─────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────
-const EMIRATE_DISTRICTS: Record<string, string[]> = {
-  Dubai: [
-    "Palm Jumeirah",
-    "Downtown Dubai",
-    "Dubai Marina",
-    "Jumeirah Beach Residence",
-    "Jumeirah",
-    "Al Barari",
-    "Emirates Hills",
-    "Arabian Ranches",
-    "Damac Hills",
-    "Dubai Hills Estate",
-    "Business Bay",
-    "DIFC",
-    "Bluewaters Island",
-    "Dubai Creek Harbour",
-    "MBR City",
-    "Al Sufouh",
-    "Umm Suqeim",
-    "Mirdif",
-    "Dubai Islands",
-    "The World Islands",
-    "Jumeirah Islands",
-  ],
-  "Abu Dhabi": [
-    "Saadiyat Island",
-    "Yas Island",
-    "Al Reem Island",
-    "Corniche Area",
-    "Al Raha Beach",
-    "Khalifa City",
-    "Al Maryah Island",
-    "Nurai Island",
-    "Jubail Island",
-    "Al Shamkha",
-    "Mohammed Bin Zayed City",
-  ],
-  Sharjah: [
-    "Al Majaz",
-    "Al Khan",
-    "Al Nahda",
-    "Al Taawun",
-    "Muwaileh",
-    "University City",
-    "Al Mamzar",
-    "Sharjah Waterfront City",
-    "Aljada",
-  ],
-  Ajman: [
-    "Al Rashidiya",
-    "Al Nuaimiya",
-    "Al Jurf",
-    "Corniche Ajman",
-    "Al Rawda",
-    "Emirates City",
-    "Al Helio",
-  ],
-  "Ras Al Khaimah": [
-    "Al Hamra Village",
-    "Al Marjan Island",
-    "Mina Al Arab",
-    "Dafan Al Nakheel",
-    "Khuzam",
-    "Al Jazeera Al Hamra",
-    "Wadi Shah",
-  ],
-  Fujairah: [
-    "Al Fujairah City",
-    "Dibba Al Fujairah",
-    "Merashid",
-    "Al Faseel",
-    "Sakamkam",
-    "Al Aqah",
-  ],
-  "Umm Al Quwain": [
-    "Old Town",
-    "Al Salamah",
-    "Al Raas",
-    "Umm Al Quwain Marina",
-    "Al Dar Al Baida",
-  ],
+const COUNTRY_REGION_DISTRICTS: Record<string, Record<string, string[]>> = {
+  "UAE": {
+    "Dubai": [
+      "Palm Jumeirah",
+      "Downtown Dubai",
+      "Dubai Marina",
+      "Jumeirah Beach Residence",
+      "Jumeirah",
+      "Al Barari",
+      "Emirates Hills",
+      "Arabian Ranches",
+      "Damac Hills",
+      "Dubai Hills Estate",
+      "Business Bay",
+      "DIFC",
+      "Bluewaters Island",
+      "Dubai Creek Harbour",
+      "MBR City",
+      "Al Sufouh",
+      "Umm Suqeim",
+      "Mirdif",
+      "Dubai Islands",
+      "The World Islands",
+      "Jumeirah Islands",
+    ],
+    "Abu Dhabi": [
+      "Saadiyat Island",
+      "Yas Island",
+      "Al Reem Island",
+      "Corniche Area",
+      "Al Raha Beach",
+      "Khalifa City",
+      "Al Maryah Island",
+      "Nurai Island",
+      "Jubail Island",
+      "Al Shamkha",
+      "Mohammed Bin Zayed City",
+    ],
+    "Sharjah": [
+      "Al Majaz", "Al Khan", "Al Nahda", "Al Taawun", "Muwaileh", "University City", "Al Mamzar", "Sharjah Waterfront City", "Aljada"
+    ],
+    "Ajman": ["Al Rashidiya", "Al Nuaimiya", "Al Jurf", "Corniche Ajman", "Al Rawda", "Emirates City", "Al Helio"],
+    "Ras Al Khaimah": ["Al Hamra Village", "Al Marjan Island", "Mina Al Arab", "Dafan Al Nakheel", "Khuzam", "Al Jazeera Al Hamra", "Wadi Shah"],
+    "Fujairah": ["Al Fujairah City", "Dibba Al Fujairah", "Merashid", "Al Faseel", "Sakamkam", "Al Aqah"],
+    "Umm Al Quwain": ["Old Town", "Al Salamah", "Al Raas", "Umm Al Quwain Marina", "Al Dar Al Baida"],
+  },
+  "Brazil": {
+    "Rio de Janeiro": [],
+    "São Paulo": [],
+    "Trancoso": [],
+    "Florianópolis": [],
+    "Búzios": [],
+    "Salvador": [],
+  },
+  "Spain": {
+    "Barcelona": [],
+    "Madrid": [],
+    "Marbella": [],
+    "Ibiza": [],
+    "Mallorca": [],
+    "Tenerife": [],
+    "Valencia": [],
+  },
+  "Italy": {
+    "Rome": [],
+    "Milan": [],
+    "Venice": [],
+    "Florence": [],
+    "Lake Como": [],
+    "Amalfi Coast": [],
+    "Sicily": [],
+    "Tuscany": [],
+  },
 };
 
-const EMIRATES = Object.keys(EMIRATE_DISTRICTS);
+const COUNTRIES = Object.keys(COUNTRY_REGION_DISTRICTS);
 
 const AMENITIES = [
-  "Private Pool",
+  "Бассейн / джакузи",
+  "Высокоскоростной Wi-Fi",
+  "Кондиционер и отопление",
+  "Бесплатная парковка",
+  "Полноценная кухня",
+  "Стиральная и сушильная машина",
+  "Self check-in",
+  "Smart-TV со стримингом",
+  "BBQ-зона и outdoor-лонж",
+  "King-size кровати и премиальное бельё",
+  "Выделенное рабочее место",
+  "Регулярная профуборка / сервис",
+  "Детские удобства",
+  "Pet-friendly",
+  "EV-зарядка",
+  "Фитнес-зона / доступ в спортзал",
+  "Игровая / развлекательная зона",
+  "Усиленная безопасность",
   "Water View",
   "Mountain View",
-  "City View",
-  "Gym",
-  "Spa",
-  "Chef Kitchen",
-  "Home Cinema",
-  "Jacuzzi",
-  "Private Beach",
-  "Helipad",
-  "Wine Cellar",
-  "Smart Home",
-  "Concierge",
-  "Pet Friendly",
-  "EV Charging",
-  "Kids Play Area",
-  "BBQ Area",
+  "City View"
 ];
 
 const STEPS = [
@@ -189,6 +191,7 @@ export interface EditPropertyData {
   description: string;
   type: "Villa" | "Penthouse" | "Resort";
   rental_type: "all" | "for_stay" | "for_event";
+  location_country: string;
   location_emirate: string;
   location_district: string;
   bedrooms: number;
@@ -238,8 +241,9 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
           description: editData.description,
           type: editData.type,
           rental_type: editData.rental_type,
+          location_country: editData.location_country || "UAE",
           location_emirate: editData.location_emirate,
-          location_district: editData.location_district,
+          location_district: editData.location_district || "",
           bedrooms: editData.bedrooms,
           bathrooms: editData.bathrooms,
           max_guests: editData.max_guests,
@@ -252,19 +256,9 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
           description: importedData?.description || "",
           type: "Villa",
           rental_type: "all",
-          location_emirate:
-            importedData?.locationEmirate &&
-            EMIRATES.includes(importedData.locationEmirate)
-              ? importedData.locationEmirate
-              : "",
-          location_district:
-            importedData?.locationDistrict &&
-            importedData?.locationEmirate &&
-            (
-              EMIRATE_DISTRICTS[importedData.locationEmirate] || []
-            ).includes(importedData.locationDistrict)
-              ? importedData.locationDistrict
-              : "",
+          location_country: importedData?.locationCountry || "UAE",
+          location_emirate: importedData?.locationEmirate || "",
+          location_district: importedData?.locationDistrict || "",
           bedrooms: importedData?.bedrooms || 1,
           bathrooms: importedData?.bathrooms || 1,
           max_guests: importedData?.maxGuests || 2,
@@ -279,11 +273,12 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
   });
 
   // Watch selected emirate to dynamically update district options
+  const selectedCountry = watch("location_country");
   const selectedEmirate = watch("location_emirate");
 
   // ─── Step Navigation ───
   const fieldsPerStep: (keyof FormValues)[][] = [
-    ["title", "type", "rental_type", "location_emirate", "location_district"],
+    ["title", "type", "rental_type", "location_country", "location_emirate", "location_district"],
     ["description", "bedrooms", "bathrooms", "max_guests"],
     ["amenities"],
     [], // gallery — manual validation
@@ -326,8 +321,9 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
       title: data.title,
       description: data.description,
       type: data.type,
+      location_country: data.location_country,
       location_emirate: data.location_emirate,
-      location_district: data.location_district,
+      location_district: data.location_district || "",
       bedrooms: data.bedrooms,
       bathrooms: data.bathrooms,
       max_guests: data.max_guests,
@@ -348,8 +344,8 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
       setSubmitResult({
         success: true,
         message: isEditMode
-          ? "Changes saved successfully! Redirecting..."
-          : "Property listed successfully! Redirecting to dashboard...",
+          ? "Changes saved successfully!"
+          : "Property listed successfully! Your property is now pending review.",
       });
     } else {
       setSubmitResult({
@@ -433,22 +429,52 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
                   <MapPin className="w-3.5 h-3.5 inline mr-1" />
-                  Emirate
+                  Country
+                </label>
+                <select
+                  {...register("location_country", {
+                    onChange: () => {
+                      setValue("location_emirate", "");
+                      setValue("location_district", "");
+                    },
+                  })}
+                  className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none"
+                >
+                  <option value="">Select...</option>
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                {errors.location_country && (
+                  <p className="text-red-500 text-xs mt-1.5">
+                    {errors.location_country.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
+                  Region/City
                 </label>
                 <select
                   {...register("location_emirate", {
                     onChange: () => setValue("location_district", ""),
                   })}
-                  className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none"
+                  disabled={!selectedCountry}
+                  className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  <option value="">Select...</option>
-                  {EMIRATES.map((e) => (
-                    <option key={e} value={e}>
-                      {e}
+                  <option value="">
+                    {selectedCountry ? "Select region..." : "Select country first"}
+                  </option>
+                  {Object.keys(COUNTRY_REGION_DISTRICTS[selectedCountry as string] || {}).map((r) => (
+                    <option key={r} value={r}>
+                      {r}
                     </option>
                   ))}
                 </select>
@@ -458,19 +484,20 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
                   </p>
                 )}
               </div>
+              
               <div>
                 <label className="block text-sm font-semibold text-charcoal/70 mb-2 uppercase tracking-wider">
-                  District
+                  Area/District
                 </label>
                 <select
                   {...register("location_district")}
-                  disabled={!selectedEmirate}
+                  disabled={!selectedEmirate || (COUNTRY_REGION_DISTRICTS[selectedCountry as string]?.[selectedEmirate]?.length === 0)}
                   className="w-full px-4 py-3.5 bg-white border border-charcoal/10 rounded-xl text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all appearance-none disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <option value="">
-                    {selectedEmirate ? "Select district..." : "Select emirate first"}
+                    {!selectedEmirate ? "Select region first" : (COUNTRY_REGION_DISTRICTS[selectedCountry as string]?.[selectedEmirate]?.length === 0 ? "Not applicable" : "Select area...")}
                   </option>
-                  {(EMIRATE_DISTRICTS[selectedEmirate] || []).map((d) => (
+                  {(COUNTRY_REGION_DISTRICTS[selectedCountry as string]?.[selectedEmirate] || []).map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>
@@ -661,11 +688,16 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
       case 3:
         return (
           <div className="space-y-6">
-            <p className="text-sm text-charcoal/50">
-              {importedData
-                ? "Your imported images are shown below. Remove or add more as needed."
-                : "Add image URLs for your property gallery (up to 10)."}
-            </p>
+            <div className="space-y-1.5">
+              <p className="text-sm text-charcoal/80 font-medium">
+                {importedData
+                  ? "Your imported images are shown below. Remove or add more as needed."
+                  : "Add image URLs for your property gallery (up to 30)."}
+              </p>
+              <p className="text-xs text-charcoal/60 leading-relaxed">
+                <strong className="text-charcoal/80">How to add photos:</strong> Copy any public image link (e.g., from Airbnb, Google Drive, or your website) and paste it into the input field below. Then click the <strong className="text-charcoal/80">Add (+)</strong> button or press enter. Make sure the link is publicly accessible.
+              </p>
+            </div>
 
             {/* Add new image */}
             <div className="flex gap-3">
@@ -804,21 +836,6 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
     }
   }
 
-  // ─── Success State ───
-  // Auto-redirect after success
-  useEffect(() => {
-    if (submitResult?.success) {
-      const timer = setTimeout(() => {
-        if (isEditMode && editData) {
-          router.push(`/host/properties/${editData.propertyId}`);
-        } else {
-          router.push("/host/dashboard");
-        }
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [submitResult, isEditMode, editData, router]);
-
   if (submitResult?.success) {
     return (
       <motion.div
@@ -832,7 +849,23 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
         <h2 className="text-3xl font-black display-font text-charcoal mb-3">
           {isEditMode ? "Updated!" : "Congratulations!"}
         </h2>
-        <p className="text-charcoal/50 text-lg">{submitResult.message}</p>
+        <p className="text-charcoal/50 text-lg mb-10">{submitResult.message}</p>
+
+        <div className="flex justify-center">
+          <button
+            onClick={() => {
+              if (isEditMode && editData) {
+                router.push(`/host/properties/${editData.propertyId}`);
+              } else {
+                router.push("/host/dashboard");
+              }
+            }}
+            className="px-8 py-3.5 gold-gradient text-white rounded-xl font-bold hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-2"
+          >
+            {isEditMode ? "View Property Details" : "Go to Dashboard"}
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </motion.div>
     );
   }

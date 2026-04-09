@@ -1,9 +1,22 @@
 {
   "nav": {
+    "home": "Главная",
     "explore": "Коллекция",
     "listProperty": "Разместить объект",
     "login": "Войти",
-    "myBookings": "Мои бронирования"
+    "myBookings": "Мои бронирования",
+    "myProfile": "Мой профиль",
+    "signOut": "Выйти"
+  },
+  "mobileNav": {
+    "home": "Главная",
+    "explore": "Коллекция",
+    "dashboard": "Панель хоста",
+    "bookings": "Бронирования",
+    "addProperty": "Добавить объект",
+    "myBookings": "Мои бронирования",
+    "myProfile": "Мой профиль",
+    "signOut": "Выйти"
   },
   "home": {
     "hero_badge": "Резиденции премиум-класса",

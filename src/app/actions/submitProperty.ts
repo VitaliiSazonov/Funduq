@@ -6,6 +6,7 @@ export interface SubmitPropertyPayload {
   title: string;
   description: string;
   type: string;
+  location_country: string;
   location_emirate: string;
   location_district: string;
   bedrooms: number;
@@ -54,6 +55,7 @@ export async function submitProperty(
         title: payload.title,
         description: payload.description,
         type: payload.type,
+        location_country: payload.location_country,
         location_emirate: payload.location_emirate,
         location_district: payload.location_district,
         bedrooms: payload.bedrooms,
