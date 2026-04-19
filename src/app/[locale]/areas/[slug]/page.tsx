@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { dubaiAreas } from "@/data/dubai-areas";
 import { createClient } from "@/lib/supabase/server";
 import PropertyCard from "@/components/ui/PropertyCard";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 
 export async function generateStaticParams() {
   return dubaiAreas.map((area) => ({
@@ -76,8 +76,8 @@ export default async function AreaPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["Place", "RealEstateAgent"],
-    name: area.name,
-    description: area.descriptionEn,
+    name: locale === "ru" ? area.nameRu : area.name,
+    description: locale === "ru" ? area.descriptionRu : area.descriptionEn,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Dubai",
@@ -98,8 +98,8 @@ export default async function AreaPage({
           <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font mb-6">
             {locale === "ru" ? area.nameRu : area.name}
           </h1>
-          <p className="text-lg text-muted max-w-4xl leading-relaxed">
-            {area.descriptionEn}
+          <p className="text-lg text-muted max-w-4xl leading-relaxed whitespace-pre-line">
+            {locale === "ru" ? area.descriptionRu : area.descriptionEn}
           </p>
         </div>
       </section>
@@ -108,7 +108,7 @@ export default async function AreaPage({
       <section className="py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-bold mb-8">
-            Available Properties in {area.name}
+            {locale === "ru" ? `Доступные объекты в ${area.nameRu}` : `Available Properties in ${area.name}`}
           </h2>
           {properties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -117,10 +117,13 @@ export default async function AreaPage({
               ))}
             </div>
           ) : (
-            <p className="text-muted">No properties available in this area at the moment.</p>
+            <p className="text-muted">
+              {locale === "ru" ? "В данный момент в этом районе нет доступных объектов." : "No properties available in this area at the moment."}
+            </p>
           )}
         </div>
       </section>
     </div>
   );
 }
+

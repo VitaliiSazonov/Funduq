@@ -21,10 +21,12 @@ export default async function AreasIndexPage({
     <div className="flex flex-col min-h-screen pt-32 pb-16 px-4 md:px-8 bg-offwhite">
       <div className="max-w-7xl mx-auto w-full">
         <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font mb-6">
-          Explore Dubai by Area
+          {locale === "ru" ? "Районы Дубая" : "Explore Dubai by Area"}
         </h1>
         <p className="text-lg text-muted max-w-3xl mb-12">
-          Discover the perfect neighborhood for your stay. From the vibrant beaches of JBR to the luxurious heights of Downtown Dubai, find your ideal holiday home across the city's most desirable locations.
+          {locale === "ru" 
+            ? "Найдите идеальный район для вашего проживания. От оживленных пляжей JBR до роскошных высот Даунтауна — выберите идеальный дом для отпуска в самых желанных локациях города."
+            : "Discover the perfect neighborhood for your stay. From the vibrant beaches of JBR to the luxurious heights of Downtown Dubai, find your ideal holiday home across the city's most desirable locations."}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -42,12 +44,12 @@ export default async function AreasIndexPage({
                   {locale === "ru" ? area.nameRu : area.name}
                 </h2>
                 <p className="text-muted line-clamp-3 text-sm leading-relaxed mb-6">
-                  {area.descriptionEn}
+                  {locale === "ru" ? area.descriptionRu : area.descriptionEn}
                 </p>
               </div>
 
               <div className="flex items-center text-sm font-bold text-charcoal uppercase tracking-widest mt-auto z-10 w-fit">
-                Explore Area
+                {locale === "ru" ? "Смотреть объекты" : "Explore Area"}
                 <ChevronRight className="w-4 h-4 ml-2 text-gold group-hover:translate-x-1 transition-transform" />
               </div>
 
