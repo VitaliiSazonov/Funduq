@@ -22,7 +22,7 @@ import { Property, SortOption } from "@/app/actions/properties";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 
-const LOCATIONS = ["UAE", "Brazil", "Italy", "Spain"];
+const LOCATIONS = ["Dubai", "Abu Dhabi", "Ras Al Khaimah", "Fujairah"];
 const BEDROOM_OPTIONS = [1, 2, 3, 4, 5, 6];
 const TYPE_OPTIONS = ["Villa", "Penthouse", "Resort"];
 const EVENT_OPTIONS = ["yes", "no"];

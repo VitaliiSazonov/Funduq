@@ -28,37 +28,32 @@ export async function getSearchLocations(): Promise<LocationSuggestion[]> {
 
   const suggestions = new Map<string, LocationSuggestion>();
 
-  // Add defaults for destination countries
-  const defaultCountries = ["UAE", "Brazil", "Italy", "Spain"];
-  defaultCountries.forEach((country) => {
-    suggestions.set(`country:${country}`, {
-      label: country,
-      country,
-      type: "country",
+  // Add defaults for destination emirates
+  const defaultEmirates = ["Dubai", "Abu Dhabi", "Ras Al Khaimah", "Fujairah"];
+  defaultEmirates.forEach((emirate) => {
+    suggestions.set(`emirate:${emirate}`, {
+      label: emirate,
+      country: "UAE",
+      type: "emirate",
     });
   });
 
   if (data) {
     for (const row of data) {
       const country = row.location_country || "UAE";
+      
+      // Enforce UAE-only market focus
+      if (country !== "UAE") continue;
+
       const emirate = row.location_emirate;
       const district = row.location_district;
-
-      // Add country
-      if (country && !suggestions.has(`country:${country}`)) {
-        suggestions.set(`country:${country}`, {
-          label: country,
-          country,
-          type: "country",
-        });
-      }
 
       // Add emirate (e.g. "Dubai")
       if (emirate) {
         const key = `emirate:${emirate}`;
         if (!suggestions.has(key)) {
           suggestions.set(key, {
-            label: `${emirate}, ${country}`,
+            label: `${emirate}`, // Just show emirate name
             country,
             type: "emirate",
           });
@@ -91,9 +86,9 @@ export async function getSearchLocations(): Promise<LocationSuggestion[]> {
 
 function getDefaultLocations(): LocationSuggestion[] {
   return [
-    { label: "UAE", country: "UAE", type: "country" },
-    { label: "Brazil", country: "Brazil", type: "country" },
-    { label: "Italy", country: "Italy", type: "country" },
-    { label: "Spain", country: "Spain", type: "country" },
+    { label: "Dubai", country: "UAE", type: "emirate" },
+    { label: "Abu Dhabi", country: "UAE", type: "emirate" },
+    { label: "Ras Al Khaimah", country: "UAE", type: "emirate" },
+    { label: "Fujairah", country: "UAE", type: "emirate" },
   ];
 }

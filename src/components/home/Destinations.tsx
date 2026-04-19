@@ -7,32 +7,32 @@ import { Link } from "@/i18n/navigation";
 
 const DESTINATIONS = [
   {
-    key: "uae",
+    key: "dubai",
     image: "/images/destinations/uae.png",
-    alt: "Luxurious desert resort in the UAE at sunset",
+    alt: "Luxurious desert resort in Dubai",
     offset: false,
-    filterValue: "UAE",
+    filterValue: "Dubai",
   },
   {
-    key: "florianopolis",
-    image: "/images/destinations/florianopolis.png",
-    alt: "Pristine beaches of Florianópolis, Brazil",
-    offset: true,
-    filterValue: "Brazil",
-  },
-  {
-    key: "italy",
+    key: "abudhabi",
     image: "/images/destinations/italy.png",
-    alt: "Tuscany landscape with a luxury villa in Italy",
-    offset: false,
-    filterValue: "Italy",
+    alt: "Luxurious villa in Abu Dhabi",
+    offset: true,
+    filterValue: "Abu Dhabi",
   },
   {
-    key: "spain",
+    key: "rak",
     image: "/images/destinations/spain.png",
-    alt: "Mediterranean luxury villa in Mallorca, Spain",
+    alt: "Mediterranean luxury villa in Ras Al Khaimah",
+    offset: false,
+    filterValue: "Ras Al Khaimah",
+  },
+  {
+    key: "fujairah",
+    image: "/images/destinations/florianopolis.png",
+    alt: "Pristine beaches of Fujairah",
     offset: true,
-    filterValue: "Spain",
+    filterValue: "Fujairah",
   },
 ];
 

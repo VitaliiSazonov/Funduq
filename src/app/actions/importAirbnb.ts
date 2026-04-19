@@ -134,37 +134,9 @@ const LOCATION_MAP: Record<string, { country: string; emirate: string; district:
   "al reem island": { country: "UAE", emirate: "Abu Dhabi", district: "Al Reem Island" },
   "al raha beach": { country: "UAE", emirate: "Abu Dhabi", district: "Al Raha Beach" },
   "nurai island": { country: "UAE", emirate: "Abu Dhabi", district: "Nurai Island" },
+  "nurai island": { country: "UAE", emirate: "Abu Dhabi", district: "Nurai Island" },
   "al marjan island": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Marjan Island" },
   "al hamra village": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Hamra Village" },
-  // Brazil
-  "rio de janeiro": { country: "Brazil", emirate: "Rio de Janeiro", district: "" },
-  "são paulo": { country: "Brazil", emirate: "São Paulo", district: "" },
-  "sao paulo": { country: "Brazil", emirate: "São Paulo", district: "" },
-  "trancoso": { country: "Brazil", emirate: "Trancoso", district: "" },
-  "florianópolis": { country: "Brazil", emirate: "Florianópolis", district: "" },
-  "florianopolis": { country: "Brazil", emirate: "Florianópolis", district: "" },
-  "búzios": { country: "Brazil", emirate: "Búzios", district: "" },
-  "buzios": { country: "Brazil", emirate: "Búzios", district: "" },
-  "salvador": { country: "Brazil", emirate: "Salvador", district: "" },
-  // Spain
-  "barcelona": { country: "Spain", emirate: "Barcelona", district: "" },
-  "madrid": { country: "Spain", emirate: "Madrid", district: "" },
-  "marbella": { country: "Spain", emirate: "Marbella", district: "" },
-  "ibiza": { country: "Spain", emirate: "Ibiza", district: "" },
-  "mallorca": { country: "Spain", emirate: "Mallorca", district: "" },
-  "tenerife": { country: "Spain", emirate: "Tenerife", district: "" },
-  "valencia": { country: "Spain", emirate: "Valencia", district: "" },
-  // Italy
-  "rome": { country: "Italy", emirate: "Rome", district: "" },
-  "milan": { country: "Italy", emirate: "Milan", district: "" },
-  "venice": { country: "Italy", emirate: "Venice", district: "" },
-  "florence": { country: "Italy", emirate: "Florence", district: "" },
-  "lake como": { country: "Italy", emirate: "Lake Como", district: "" },
-  "como": { country: "Italy", emirate: "Lake Como", district: "" },
-  "amalfi coast": { country: "Italy", emirate: "Amalfi Coast", district: "" },
-  "amalfi": { country: "Italy", emirate: "Amalfi Coast", district: "" },
-  "sicily": { country: "Italy", emirate: "Sicily", district: "" },
-  "tuscany": { country: "Italy", emirate: "Tuscany", district: "" },
 };
 
 function resolveLocation(locationText: string): { country: string; emirate: string; district: string } {
@@ -177,8 +149,7 @@ function resolveLocation(locationText: string): { country: string; emirate: stri
 
   // Detect regions for UAE
   const uaeEmirates = [
-    "Dubai", "Abu Dhabi", "Sharjah", "Ajman",
-    "Ras Al Khaimah", "Fujairah", "Umm Al Quwain",
+    "Dubai", "Abu Dhabi", "Ras Al Khaimah", "Fujairah",
   ];
   for (const emirate of uaeEmirates) {
     if (lower.includes(emirate.toLowerCase())) {
@@ -186,27 +157,6 @@ function resolveLocation(locationText: string): { country: string; emirate: stri
     }
   }
 
-  // Detect regions for Brazil
-  const brazilRegions = ["Rio de Janeiro", "São Paulo", "Trancoso", "Florianópolis", "Búzios", "Salvador"];
-  for (const region of brazilRegions) {
-    if (lower.includes(region.toLowerCase())) return { country: "Brazil", emirate: region, district: "" };
-  }
-
-  // Detect regions for Spain
-  const spainRegions = ["Barcelona", "Madrid", "Marbella", "Ibiza", "Mallorca", "Tenerife", "Valencia"];
-  for (const region of spainRegions) {
-    if (lower.includes(region.toLowerCase())) return { country: "Spain", emirate: region, district: "" };
-  }
-
-  // Detect regions for Italy
-  const italyRegions = ["Rome", "Milan", "Venice", "Florence", "Lake Como", "Amalfi Coast", "Sicily", "Tuscany"];
-  for (const region of italyRegions) {
-    if (lower.includes(region.toLowerCase())) return { country: "Italy", emirate: region, district: "" };
-  }
-
-  if (lower.includes("brazil")) return { country: "Brazil", emirate: "", district: "" };
-  if (lower.includes("spain")) return { country: "Spain", emirate: "", district: "" };
-  if (lower.includes("italy")) return { country: "Italy", emirate: "", district: "" };
   if (lower.includes("uae") || lower.includes("united arab emirates")) return { country: "UAE", emirate: "", district: "" };
 
   return { country: "UAE", emirate: "", district: "" };

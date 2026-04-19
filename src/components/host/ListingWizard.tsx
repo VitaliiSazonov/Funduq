@@ -112,40 +112,8 @@ const COUNTRY_REGION_DISTRICTS: Record<string, Record<string, string[]>> = {
       "Al Shamkha",
       "Mohammed Bin Zayed City",
     ],
-    "Sharjah": [
-      "Al Majaz", "Al Khan", "Al Nahda", "Al Taawun", "Muwaileh", "University City", "Al Mamzar", "Sharjah Waterfront City", "Aljada"
-    ],
-    "Ajman": ["Al Rashidiya", "Al Nuaimiya", "Al Jurf", "Corniche Ajman", "Al Rawda", "Emirates City", "Al Helio"],
     "Ras Al Khaimah": ["Al Hamra Village", "Al Marjan Island", "Mina Al Arab", "Dafan Al Nakheel", "Khuzam", "Al Jazeera Al Hamra", "Wadi Shah"],
     "Fujairah": ["Al Fujairah City", "Dibba Al Fujairah", "Merashid", "Al Faseel", "Sakamkam", "Al Aqah"],
-    "Umm Al Quwain": ["Old Town", "Al Salamah", "Al Raas", "Umm Al Quwain Marina", "Al Dar Al Baida"],
-  },
-  "Brazil": {
-    "Rio de Janeiro": [],
-    "São Paulo": [],
-    "Trancoso": [],
-    "Florianópolis": [],
-    "Búzios": [],
-    "Salvador": [],
-  },
-  "Spain": {
-    "Barcelona": [],
-    "Madrid": [],
-    "Marbella": [],
-    "Ibiza": [],
-    "Mallorca": [],
-    "Tenerife": [],
-    "Valencia": [],
-  },
-  "Italy": {
-    "Rome": [],
-    "Milan": [],
-    "Venice": [],
-    "Florence": [],
-    "Lake Como": [],
-    "Amalfi Coast": [],
-    "Sicily": [],
-    "Tuscany": [],
   },
 };
 
