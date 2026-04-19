@@ -93,12 +93,12 @@ export default async function AreaPage({
       />
       
       {/* Header Section */}
-      <section className="pt-32 pb-16 px-4 md:px-8 bg-offwhite">
+      <section className="pt-32 pb-16 px-4 md:px-8 bg-charcoal text-white">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-black text-charcoal display-font mb-6">
+          <h1 className="text-4xl md:text-5xl font-black text-white display-font mb-6 text-center md:text-left">
             {locale === "ru" ? area.nameRu : area.name}
           </h1>
-          <p className="text-lg text-muted max-w-4xl leading-relaxed whitespace-pre-line">
+          <p className="text-lg text-white/70 max-w-4xl leading-relaxed whitespace-pre-line text-center md:text-left">
             {locale === "ru" ? area.descriptionRu : area.descriptionEn}
           </p>
         </div>
