@@ -19,8 +19,8 @@
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbGciOi... (anon_key)` |
 | `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOi... (service_role)` |
 | `RESEND_API_KEY` | `re_DjS... (resend_key)` |
-| `EMAIL_FROM` | `noreply@funduq.com` |
-| `NEXT_PUBLIC_SITE_URL` | `https://funduq.vercel.app` |
+| `EMAIL_FROM` | `noreply@funduq.ae` |
+| `NEXT_PUBLIC_SITE_URL` | `https://funduq.ae` |
 | `SENTRY_DSN` | (Leave blank if not active yet) |
 | `SENTRY_ORG` | (From Sentry project) |
 | `SENTRY_PROJECT` | (From Sentry project) |
@@ -30,8 +30,8 @@
 
 ## 3. Supabase Dashboard
 - [ ] **Auth → URL Config**
-    - Site URL: `https://funduq.vercel.app`
-    - Redirect URL: `https://funduq.vercel.app/auth/callback`
+    - Site URL: `https://funduq.ae`
+    - Redirect URL: `https://funduq.ae/auth/callback`
 - [ ] **SQL Editor** - Run migrations in order:
     1. `20260326000000_initial_schema.sql`
     2. `005_bookings_and_rls.sql`

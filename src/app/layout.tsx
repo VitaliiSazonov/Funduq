@@ -15,7 +15,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://funduq.vercel.app"),
+  metadataBase: new URL("https://funduq.ae"),
   title: "Funduq – Holiday Homes & Short-Term Rentals in Dubai",
   description:
     "Find and book verified holiday homes, apartments and villas in Dubai. Flexible check-in, transparent pricing, no hidden fees.",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_AE",
-    url: "https://funduq.vercel.app",
+    url: "https://funduq.ae",
     title: "Funduq – Holiday Homes & Short-Term Rentals in Dubai",
     description: "Find and book verified holiday homes, apartments and villas in Dubai.",
     siteName: "Funduq",
@@ -42,8 +42,8 @@ const jsonLd = {
     {
       "@type": "Organization",
       "name": "Funduq",
-      "url": "https://funduq.vercel.app",
-      "logo": "https://funduq.vercel.app/favicon.ico",
+      "url": "https://funduq.ae",
+      "logo": "https://funduq.ae/favicon.ico",
       "sameAs": [
         "https://www.instagram.com/funduq",
         "https://twitter.com/funduq"
@@ -52,10 +52,10 @@ const jsonLd = {
     {
       "@type": "WebSite",
       "name": "Funduq",
-      "url": "https://funduq.vercel.app",
+      "url": "https://funduq.ae",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://funduq.vercel.app/en/villas?q={search_term_string}",
+        "target": "https://funduq.ae/en/villas?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
@@ -63,7 +63,7 @@ const jsonLd = {
       "@type": "LodgingBusiness",
       "name": "Funduq Holiday Homes",
       "description": "Verified holiday homes, apartments and villas in Dubai. Flexible check-in, transparent pricing.",
-      "url": "https://funduq.vercel.app",
+      "url": "https://funduq.ae",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Dubai",

@@ -17,7 +17,7 @@ Funduq connects travelers with verified property owners in Dubai. All listings i
 
 ## Properties
 
-Browse all available properties at https://funduq.vercel.app/en/villas
+Browse all available properties at https://funduq.ae/en/villas
 
 ## Contact
 
