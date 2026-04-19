@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://funduq.vercel.app';
+  const baseUrl = 'https://funduq.ae';
 
   // Fetch all properties to generate dynamic routes
   const { data: properties } = await supabase

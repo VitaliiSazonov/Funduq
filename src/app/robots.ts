@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://funduq.vercel.app/sitemap.xml',
+    sitemap: 'https://funduq.ae/sitemap.xml',
   };
 }
