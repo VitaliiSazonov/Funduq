@@ -120,7 +120,7 @@ export default function BlogPostPage({
                          prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
                          prose-p:text-charcoal/80 prose-p:leading-relaxed prose-p:mb-6
                          prose-ul:list-disc prose-ul:ml-6 prose-li:text-charcoal/80"
-              dangerouslySetInnerHTML={{ __html: isRu ? (post.contentRu || post.contentEn) : post.contentEn }}
+              dangerouslySetInnerHTML={{ __html: isRu ? ((post as any).contentRu || post.contentEn) : post.contentEn }}
             />
           </div>
 
