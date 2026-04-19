@@ -134,7 +134,6 @@ const LOCATION_MAP: Record<string, { country: string; emirate: string; district:
   "al reem island": { country: "UAE", emirate: "Abu Dhabi", district: "Al Reem Island" },
   "al raha beach": { country: "UAE", emirate: "Abu Dhabi", district: "Al Raha Beach" },
   "nurai island": { country: "UAE", emirate: "Abu Dhabi", district: "Nurai Island" },
-  "nurai island": { country: "UAE", emirate: "Abu Dhabi", district: "Nurai Island" },
   "al marjan island": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Marjan Island" },
   "al hamra village": { country: "UAE", emirate: "Ras Al Khaimah", district: "Al Hamra Village" },
 };
