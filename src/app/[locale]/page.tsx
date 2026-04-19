@@ -27,8 +27,51 @@ export default async function HomePage({ params }: Props) {
     getSearchLocations(),
   ]);
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Funduq?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Funduq is a holiday homes and short-term rental platform in Dubai, UAE. We offer verified apartments, villas, and studios with transparent pricing and flexible check-in."
+        }
+      },
+      {
+        "@type": "Question", 
+        "name": "How do I book a holiday home in Dubai through Funduq?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Browse our verified listings, select your dates and property, and submit a booking request. Our team will confirm availability within 24 hours."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are all Funduq properties verified?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All properties on Funduq are reviewed and verified by our moderation team before being published on the platform."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What areas in Dubai does Funduq cover?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Funduq covers all major areas of Dubai including Downtown Dubai, Dubai Marina, JBR, Palm Jumeirah, Business Bay, DIFC, and more."
+        }
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Hero with Search */}
       <HomeHero locations={locations} />
 

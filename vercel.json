@@ -13,15 +13,11 @@
   },
   "rewrites": [],
   "redirects": [],
-  "headers": [
+  "headers": [],
+  "crons": [
     {
-      "source": "/api/test/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
+      "path": "/api/cron/popularity",
+      "schedule": "0 3 * * *"
     }
   ]
 }

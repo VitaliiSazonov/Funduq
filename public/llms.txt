@@ -1,0 +1,30 @@
+# Funduq
+
+> Funduq is a holiday homes and short-term rental platform in Dubai, UAE. We list verified apartments, villas and studios with transparent pricing, no hidden fees, and flexible check-in.
+> 
+
+## About
+
+Funduq connects travelers with verified property owners in Dubai. All listings include photos, amenities, pricing, and availability calendars. Properties are reviewed by our moderation team before being published.
+
+## Services
+
+- Short-term apartment rentals in Dubai
+- Holiday villa bookings in Dubai
+- Studio and room rentals for tourists
+- Flexible check-in and check-out
+- Verified property listings with photos
+
+## Properties
+
+Browse all available properties at https://funduq.vercel.app/en/villas
+
+## Contact
+
+Email: [info@sezavi.ae](mailto:info@sezavi.ae)
+
+Location: Dubai, UAE
+
+## Optional
+
+noindex: false

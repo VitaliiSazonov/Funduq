@@ -15,9 +15,63 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Funduq | Luxury Short-Term Rentals in UAE",
+  metadataBase: new URL("https://funduq.vercel.app"),
+  title: "Funduq – Holiday Homes & Short-Term Rentals in Dubai",
   description:
-    "Experience the ultimate in luxury living with Funduq's curated selection of villas, penthouses, and desert resorts across the UAE.",
+    "Find and book verified holiday homes, apartments and villas in Dubai. Flexible check-in, transparent pricing, no hidden fees.",
+  keywords: ["Dubai holiday homes", "short-term rentals Dubai", "villas in Dubai", "vacation rentals UAE", "Funduq"],
+  authors: [{ name: "Funduq" }],
+  openGraph: {
+    type: "website",
+    locale: "en_AE",
+    url: "https://funduq.vercel.app",
+    title: "Funduq – Holiday Homes & Short-Term Rentals in Dubai",
+    description: "Find and book verified holiday homes, apartments and villas in Dubai.",
+    siteName: "Funduq",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Funduq – Holiday Homes & Short-Term Rentals in Dubai",
+    description: "Find and book verified holiday homes, apartments and villas in Dubai.",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Funduq",
+      "url": "https://funduq.vercel.app",
+      "logo": "https://funduq.vercel.app/favicon.ico",
+      "sameAs": [
+        "https://www.instagram.com/funduq",
+        "https://twitter.com/funduq"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "name": "Funduq",
+      "url": "https://funduq.vercel.app",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://funduq.vercel.app/en/villas?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "LodgingBusiness",
+      "name": "Funduq Holiday Homes",
+      "description": "Verified holiday homes, apartments and villas in Dubai. Flexible check-in, transparent pricing.",
+      "url": "https://funduq.vercel.app",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Dubai",
+        "addressRegion": "Dubai",
+        "addressCountry": "AE"
+      }
+    }
+  ]
 };
 
 export default function RootLayout({
@@ -28,6 +82,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${dmSans.variable}`}>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {/* DNS prefetch + preconnect for Supabase (images + API) */}
         <link rel="dns-prefetch" href="https://jftowqfrhhohkqkslfaa.supabase.co" />
         <link

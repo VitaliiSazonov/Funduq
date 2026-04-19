@@ -16,6 +16,7 @@ import {
   Mail,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { signUpAction } from '@/app/actions/auth';
 
@@ -50,6 +51,7 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   // ─── Schema (with translated messages) ───
   const registerSchema = z
@@ -110,9 +112,14 @@ export default function RegisterPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      setSuccessMessage(
-        result.message || t('accountCreated')
-      );
+      setSuccessMessage(result.message || 'Success');
+      // Give the user a moment to see the success state or just redirect
+      setTimeout(() => {
+        if (result.redirectTo) {
+          router.push(result.redirectTo);
+          router.refresh();
+        }
+      }, 1500);
     } else {
       setServerError(result.error || t('somethingWrong'));
     }
@@ -128,24 +135,21 @@ export default function RegisterPage() {
         className="w-full max-w-md text-center"
       >
         <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury p-10">
-          <div className="w-16 h-16 mx-auto mb-6 gold-gradient rounded-full flex items-center justify-center">
-            <Mail className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 mx-auto mb-6 bg-green-500 rounded-full flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-white" />
           </div>
           <h1
             className="text-2xl font-black display-font text-charcoal mb-3"
             data-testid="register-success-heading"
           >
-            {t('checkYourEmail')}
+            {t('welcomeBack').replace('{name}', '')}
           </h1>
           <p className="text-charcoal/50 text-sm leading-relaxed mb-6">
             {successMessage}
           </p>
-          <Link
-            href="/login"
-            className="inline-block px-8 py-3 gold-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-opacity text-sm"
-          >
-            {t('goToSignIn')}
-          </Link>
+          <div className="flex justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-gold" />
+          </div>
         </div>
       </motion.div>
     );

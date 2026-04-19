@@ -47,17 +47,28 @@ export async function generateMetadata({
     return { title: "Property Not Found — Funduq" };
   }
 
-  const ogImage =
-    property.images[0]?.url || property.main_image_url || undefined;
+  const ogImage = property.main_image_url || property.images[0]?.url || undefined;
+  
+  const propertyType = property.type || "Holiday Home";
+  const location = `${property.location_district}, ${property.location_emirate}`;
+  const price = property.price_min ? `AED ${property.price_min}` : "Flexible pricing";
+  
+  const description = `${propertyType} in ${location}. Starting from ${price}. Book this verified property on Funduq with flexible check-in and no hidden fees.`;
 
   return {
-    title: `${property.title} — Funduq | Luxury Villas UAE`,
-    description: property.description?.slice(0, 160) || undefined,
+    title: `${property.title} – Funduq Dubai`,
+    description: description,
     openGraph: {
-      title: `${property.title} — Funduq`,
-      description: property.description?.slice(0, 160) || undefined,
+      title: `${property.title} – Funduq Dubai`,
+      description: description,
       images: ogImage ? [{ url: ogImage }] : undefined,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${property.title} – Funduq Dubai`,
+      description: description,
+      images: ogImage ? [ogImage] : undefined,
+    }
   };
 }
 

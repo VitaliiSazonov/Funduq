@@ -87,6 +87,7 @@ const COUNTRY_REGION_DISTRICTS: Record<string, Record<string, string[]>> = {
       "Damac Hills",
       "Dubai Hills Estate",
       "Business Bay",
+      "Al Barsha",
       "DIFC",
       "Bluewaters Island",
       "Dubai Creek Harbour",

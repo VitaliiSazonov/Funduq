@@ -120,6 +120,7 @@ const LOCATION_MAP: Record<string, { country: string; emirate: string; district:
   "dubai hills": { country: "UAE", emirate: "Dubai", district: "Dubai Hills Estate" },
   "dubai hills estate": { country: "UAE", emirate: "Dubai", district: "Dubai Hills Estate" },
   "business bay": { country: "UAE", emirate: "Dubai", district: "Business Bay" },
+  "al barsha": { country: "UAE", emirate: "Dubai", district: "Al Barsha" },
   difc: { country: "UAE", emirate: "Dubai", district: "DIFC" },
   "bluewaters island": { country: "UAE", emirate: "Dubai", district: "Bluewaters Island" },
   bluewaters: { country: "UAE", emirate: "Dubai", district: "Bluewaters Island" },

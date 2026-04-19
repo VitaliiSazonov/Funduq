@@ -12,6 +12,7 @@ type AuthResult = {
   success: boolean;
   error?: string;
   message?: string;
+  redirectTo?: string;
 };
 
 type UserRole = 'guest' | 'host' | 'admin';
@@ -93,10 +94,12 @@ export async function signUpAction(formData: {
       });
     }
 
+    const redirectTo = await getPostAuthRedirect();
+    
     return {
       success: true,
-      message:
-        'Account created! Please check your email to confirm your account.',
+      message: 'Account created successfully! Welcome to Funduq.',
+      redirectTo,
     };
   } catch (err) {
     console.error('[Funduq Auth] Unexpected signup error:', err);
@@ -232,7 +235,7 @@ function friendlyAuthError(message: string): string {
   if (lower.includes('invalid login credentials'))
     return 'Incorrect email or password. Please try again.';
   if (lower.includes('email not confirmed'))
-    return 'Please confirm your email address before signing in.';
+    return 'Authentication failed. Please check your credentials or contact support.';
   if (lower.includes('user already registered'))
     return 'An account with this email already exists. Try signing in instead.';
   if (lower.includes('signup is disabled'))
