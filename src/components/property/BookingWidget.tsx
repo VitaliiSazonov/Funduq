@@ -125,7 +125,7 @@ export default function BookingWidget({
     const propertyLink = window.location.href;
     
     // The service number should ideally be in env vars. Defaulting to a placeholder if not set.
-    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971500000000";
+    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
 
     const text = `Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
