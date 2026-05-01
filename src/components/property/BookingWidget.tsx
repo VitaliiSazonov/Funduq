@@ -116,18 +116,52 @@ export default function BookingWidget({
     return disabledDates.some((d) => isSameDay(d, date));
   }
 
-  // ─── Submit booking (WhatsApp Redirect) ───
-  function handleSubmit() {
+  // ─── Submit booking (DB + WhatsApp Redirect) ───
+  async function handleSubmit() {
     if (!range?.from || !range?.to || rangeHasConflict()) return;
+
+    setIsSubmitting(true);
+    setResult(null);
+
+    // ── Passport verification gate ──
+    try {
+      const status = await checkVerificationStatus();
+      setVerificationStatus(status);
+      if (status !== "verified") {
+        setShowVerification(true);
+        setIsSubmitting(false);
+        return;
+      }
+    } catch {
+      // If check fails, let createBooking handle auth error
+    }
 
     const checkInStr = format(range.from, "yyyy-MM-dd");
     const checkOutStr = format(range.to, "yyyy-MM-dd");
-    const propertyLink = window.location.href;
-    
-    // The service number should ideally be in env vars. Defaulting to a placeholder if not set.
-    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
 
-    const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+    // 1. Create booking in platform DB for statistics (skip email)
+    const res = await createBooking({
+      propertyId,
+      checkIn: checkInStr,
+      checkOut: checkOutStr,
+      totalGuests: guests,
+      message: message.trim() || undefined,
+      skipEmail: true,
+    });
+
+    setIsSubmitting(false);
+
+    if (res.success) {
+      setResult({
+        success: true,
+        message: t("bookingRequestSent"),
+      });
+
+      // 2. Open WhatsApp with prefilled message
+      const propertyLink = window.location.href;
+      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
+
+      const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
 
 Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
@@ -137,13 +171,26 @@ Hello! I would like to request a booking:
 *Link:* ${propertyLink}
 ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
-    const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
+      const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank");
+
+      // Reset form
+      setRange(undefined);
+      setMessage("");
+      fetchDates();
+    } else {
+      setResult({ success: false, message: res.error || t("somethingWrong") });
+    }
   }
 
-  // ─── Handle verification complete (Not needed anymore, but keeping stub) ───
-  function handleVerificationClose() {
+  // ─── Handle verification complete ───
+  async function handleVerificationClose() {
     setShowVerification(false);
+    const status = await checkVerificationStatus();
+    setVerificationStatus(status);
+    if (status === "verified" && range?.from && range?.to) {
+      handleSubmit();
+    }
   }
 
   return (

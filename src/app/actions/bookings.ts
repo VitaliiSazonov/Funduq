@@ -50,6 +50,7 @@ interface CreateBookingPayload {
   checkOut: string;  // YYYY-MM-DD
   totalGuests: number;
   message?: string;
+  skipEmail?: boolean;
 }
 
 interface ActionResult {
@@ -107,41 +108,43 @@ export async function createBooking(
   }
 
   // ── Email: notify HOST about new request (fire-and-forget) ──
-  const { data: property } = await supabase
-    .from("properties")
-    .select("title, owner_id, price_min")
-    .eq("id", payload.propertyId)
-    .single();
-
-  if (property) {
-    const { data: hostProfile } = await supabase
-      .from("profiles")
-      .select("email")
-      .eq("id", property.owner_id)
+  if (!payload.skipEmail) {
+    const { data: property } = await supabase
+      .from("properties")
+      .select("title, owner_id, price_min")
+      .eq("id", payload.propertyId)
       .single();
 
-    const { data: guestProfile } = await supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("id", user.id)
-      .single();
+    if (property) {
+      const { data: hostProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", property.owner_id)
+        .single();
 
-    if (hostProfile?.email) {
-      const nights = calcNights(payload.checkIn, payload.checkOut);
-      void sendEmail({
-        to: hostProfile.email,
-        subject: `New booking request for ${property.title}`,
-        react: BookingRequestEmail({
-          guestName: guestProfile?.full_name || user.email || "Guest",
-          propertyTitle: property.title,
-          checkIn: formatDateDubai(payload.checkIn),
-          checkOut: formatDateDubai(payload.checkOut),
-          totalGuests: payload.totalGuests,
-          totalNights: nights,
-          estimatedPrice: `AED ${new Intl.NumberFormat().format(property.price_min * nights)}`,
-          baseUrl: BASE_URL,
-        }),
-      });
+      const { data: guestProfile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
+
+      if (hostProfile?.email) {
+        const nights = calcNights(payload.checkIn, payload.checkOut);
+        void sendEmail({
+          to: hostProfile.email,
+          subject: `New booking request for ${property.title}`,
+          react: BookingRequestEmail({
+            guestName: guestProfile?.full_name || user.email || "Guest",
+            propertyTitle: property.title,
+            checkIn: formatDateDubai(payload.checkIn),
+            checkOut: formatDateDubai(payload.checkOut),
+            totalGuests: payload.totalGuests,
+            totalNights: nights,
+            estimatedPrice: `AED ${new Intl.NumberFormat().format(property.price_min * nights)}`,
+            baseUrl: BASE_URL,
+          }),
+        });
+      }
     }
   }
 
