@@ -127,7 +127,9 @@ export default function BookingWidget({
     // The service number should ideally be in env vars. Defaulting to a placeholder if not set.
     const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
 
-    const text = `Hello! I would like to request a booking:
+    const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+
+Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
 *ID:* ${propertyId}
 *Dates:* ${checkInStr} to ${checkOutStr}
