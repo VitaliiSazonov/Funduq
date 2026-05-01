@@ -69,12 +69,11 @@ export async function createBooking(
 
     const {
       data: { user },
-      error: authError,
     } = await supabase.auth.getUser();
 
-    if (authError || !user) {
-      return { success: false, error: "You must be signed in to book." };
-    }
+    // guest_id can be null if not signed in (if DB allows)
+    // or we can use a system-level recording logic.
+    const guestId = user?.id || null;
 
     // Overlap check: prevent double-booking at application level
     const { data: conflicts } = await supabase
@@ -95,7 +94,7 @@ export async function createBooking(
 
     const { error } = await supabase.from("bookings").insert({
       property_id: payload.propertyId,
-      guest_id: user.id,
+      guest_id: guestId,
       check_in: payload.checkIn,
       check_out: payload.checkOut,
       total_guests: payload.totalGuests,
@@ -123,11 +122,15 @@ export async function createBooking(
           .eq("id", property.owner_id)
           .single();
 
-        const { data: guestProfile } = await supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("id", user.id)
-          .single();
+        let guestName = "Guest";
+        if (guestId) {
+          const { data: guestProfile } = await supabase
+            .from("profiles")
+            .select("full_name")
+            .eq("id", guestId)
+            .single();
+          if (guestProfile?.full_name) guestName = guestProfile.full_name;
+        }
 
         if (hostProfile?.email) {
           const nights = calcNights(payload.checkIn, payload.checkOut);
@@ -135,7 +138,7 @@ export async function createBooking(
             to: hostProfile.email,
             subject: `New booking request for ${property.title}`,
             react: BookingRequestEmail({
-              guestName: guestProfile?.full_name || user.email || "Guest",
+              guestName: guestName,
               propertyTitle: property.title,
               checkIn: formatDateDubai(payload.checkIn),
               checkOut: formatDateDubai(payload.checkOut),
