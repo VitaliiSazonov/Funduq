@@ -149,7 +149,7 @@ export async function createBooking(
       }
     }
 
-    revalidatePath("/guest/bookings");
+    // Do NOT revalidatePath here, it can cause Next.js internal errors in some edge cases.
     return { success: true };
   } catch (err: any) {
     console.error("Critical booking error:", err);
