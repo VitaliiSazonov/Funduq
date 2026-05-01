@@ -11,11 +11,13 @@ interface BookingRow {
   status: string;
   created_at: string;
   property: {
+    id: string;
     title: string;
     location_emirate: string;
   } | null;
   guest: {
     full_name: string | null;
+    email: string | null;
   } | null;
 }
 
@@ -44,10 +46,10 @@ export default async function AdminBookingsPage() {
       `
       id, check_in, check_out, total_guests, status, created_at,
       property:properties!bookings_property_id_fkey (
-        title, location_emirate
+        id, title, location_emirate
       ),
       guest:profiles!bookings_guest_id_fkey (
-        full_name
+        full_name, email
       )
     `
     )
@@ -183,16 +185,20 @@ export default async function AdminBookingsPage() {
                       }}
                     >
                       <td style={{ padding: "12px 16px" }}>
-                        <p
+                        <a
+                          href={`/villas/${b.property?.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           style={{
                             fontSize: 14,
                             fontWeight: 600,
-                            color: "#E5E5E5",
+                            color: "#C5A059",
                             margin: "0 0 2px",
+                            textDecoration: "none",
                           }}
                         >
                           {b.property?.title || "—"}
-                        </p>
+                        </a>
                         <p
                           style={{
                             fontSize: 12,
@@ -207,11 +213,20 @@ export default async function AdminBookingsPage() {
                         <p
                           style={{
                             fontSize: 14,
-                            color: "#B5B5B5",
-                            margin: 0,
+                            color: "#E5E5E5",
+                            margin: "0 0 2px",
                           }}
                         >
                           {b.guest?.full_name || "—"}
+                        </p>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            color: "#8A8A8A",
+                            margin: 0,
+                          }}
+                        >
+                          {b.guest?.email || ""}
                         </p>
                       </td>
                       <td style={{ padding: "12px 16px" }}>
