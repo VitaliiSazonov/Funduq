@@ -4,34 +4,53 @@ import PropertyModerationRow from "@/components/admin/PropertyModerationRow";
 import { Building2 } from "lucide-react";
 import AdminPropertiesTabs from "@/components/admin/AdminPropertiesTabs";
 
+import AdminSearch from "@/components/admin/AdminSearch";
+import { Suspense } from "react";
+
 export const dynamic = "force-dynamic";
 
 interface PageProps {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; search?: string }>;
 }
 
 export default async function AdminPropertiesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const statusFilter = params.status || "all";
-  const properties = await getAllAdminProperties(statusFilter);
+  const searchQuery = params.search || "";
+  const properties = await getAllAdminProperties(statusFilter, searchQuery);
 
   return (
     <div>
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <h1
-          style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: "#E5E5E5",
-            margin: "0 0 6px",
-          }}
-        >
-          Properties
-        </h1>
-        <p style={{ fontSize: 14, color: "#8A8A8A", margin: 0 }}>
-          Review and moderate property listings
-        </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          marginBottom: 24,
+          gap: 20,
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize: 28,
+              fontWeight: 700,
+              color: "#E5E5E5",
+              margin: "0 0 6px",
+            }}
+          >
+            Properties
+          </h1>
+          <p style={{ fontSize: 14, color: "#8A8A8A", margin: 0 }}>
+            Review and moderate property listings
+          </p>
+        </div>
+
+        <Suspense fallback={null}>
+          <AdminSearch />
+        </Suspense>
       </div>
 
       {/* Tabs */}

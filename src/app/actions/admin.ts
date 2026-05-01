@@ -296,7 +296,8 @@ export async function getPendingProperties(): Promise<PropertyWithHost[]> {
 }
 
 export async function getAllAdminProperties(
-  statusFilter?: string
+  statusFilter?: string,
+  search?: string
 ): Promise<PropertyWithHost[]> {
   const auth = await verifyAdmin();
   if (!auth.isAdmin) return [];
@@ -319,6 +320,11 @@ export async function getAllAdminProperties(
 
   if (statusFilter && statusFilter !== "all") {
     query = query.eq("status", statusFilter);
+  }
+
+  if (search) {
+    // Search by title or partial ID
+    query = query.or(`title.ilike.%${search}%,id.ilike.%${search}%`);
   }
 
   const { data, error } = await query;
