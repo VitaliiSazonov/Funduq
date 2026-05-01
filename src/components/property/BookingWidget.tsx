@@ -170,9 +170,9 @@ export default function BookingWidget({
   }
 
   return (
-    <div className="sticky top-8 bg-white rounded-3xl border border-charcoal/5 shadow-luxury overflow-hidden">
+    <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury overflow-hidden flex flex-col max-h-[calc(100vh-6rem)]">
       {/* ─── Header ─── */}
-      <div className="gold-gradient px-6 py-5">
+      <div className="gold-gradient px-6 py-5 shrink-0 z-10 shadow-sm relative">
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-bold mb-1">
           {t("from")}
         </p>
@@ -182,7 +182,8 @@ export default function BookingWidget({
         </p>
       </div>
 
-      <div className="p-6 space-y-5">
+      {/* ─── Scrollable Content ─── */}
+      <div className="p-6 space-y-5 overflow-y-auto overflow-x-hidden flex-1">
         {/* ─── Calendar ─── */}
         <div>
           <label className="flex items-center gap-2 text-xs font-bold text-charcoal/50 uppercase tracking-wider mb-3">
@@ -265,7 +266,10 @@ export default function BookingWidget({
             className="w-full px-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/25 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all resize-none"
           />
         </div>
+      </div>
 
+      {/* ─── Sticky Bottom (Submit) ─── */}
+      <div className="p-6 bg-white border-t border-charcoal/5 shrink-0 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.03)] z-10 relative space-y-4">
         {/* ─── Price Estimate ─── */}
         {nights > 0 && (
           <div className="bg-offwhite rounded-2xl p-4 space-y-2">
@@ -320,15 +324,15 @@ export default function BookingWidget({
             {result.message}
           </div>
         )}
-
-        {/* ─── Passport Verification Modal ─── */}
-        {showVerification && (
-          <PassportVerificationModal
-            initialStatus={verificationStatus}
-            onClose={handleVerificationClose}
-          />
-        )}
       </div>
+
+      {/* ─── Passport Verification Modal ─── */}
+      {showVerification && (
+        <PassportVerificationModal
+          initialStatus={verificationStatus}
+          onClose={handleVerificationClose}
+        />
+      )}
     </div>
   );
 }
