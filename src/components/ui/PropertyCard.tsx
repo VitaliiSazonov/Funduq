@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Bed, Users, MapPin, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 
 interface PropertyProps {
   id: string;
@@ -26,9 +27,12 @@ export default function PropertyCard({
   imageUrl,
 }: PropertyProps) {
   const t = useTranslations("villas");
+  const searchParams = useSearchParams();
+  const qs = searchParams.toString();
+  const href = qs ? `/villas/${id}?${qs}` : `/villas/${id}`;
 
   return (
-    <Link href={`/villas/${id}`} data-testid="property-card">
+    <Link href={href} data-testid="property-card">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

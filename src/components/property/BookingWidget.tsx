@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
 import {
@@ -46,7 +47,26 @@ export default function BookingWidget({
   propertyTitle,
 }: BookingWidgetProps) {
   const t = useTranslations("bookingWidget");
-  const [range, setRange] = useState<DateRange | undefined>();
+  const searchParams = useSearchParams();
+
+  const initialRange = useMemo(() => {
+    const checkInStr = searchParams.get("checkIn");
+    const checkOutStr = searchParams.get("checkOut");
+    if (checkInStr && checkOutStr) {
+      try {
+        const from = parseISO(checkInStr);
+        const to = parseISO(checkOutStr);
+        if (!isNaN(from.getTime()) && !isNaN(to.getTime())) {
+          return { from, to };
+        }
+      } catch (e) {
+        // invalid date
+      }
+    }
+    return undefined;
+  }, [searchParams]);
+
+  const [range, setRange] = useState<DateRange | undefined>(initialRange);
   const [guests, setGuests] = useState(1);
   const [message, setMessage] = useState("");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
