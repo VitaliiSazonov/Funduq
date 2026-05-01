@@ -124,14 +124,8 @@ export default function BookingWidget({
     setResult(null);
 
     try {
-      // ── Passport verification gate ──
-      const status = await checkVerificationStatus();
-      setVerificationStatus(status);
-      if (status !== "verified") {
-        setShowVerification(true);
-        setIsSubmitting(false);
-        return;
-      }
+      // ── Passport verification temporarily disabled ──
+      // Verification logic removed by request
 
       const checkInStr = format(range.from, "yyyy-MM-dd");
       const checkOutStr = format(range.to, "yyyy-MM-dd");
