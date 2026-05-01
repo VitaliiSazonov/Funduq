@@ -64,92 +64,97 @@ interface ActionResult {
 export async function createBooking(
   payload: CreateBookingPayload
 ): Promise<ActionResult> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (authError || !user) {
-    return { success: false, error: "You must be signed in to book." };
-  }
+    if (authError || !user) {
+      return { success: false, error: "You must be signed in to book." };
+    }
 
-  // Overlap check: prevent double-booking at application level
-  const { data: conflicts } = await supabase
-    .from("bookings")
-    .select("id")
-    .eq("property_id", payload.propertyId)
-    .in("status", ["pending", "confirmed"])
-    .lt("check_in", payload.checkOut)
-    .gt("check_out", payload.checkIn)
-    .limit(1);
+    // Overlap check: prevent double-booking at application level
+    const { data: conflicts } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("property_id", payload.propertyId)
+      .in("status", ["pending", "confirmed"])
+      .lt("check_in", payload.checkOut)
+      .gt("check_out", payload.checkIn)
+      .limit(1);
 
-  if (conflicts && conflicts.length > 0) {
-    return {
-      success: false,
-      error: "These dates overlap with an existing booking.",
-    };
-  }
+    if (conflicts && conflicts.length > 0) {
+      return {
+        success: false,
+        error: "These dates overlap with an existing booking.",
+      };
+    }
 
-  const { error } = await supabase.from("bookings").insert({
-    property_id: payload.propertyId,
-    guest_id: user.id,
-    check_in: payload.checkIn,
-    check_out: payload.checkOut,
-    total_guests: payload.totalGuests,
-    message: payload.message || null,
-    status: "pending",
-  });
+    const { error } = await supabase.from("bookings").insert({
+      property_id: payload.propertyId,
+      guest_id: user.id,
+      check_in: payload.checkIn,
+      check_out: payload.checkOut,
+      total_guests: payload.totalGuests,
+      message: payload.message || null,
+      status: "pending",
+    });
 
-  if (error) {
-    console.error("Error creating booking:", error);
-    return { success: false, error: "Failed to create booking." };
-  }
+    if (error) {
+      console.error("Error creating booking:", error);
+      return { success: false, error: "Failed to create booking." };
+    }
 
-  // ── Email: notify HOST about new request (fire-and-forget) ──
-  if (!payload.skipEmail) {
-    const { data: property } = await supabase
-      .from("properties")
-      .select("title, owner_id, price_min")
-      .eq("id", payload.propertyId)
-      .single();
-
-    if (property) {
-      const { data: hostProfile } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("id", property.owner_id)
+    // ── Email: notify HOST about new request (fire-and-forget) ──
+    if (!payload.skipEmail) {
+      const { data: property } = await supabase
+        .from("properties")
+        .select("title, owner_id, price_min")
+        .eq("id", payload.propertyId)
         .single();
 
-      const { data: guestProfile } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .single();
+      if (property) {
+        const { data: hostProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", property.owner_id)
+          .single();
 
-      if (hostProfile?.email) {
-        const nights = calcNights(payload.checkIn, payload.checkOut);
-        void sendEmail({
-          to: hostProfile.email,
-          subject: `New booking request for ${property.title}`,
-          react: BookingRequestEmail({
-            guestName: guestProfile?.full_name || user.email || "Guest",
-            propertyTitle: property.title,
-            checkIn: formatDateDubai(payload.checkIn),
-            checkOut: formatDateDubai(payload.checkOut),
-            totalGuests: payload.totalGuests,
-            totalNights: nights,
-            estimatedPrice: `AED ${new Intl.NumberFormat().format(property.price_min * nights)}`,
-            baseUrl: BASE_URL,
-          }),
-        });
+        const { data: guestProfile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .single();
+
+        if (hostProfile?.email) {
+          const nights = calcNights(payload.checkIn, payload.checkOut);
+          void sendEmail({
+            to: hostProfile.email,
+            subject: `New booking request for ${property.title}`,
+            react: BookingRequestEmail({
+              guestName: guestProfile?.full_name || user.email || "Guest",
+              propertyTitle: property.title,
+              checkIn: formatDateDubai(payload.checkIn),
+              checkOut: formatDateDubai(payload.checkOut),
+              totalGuests: payload.totalGuests,
+              totalNights: nights,
+              estimatedPrice: `AED ${new Intl.NumberFormat().format(property.price_min * nights)}`,
+              baseUrl: BASE_URL,
+            }),
+          });
+        }
       }
     }
-  }
 
-  revalidatePath("/guest/bookings");
-  return { success: true };
+    revalidatePath("/guest/bookings");
+    return { success: true };
+  } catch (err: any) {
+    console.error("Critical booking error:", err);
+    return { success: false, error: err.message || "Internal server error" };
+  }
 }
 
 /**
