@@ -167,7 +167,9 @@ Hello! I would like to request a booking:
 ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
         const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-        window.open(url, "_blank");
+        
+        // Use location.href instead of window.open to avoid popup blockers after async await
+        window.location.href = url;
 
         // Reset form
         setRange(undefined);
@@ -176,9 +178,13 @@ ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
       } else {
         setResult({ success: false, message: res.error || t("somethingWrong") });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Booking error:", err);
-      setResult({ success: false, message: t("somethingWrong") });
+      // Show actual error message if possible to help debugging
+      setResult({ 
+        success: false, 
+        message: err.message || t("somethingWrong") 
+      });
     } finally {
       setIsSubmitting(false);
     }
