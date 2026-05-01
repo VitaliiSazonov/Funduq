@@ -123,8 +123,8 @@ export default function BookingWidget({
     setIsSubmitting(true);
     setResult(null);
 
-    // ── Passport verification gate ──
     try {
+      // ── Passport verification gate ──
       const status = await checkVerificationStatus();
       setVerificationStatus(status);
       if (status !== "verified") {
@@ -132,36 +132,31 @@ export default function BookingWidget({
         setIsSubmitting(false);
         return;
       }
-    } catch {
-      // If check fails, let createBooking handle auth error
-    }
 
-    const checkInStr = format(range.from, "yyyy-MM-dd");
-    const checkOutStr = format(range.to, "yyyy-MM-dd");
+      const checkInStr = format(range.from, "yyyy-MM-dd");
+      const checkOutStr = format(range.to, "yyyy-MM-dd");
 
-    // 1. Create booking in platform DB for statistics (skip email)
-    const res = await createBooking({
-      propertyId,
-      checkIn: checkInStr,
-      checkOut: checkOutStr,
-      totalGuests: guests,
-      message: message.trim() || undefined,
-      skipEmail: true,
-    });
-
-    setIsSubmitting(false);
-
-    if (res.success) {
-      setResult({
-        success: true,
-        message: t("bookingRequestSent"),
+      // 1. Create booking in platform DB for statistics (skip email)
+      const res = await createBooking({
+        propertyId,
+        checkIn: checkInStr,
+        checkOut: checkOutStr,
+        totalGuests: guests,
+        message: message.trim() || undefined,
+        skipEmail: true,
       });
 
-      // 2. Open WhatsApp with prefilled message
-      const propertyLink = window.location.href;
-      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
+      if (res.success) {
+        setResult({
+          success: true,
+          message: t("bookingRequestSent"),
+        });
 
-      const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+        // 2. Open WhatsApp with prefilled message
+        const propertyLink = window.location.href;
+        const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
+
+        const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
 
 Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
@@ -171,15 +166,21 @@ Hello! I would like to request a booking:
 *Link:* ${propertyLink}
 ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
-      const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-      window.open(url, "_blank");
+        const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+        window.open(url, "_blank");
 
-      // Reset form
-      setRange(undefined);
-      setMessage("");
-      fetchDates();
-    } else {
-      setResult({ success: false, message: res.error || t("somethingWrong") });
+        // Reset form
+        setRange(undefined);
+        setMessage("");
+        fetchDates();
+      } else {
+        setResult({ success: false, message: res.error || t("somethingWrong") });
+      }
+    } catch (err) {
+      console.error("Booking error:", err);
+      setResult({ success: false, message: t("somethingWrong") });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
