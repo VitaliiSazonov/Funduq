@@ -99,7 +99,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <NextIntlClientProvider messages={messages}>
         <Header user={headerUser} />
         {children}
-        <Footer />
+        <Footer userRole={userRole} />
       </NextIntlClientProvider>
     </>
   );

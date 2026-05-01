@@ -90,14 +90,16 @@ export default function UserMenu({ email, fullName, role }: UserMenuProps) {
             <span>{t("myBookings")}</span>
           </NextLink>
 
-          <NextLink
-            href="/host/dashboard"
-            className="user-menu-item"
-            onClick={() => setOpen(false)}
-          >
-            <Building2 size={15} />
-            <span>{t("hostDashboard")}</span>
-          </NextLink>
+          {(role === "host" || role === "admin") && (
+            <NextLink
+              href="/host/dashboard"
+              className="user-menu-item"
+              onClick={() => setOpen(false)}
+            >
+              <Building2 size={15} />
+              <span>{t("hostDashboard")}</span>
+            </NextLink>
+          )}
 
           {role === "admin" && (
             <NextLink

@@ -89,12 +89,14 @@ export default function Header({ user }: HeaderProps) {
           >
             Blog
           </IntlLink>
-          <NextLink
-            href="/host/dashboard"
-            className="text-white/70 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors duration-300"
-          >
-            {t("listProperty")}
-          </NextLink>
+          {userRole !== "guest" && (
+            <NextLink
+              href="/host/dashboard"
+              className="text-white/70 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors duration-300"
+            >
+              {t("listProperty")}
+            </NextLink>
+          )}
         </nav>
 
         {/* Right side: Language switcher + Login / UserMenu */}
@@ -168,14 +170,16 @@ export default function Header({ user }: HeaderProps) {
                 <span className="text-base font-bold">Blog</span>
               </IntlLink>
 
-              <NextLink
-                href="/host/dashboard"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-4 px-5 py-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-200"
-              >
-                <Building2 className="w-5 h-5" />
-                <span className="text-base font-bold">{t("listProperty")}</span>
-              </NextLink>
+              {userRole !== "guest" && (
+                <NextLink
+                  href="/host/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-4 px-5 py-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-200"
+                >
+                  <Building2 className="w-5 h-5" />
+                  <span className="text-base font-bold">{t("listProperty")}</span>
+                </NextLink>
+              )}
             </div>
 
             {/* ── Divider ── */}

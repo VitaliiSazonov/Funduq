@@ -5,7 +5,11 @@ import { useTranslations } from "next-intl";
 import { Link as IntlLink } from "@/i18n/navigation";
 import { Mail, MapPin, Globe, MessageCircle } from "lucide-react";
 
-export default function Footer() {
+interface FooterProps {
+  userRole?: string | null;
+}
+
+export default function Footer({ userRole }: FooterProps) {
   const t = useTranslations("footer");
 
   return (
@@ -58,12 +62,14 @@ export default function Footer() {
               >
                 {t("explore")}
               </IntlLink>
-              <Link
-                href="/host/dashboard"
-                className="text-sm hover:text-white transition-colors duration-300"
-              >
-                {t("listProperty")}
-              </Link>
+              {userRole !== "guest" && (
+                <Link
+                  href="/host/dashboard"
+                  className="text-sm hover:text-white transition-colors duration-300"
+                >
+                  {t("listProperty")}
+                </Link>
+              )}
               <Link
                 href="/login"
                 className="text-sm hover:text-white transition-colors duration-300"
