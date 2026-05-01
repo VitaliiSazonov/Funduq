@@ -51,7 +51,7 @@ export async function getDisabledDates(
     .from("bookings")
     .select("check_in, check_out")
     .eq("property_id", propertyId)
-    .in("status", ["pending", "confirmed"]);
+    .eq("status", "confirmed");
 
   if (bookingsError) {
     console.error("Error fetching bookings:", bookingsError);
