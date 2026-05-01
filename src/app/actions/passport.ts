@@ -107,34 +107,39 @@ export async function uploadPassport(
 // ─── Check Verification Status ─────────────────────────────────
 
 export async function checkVerificationStatus(): Promise<PassportStatus> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (authError || !user) {
+    if (authError || !user) {
+      return "none";
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("passport_url, passport_verified")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile) {
+      return "none";
+    }
+
+    if (profile.passport_verified === true) {
+      return "verified";
+    }
+
+    if (profile.passport_url) {
+      return "pending";
+    }
+
+    return "none";
+  } catch (error) {
+    console.error("[Passport] checkVerificationStatus error:", error);
     return "none";
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("passport_url, passport_verified")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile) {
-    return "none";
-  }
-
-  if (profile.passport_verified === true) {
-    return "verified";
-  }
-
-  if (profile.passport_url) {
-    return "pending";
-  }
-
-  return "none";
 }
