@@ -37,7 +37,7 @@ export default function BookingReminderEmail({
           fontStyle="normal"
         />
       </Head>
-      <Preview>Reminder: You have {pendingCount} pending booking request{pendingCount > 1 ? "s" : ""}</Preview>
+      <Preview>{`Reminder: You have ${pendingCount} pending booking request${pendingCount > 1 ? "s" : ""}`}</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Logo */}
