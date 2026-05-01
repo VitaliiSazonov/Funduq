@@ -323,8 +323,12 @@ export async function getAllAdminProperties(
   }
 
   if (search) {
-    // Search by title or partial ID
-    query = query.or(`title.ilike.%${search}%,id.ilike.%${search}%`);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.trim());
+    if (isUuid) {
+      query = query.eq("id", search.trim());
+    } else {
+      query = query.ilike("title", `%${search.trim()}%`);
+    }
   }
 
   const { data, error } = await query;
