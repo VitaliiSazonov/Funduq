@@ -75,7 +75,7 @@ export default async function AdminPropertiesPage({ searchParams }: PageProps) {
                     borderBottom: "1px solid rgba(197, 160, 89, 0.1)",
                   }}
                 >
-                  {["", "Property", "Host", "Submitted", "Status", ""].map(
+                  {["", "ID", "Property", "Host", "Contact", "Submitted", "Status", ""].map(
                     (h, i) => (
                       <th
                         key={i}

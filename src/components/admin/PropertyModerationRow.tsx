@@ -120,6 +120,28 @@ export default function PropertyModerationRow({
         </div>
       </td>
 
+      {/* ID */}
+      <td style={cellStyle}>
+        <code
+          onClick={() => {
+            navigator.clipboard.writeText(property.id);
+            alert("ID copied to clipboard");
+          }}
+          style={{
+            fontSize: 11,
+            color: "#6A6A6A",
+            background: "rgba(255, 255, 255, 0.03)",
+            padding: "2px 6px",
+            borderRadius: 4,
+            cursor: "copy",
+            fontFamily: "monospace",
+          }}
+          title="Click to copy ID"
+        >
+          {property.id.slice(0, 8)}...
+        </code>
+      </td>
+
       {/* Title & Location */}
       <td style={cellStyle}>
         <p style={titleText}>{property.title}</p>
@@ -131,6 +153,12 @@ export default function PropertyModerationRow({
       {/* Host */}
       <td style={cellStyle}>
         <p style={hostText}>{property.owner?.full_name || "Unknown"}</p>
+      </td>
+
+      {/* Contact */}
+      <td style={cellStyle}>
+        <p style={{ ...dateText, fontSize: 12, marginBottom: 2 }}>{property.owner?.phone || "No phone"}</p>
+        <p style={{ ...dateText, fontSize: 11, color: "#6A6A6A" }}>{property.owner?.email || "No email"}</p>
       </td>
 
       {/* Submitted */}

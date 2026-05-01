@@ -42,7 +42,8 @@ export interface PropertyWithHost {
     id: string;
     full_name: string | null;
     avatar_url: string | null;
-    email?: string;
+    email: string | null;
+    phone: string | null;
   };
 }
 
@@ -256,7 +257,7 @@ export async function getPendingProperties(): Promise<PropertyWithHost[]> {
       main_image_url, bedrooms, bathrooms, max_guests, price_min, price_max,
       created_at, is_signature,
       owner:profiles!properties_owner_id_fkey (
-        id, full_name, avatar_url
+        id, full_name, avatar_url, email, phone
       )
     `
     )
@@ -284,7 +285,13 @@ export async function getPendingProperties(): Promise<PropertyWithHost[]> {
     price_max: row.price_max as number,
     created_at: row.created_at as string,
     is_signature: (row.is_signature as boolean) || false,
-    owner: row.owner as { id: string; full_name: string | null; avatar_url: string | null },
+    owner: row.owner as { 
+      id: string; 
+      full_name: string | null; 
+      avatar_url: string | null;
+      email: string | null;
+      phone: string | null;
+    },
   }));
 }
 
@@ -304,7 +311,7 @@ export async function getAllAdminProperties(
       main_image_url, bedrooms, bathrooms, max_guests, price_min, price_max,
       created_at, is_signature,
       owner:profiles!properties_owner_id_fkey (
-        id, full_name, avatar_url
+        id, full_name, avatar_url, email, phone
       )
     `
     )
@@ -337,7 +344,13 @@ export async function getAllAdminProperties(
     price_max: row.price_max as number,
     created_at: row.created_at as string,
     is_signature: (row.is_signature as boolean) || false,
-    owner: row.owner as { id: string; full_name: string | null; avatar_url: string | null },
+    owner: row.owner as { 
+      id: string; 
+      full_name: string | null; 
+      avatar_url: string | null;
+      email: string | null;
+      phone: string | null;
+    },
   }));
 }
 
