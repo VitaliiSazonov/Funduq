@@ -116,57 +116,32 @@ export default function BookingWidget({
     return disabledDates.some((d) => isSameDay(d, date));
   }
 
-  // ─── Submit booking ───
-  async function handleSubmit() {
+  // ─── Submit booking (WhatsApp Redirect) ───
+  function handleSubmit() {
     if (!range?.from || !range?.to || rangeHasConflict()) return;
 
-    setIsSubmitting(true);
-    setResult(null);
+    const checkInStr = format(range.from, "yyyy-MM-dd");
+    const checkOutStr = format(range.to, "yyyy-MM-dd");
+    const propertyLink = window.location.href;
+    
+    // The service number should ideally be in env vars. Defaulting to a placeholder if not set.
+    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971500000000";
 
-    // ── Passport verification gate ──
-    try {
-      const status = await checkVerificationStatus();
-      setVerificationStatus(status);
-      if (status !== "verified") {
-        setShowVerification(true);
-        setIsSubmitting(false);
-        return;
-      }
-    } catch {
-      // If check fails (e.g. not logged in), let createBooking handle auth
-    }
+    const text = `Hello! I would like to request a booking:
+*Property:* ${propertyTitle}
+*ID:* ${propertyId}
+*Dates:* ${checkInStr} to ${checkOutStr}
+*Guests:* ${guests}
+*Link:* ${propertyLink}
+${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
-    const res = await createBooking({
-      propertyId,
-      checkIn: format(range.from, "yyyy-MM-dd"),
-      checkOut: format(range.to, "yyyy-MM-dd"),
-      totalGuests: guests,
-      message: message.trim() || undefined,
-    });
-
-    setIsSubmitting(false);
-
-    if (res.success) {
-      setResult({
-        success: true,
-        message: t("bookingRequestSent"),
-      });
-      setRange(undefined);
-      setMessage("");
-      fetchDates();
-    } else {
-      setResult({ success: false, message: res.error || t("somethingWrong") });
-    }
+    const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank");
   }
 
-  // ─── Handle verification complete ───
-  async function handleVerificationClose() {
+  // ─── Handle verification complete (Not needed anymore, but keeping stub) ───
+  function handleVerificationClose() {
     setShowVerification(false);
-    const status = await checkVerificationStatus();
-    setVerificationStatus(status);
-    if (status === "verified" && range?.from && range?.to) {
-      handleSubmit();
-    }
   }
 
   return (
