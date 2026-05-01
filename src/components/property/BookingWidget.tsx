@@ -130,27 +130,31 @@ export default function BookingWidget({
       const checkInStr = format(range.from, "yyyy-MM-dd");
       const checkOutStr = format(range.to, "yyyy-MM-dd");
 
-      // 1. Create booking in platform DB for statistics (skip email)
-      const res = await createBooking({
-        propertyId,
-        checkIn: checkInStr,
-        checkOut: checkOutStr,
-        totalGuests: guests,
-        message: message.trim() || undefined,
-        skipEmail: true,
+      // 1. Try to create booking in platform DB (stats), but DON'T block if it fails
+      try {
+        await createBooking({
+          propertyId,
+          checkIn: checkInStr,
+          checkOut: checkOutStr,
+          totalGuests: guests,
+          message: message.trim() || undefined,
+          skipEmail: true,
+        });
+      } catch (dbErr) {
+        console.error("Database stat recording failed, proceeding to WhatsApp:", dbErr);
+        // We continue anyway because WhatsApp is the priority
+      }
+
+      setResult({
+        success: true,
+        message: t("bookingRequestSent"),
       });
 
-      if (res.success) {
-        setResult({
-          success: true,
-          message: t("bookingRequestSent"),
-        });
+      // 2. Open WhatsApp with prefilled message
+      const propertyLink = window.location.href;
+      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
 
-        // 2. Open WhatsApp with prefilled message
-        const propertyLink = window.location.href;
-        const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
-
-        const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+      const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
 
 Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
@@ -160,25 +164,28 @@ Hello! I would like to request a booking:
 *Link:* ${propertyLink}
 ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
-        const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-        
-        // Use location.href instead of window.open to avoid popup blockers after async await
-        window.location.href = url;
+      const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+      
+      // Use location.href instead of window.open to avoid popup blockers
+      window.location.href = url;
 
-        // Reset form
-        setRange(undefined);
-        setMessage("");
-        fetchDates();
-      } else {
-        setResult({ success: false, message: res.error || t("somethingWrong") });
-      }
+      // Reset form
+      setRange(undefined);
+      setMessage("");
+      fetchDates();
     } catch (err: any) {
-      console.error("Booking error:", err);
-      // Show actual error message if possible to help debugging
-      setResult({ 
-        success: false, 
-        message: err.message || t("somethingWrong") 
-      });
+      console.error("Booking handler error:", err);
+      // Even if everything fails, try one last attempt to redirect to WhatsApp if we have the dates
+      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
+      const checkInStr = range?.from ? format(range.from, "yyyy-MM-dd") : "";
+      const checkOutStr = range?.to ? format(range.to, "yyyy-MM-dd") : "";
+      
+      if (checkInStr && checkOutStr) {
+        const text = `Hello! I would like to book ${propertyTitle} from ${checkInStr} to ${checkOutStr}.`;
+        window.location.href = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+      } else {
+        setResult({ success: false, message: t("somethingWrong") });
+      }
     } finally {
       setIsSubmitting(false);
     }
