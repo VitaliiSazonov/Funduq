@@ -26,6 +26,7 @@ import AvailabilityCalendar from "@/components/property/AvailabilityCalendar";
 import ShareButton from "@/components/property/ShareButton";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import JsonLd from "@/components/seo/JsonLd";
 
 // ─────────────────────────────────────────────────────────────
 // Params interface (Next.js 15+: params is a Promise)
@@ -73,32 +74,6 @@ export async function generateMetadata({
 }
 
 // ─────────────────────────────────────────────────────────────
-// JSON-LD Structured Data
-// ─────────────────────────────────────────────────────────────
-function buildJsonLd(property: NonNullable<Awaited<ReturnType<typeof getProperty>>>) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "LodgingBusiness",
-    name: property.title,
-    description: property.description,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: property.location_district,
-      addressRegion: property.location_emirate,
-      addressCountry: "AE",
-    },
-    priceRange: `AED ${property.price_min} - ${property.price_max}`,
-    image: property.images[0]?.url || property.main_image_url || undefined,
-    numberOfRooms: property.bedrooms,
-    amenityFeature: (property.amenities || []).map((a) => ({
-      "@type": "LocationFeatureSpecification",
-      name: a,
-      value: true,
-    })),
-  };
-}
-
-// ─────────────────────────────────────────────────────────────
 // Page Component (Server Component)
 // ─────────────────────────────────────────────────────────────
 export default async function PropertyDetailPage({ params }: PageProps) {
@@ -121,15 +96,57 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     ? format(parseISO(property.host.created_at), "MMMM yyyy")
     : null;
 
-  const jsonLd = buildJsonLd(property);
+  const lodgingBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LodgingBusiness",
+    "name": property.title,
+    "description": property.description || null,
+    "url": `https://funduq.ae/villas/${property.id}`,
+    "image": property.images?.map((img) => img.url) || [],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": property.location_district || null,
+      "addressRegion": "Dubai",
+      "addressCountry": "AE",
+    },
+    "numberOfRooms": property.bedrooms || null,
+    "occupancy": {
+      "@type": "QuantitativeValue",
+      "maxValue": property.max_guests || null,
+    },
+    "priceRange": `AED ${property.price_min || 0} - ${property.price_max || 0} per night`,
+  };
+
+  const breadcrumbsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://funduq.ae",
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Villas",
+        "item": "https://funduq.ae/villas",
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": property.title,
+        "item": `https://funduq.ae/villas/${property.id}`,
+      },
+    ],
+  };
 
   return (
     <div className="min-h-screen bg-offwhite">
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={lodgingBusinessJsonLd} />
+      <JsonLd data={breadcrumbsJsonLd} />
 
       {/* Track property view (deduplicated) */}
       <ViewTracker propertyId={property.id} />
