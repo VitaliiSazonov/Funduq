@@ -18,11 +18,14 @@ export async function generateStaticParams() {
   return params;
 }
 
+interface BlogPostPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
+
 export async function generateMetadata({
-  params: { locale, slug },
-}: {
-  params: { locale: string; slug: string };
-}): Promise<Metadata> {
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) return {};
 
@@ -43,11 +46,10 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogPostPage({
-  params: { locale, slug },
-}: {
-  params: { locale: string; slug: string };
-}) {
+export default async function BlogPostPage({
+  params,
+}: BlogPostPageProps) {
+  const { locale, slug } = await params;
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) notFound();
 
