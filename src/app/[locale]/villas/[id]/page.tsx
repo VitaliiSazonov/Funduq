@@ -100,6 +100,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   const similarProperties = await getSimilarProperties(
     property.id,
+    property.location_district,
     property.location_emirate
   );
 

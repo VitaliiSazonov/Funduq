@@ -153,22 +153,42 @@ export interface SimilarProperty {
 
 export async function getSimilarProperties(
   currentId: string,
+  district: string,
   emirate: string
 ): Promise<SimilarProperty[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  // Try to find active properties in the same district, excluding the current property
+  const { data: districtData, error: districtError } = await supabase
     .from("properties")
     .select("*")
     .eq("status", "active")
-    .eq("location_emirate", emirate)
+    .eq("location_district", district)
     .neq("id", currentId)
     .order("created_at", { ascending: false })
     .limit(3);
 
-  if (error || !data) return [];
+  let similar = districtData || [];
 
-  return data.map((row) => ({
+  // If we found fewer than 3 properties, fill up to 3 with other active properties (excluding current and already selected ones)
+  if (similar.length < 3) {
+    const excludedIds = [currentId, ...similar.map((p) => p.id)];
+    const needed = 3 - similar.length;
+
+    const { data: fallbackData } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("status", "active")
+      .not("id", "in", `(${excludedIds.join(",")})`)
+      .order("created_at", { ascending: false })
+      .limit(needed);
+
+    if (fallbackData) {
+      similar = [...similar, ...fallbackData];
+    }
+  }
+
+  return similar.map((row) => ({
     id: row.id,
     title: row.title,
     location: `${row.location_district}, ${row.location_emirate}`,
