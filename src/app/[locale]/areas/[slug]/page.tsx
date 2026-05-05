@@ -83,16 +83,7 @@ export default async function AreaPage({
     .eq("status", "active")
     .in("location_district", targetDistricts);
 
-  // If no properties found, show all active listings as fallback
-  if (!rawProperties || rawProperties.length === 0) {
-    const { data: allActive } = await supabase
-      .from("properties")
-      .select("*")
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
-      .limit(12);
-    rawProperties = allActive;
-  }
+
 
   const properties = (rawProperties || []).map((row: any) => ({
     id: row.id,
