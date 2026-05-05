@@ -1,4 +1,5 @@
 import HomeHero from "@/components/home/Hero";
+import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import Destinations from "@/components/home/Destinations";
 import Popular from "@/components/home/Popular";
@@ -16,6 +17,26 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const isRu = locale === "ru";
+  const description = isRu
+    ? "Funduq — эксклюзивные виллы, пентхаусы и дома для отдыха по всему Дубаю, Абу-Даби и ОАЭ. Бронируйте напрямую по цене владельца без комиссии."
+    : "Funduq — curated luxury villas, penthouses and holiday homes across Dubai, Abu Dhabi and UAE. Book directly at owner's price with 0% guest commission.";
+
+  return {
+    description,
+    openGraph: {
+      images: [{ url: "https://funduq.ae/images/og-default.jpg" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+  };
+}
+
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -32,7 +53,9 @@ export default async function HomePage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Funduq",
-    "description": "Luxury short-term rentals in UAE with 0% guest commission",
+    "description": locale === "ru"
+      ? "Funduq — эксклюзивные виллы, пентхаусы и дома для отдыха по всему Дубаю, Абу-Даби и ОАЭ. Бронируйте напрямую по цене владельца без комиссии."
+      : "Funduq — curated luxury villas, penthouses and holiday homes across Dubai, Abu Dhabi and UAE. Book directly at owner's price with 0% guest commission.",
     "url": "https://funduq.ae",
     "address": {
       "@type": "PostalAddress",
