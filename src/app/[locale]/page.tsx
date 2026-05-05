@@ -1,4 +1,5 @@
 import HomeHero from "@/components/home/Hero";
+import JsonLd from "@/components/seo/JsonLd";
 import Destinations from "@/components/home/Destinations";
 import Popular from "@/components/home/Popular";
 import LatestArrivals from "@/components/home/LatestArrivals";
@@ -26,6 +27,24 @@ export default async function HomePage({ params }: Props) {
     getWishlistedIds(),
     getSearchLocations(),
   ]);
+
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Funduq",
+    "description": "Luxury short-term rentals in UAE with 0% guest commission",
+    "url": "https://funduq.ae",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Dubai",
+      "addressCountry": "AE"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@funduq.com",
+      "contactType": "customer service"
+    }
+  };
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -68,10 +87,8 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <JsonLd data={localBusinessJsonLd} />
+      <JsonLd data={faqJsonLd} />
       {/* Hero with Search */}
       <HomeHero locations={locations} />
 
