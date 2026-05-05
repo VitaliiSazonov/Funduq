@@ -65,12 +65,23 @@ export default async function AreaPage({
 
   const supabase = await createClient();
 
-  // Search by district/emirate ILIKE %name%
+  // Map area slugs to their possible district names in Supabase
+  const slugToDistricts: Record<string, string[]> = {
+    "dubai-marina": ["Dubai Marina", "dubai marina"],
+    "downtown-dubai": ["Downtown Dubai", "Downtown", "downtown dubai", "downtown"],
+    "palm-jumeirah": ["Palm Jumeirah", "palm jumeirah"],
+    "business-bay": ["Business Bay", "business bay"],
+    "jumeirah-beach-residence": ["Jumeirah Beach Residence", "JBR", "jumeirah beach residence", "jbr"],
+    "difc": ["DIFC", "difc"],
+  };
+
+  const targetDistricts = slugToDistricts[slug] || [area.name];
+
   let { data: rawProperties } = await supabase
     .from("properties")
     .select("*")
     .eq("status", "active")
-    .ilike("location_district", `%${area.name}%`);
+    .in("location_district", targetDistricts);
 
   // If no properties found, show all active listings as fallback
   if (!rawProperties || rawProperties.length === 0) {
