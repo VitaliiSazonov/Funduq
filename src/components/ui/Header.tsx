@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link as IntlLink } from "@/i18n/navigation";
 import NextLink from "next/link";
-import { Menu, X, Search, Building2, LogIn, LogOut, CalendarDays, User, Home, MapPin, BookOpen } from "lucide-react";
+import { Menu, X, Search, Building2, LogIn, LogOut, CalendarDays, User, Home, MapPin, BookOpen, Info } from "lucide-react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import UserMenu from "@/components/ui/UserMenu";
 import { signOutAction } from "@/app/actions/auth";
@@ -89,6 +89,12 @@ export default function Header({ user }: HeaderProps) {
           >
             Blog
           </IntlLink>
+          <IntlLink
+            href="/about"
+            className="text-white/70 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors duration-300"
+          >
+            {t("about")}
+          </IntlLink>
           {userRole !== "guest" && (
             <NextLink
               href="/host/dashboard"
@@ -168,6 +174,15 @@ export default function Header({ user }: HeaderProps) {
               >
                 <BookOpen className="w-5 h-5" />
                 <span className="text-base font-bold">Blog</span>
+              </IntlLink>
+
+              <IntlLink
+                href="/about"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-4 px-5 py-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-200"
+              >
+                <Info className="w-5 h-5" />
+                <span className="text-base font-bold">{t("about")}</span>
               </IntlLink>
 
               {userRole !== "guest" && (

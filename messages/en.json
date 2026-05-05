@@ -6,7 +6,8 @@
     "login": "Sign In",
     "myBookings": "My Bookings",
     "myProfile": "My Profile",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "about": "About"
   },
   "mobileNav": {
     "home": "Home",
