@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { Calendar, Clock, ChevronRight } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
-import Script from 'next/script';
+import JsonLd from '@/components/seo/JsonLd';
 
 export async function generateStaticParams() {
   const locales = ['en', 'ru'];
@@ -56,12 +56,17 @@ export default function BlogPostPage({
   // Get a couple of related posts for the sidebar
   const relatedPosts = blogPosts.filter((p) => p.slug !== slug).slice(0, 3);
 
-  const jsonLd = {
+  const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: isRu ? post.titleRu : post.titleEn,
-    description: isRu ? post.descriptionRu : post.descriptionEn,
-    image: 'https://funduq.ae/images/og-default.jpg', // Default OG image
+    description: isRu
+      ? ((post as any).excerptRu || post.descriptionRu)
+      : ((post as any).excerptEn || (post as any).excerpt || post.descriptionEn),
+    url: `https://funduq.ae/blog/${post.slug}`,
+    datePublished: post.publishedAt,
+    dateModified: (post as any).updatedAt || post.publishedAt,
+    image: (post as any).coverImage || 'https://funduq.ae/images/og-default.jpg',
     author: {
       '@type': 'Organization',
       name: 'Funduq Editorial Team',
@@ -74,18 +79,12 @@ export default function BlogPostPage({
         '@type': 'ImageObject',
         url: 'https://funduq.ae/logo.png'
       }
-    },
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    }
   };
 
   return (
     <>
-      <Script
-        id="article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={articleJsonLd} />
       <main className="min-h-screen bg-sand-light pt-32 pb-20">
         <article className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16">
           
