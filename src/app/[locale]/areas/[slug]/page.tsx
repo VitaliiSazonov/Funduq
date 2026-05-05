@@ -4,6 +4,7 @@ import { dubaiAreas } from "@/data/dubai-areas";
 import { createClient } from "@/lib/supabase/server";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale } from "next-intl/server";
+import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateStaticParams() {
   return dubaiAreas.map((area) => ({
@@ -73,10 +74,17 @@ export default async function AreaPage({
     imageUrl: row.main_image_url || "/images/props/placeholder.png",
   }));
 
-  const jsonLd = {
+  const areaName = locale === "ru" ? area.nameRu : area.name;
+
+  const minPrice = rawProperties && rawProperties.length > 0
+    ? Math.min(...rawProperties.map((row: any) => row.price_min || 1500))
+    : 1500;
+  const formattedMinPrice = new Intl.NumberFormat().format(minPrice);
+
+  const placeJsonLd = {
     "@context": "https://schema.org",
     "@type": ["Place", "RealEstateAgent"],
-    name: locale === "ru" ? area.nameRu : area.name,
+    name: areaName,
     description: locale === "ru" ? area.descriptionRu : area.descriptionEn,
     address: {
       "@type": "PostalAddress",
@@ -85,12 +93,61 @@ export default async function AreaPage({
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://funduq.ae"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": areaName,
+        "item": `https://funduq.ae/${locale}/areas/${slug}`
+      }
+    ]
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": locale === "ru"
+          ? `Как арендовать виллу в ${areaName} без комиссии?`
+          : `How to rent a villa in ${areaName} without commission?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": locale === "ru"
+            ? "На Funduq гости не платят комиссию (0%). Связывайтесь с владельцем напрямую."
+            : "On Funduq, guests pay 0% commission. Contact the owner directly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": locale === "ru"
+          ? `Какова средняя цена виллы в ${areaName}?`
+          : `What is the average villa price in ${areaName}?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": locale === "ru"
+            ? `Цены начинаются от AED ${formattedMinPrice} за ночь.`
+            : `Prices start from AED ${formattedMinPrice} per night.`
+        }
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={placeJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={faqJsonLd} />
       
       {/* Header Section */}
       <section className="pt-32 pb-16 px-4 md:px-8 bg-charcoal text-white">
