@@ -56,19 +56,23 @@ export async function generateMetadata({
   
   const description = `${propertyType} in ${location}. Starting from ${price}. Book this verified property on Funduq with flexible check-in and no hidden fees.`;
 
+  const ogDescription = (property.description || "").substring(0, 160);
+  const ogImageUrl = property.images?.[0]?.url || property.main_image_url || undefined;
+
   return {
     title: `${property.title} – Funduq Dubai`,
     description: description,
     openGraph: {
-      title: `${property.title} – Funduq Dubai`,
-      description: description,
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      title: property.title,
+      description: ogDescription,
+      images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+      type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${property.title} – Funduq Dubai`,
-      description: description,
-      images: ogImage ? [ogImage] : undefined,
+      title: property.title,
+      description: ogDescription,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
     }
   };
 }

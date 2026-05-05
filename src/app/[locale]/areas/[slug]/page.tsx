@@ -17,18 +17,30 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const area = dubaiAreas.find((a) => a.slug === slug);
 
   if (!area) return {};
 
+  const isRu = locale === "ru";
+  const name = isRu ? area.nameRu : area.name;
+  const description = isRu ? area.descriptionRu : area.descriptionEn;
+  const slicedDescription = (description || "").substring(0, 160);
+
   return {
-    title: `Holiday Homes & Villas in ${area.name} | Funduq`,
-    description: area.descriptionEn.substring(0, 160) + "...",
+    title: `Holiday Homes & Villas in ${name} | Funduq`,
+    description: slicedDescription + "...",
     openGraph: {
-      title: `${area.name} Holiday Homes | Funduq`,
-      description: area.descriptionEn.substring(0, 160) + "...",
+      title: `${name} | Funduq`,
+      description: slicedDescription,
+      images: [{ url: "https://funduq.ae/images/og-default.jpg" }],
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${name} | Funduq`,
+      description: slicedDescription,
+      images: ["https://funduq.ae/images/og-default.jpg"],
     },
   };
 }

@@ -33,15 +33,27 @@ export async function generateMetadata({
   const title = isRu ? post.titleRu : post.titleEn;
   const description = isRu ? post.descriptionRu : post.descriptionEn;
 
+  const excerpt = isRu
+    ? ((post as any).excerptRu || post.descriptionRu)
+    : ((post as any).excerptEn || (post as any).excerpt || post.descriptionEn);
+  const coverImage = (post as any).coverImage ?? 'https://funduq.ae/images/og-default.jpg';
+
   return {
     title: `${title} | Funduq Guides`,
     description,
     openGraph: {
       title,
-      description,
+      description: excerpt,
+      images: [{ url: coverImage }],
       type: 'article',
       publishedTime: post.publishedAt,
       authors: ['Funduq Editorial Team'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: excerpt,
+      images: [coverImage],
     },
   };
 }
