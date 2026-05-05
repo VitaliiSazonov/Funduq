@@ -41,7 +41,7 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const property = await getProperty(id);
 
   if (!property) {
@@ -73,7 +73,14 @@ export async function generateMetadata({
       title: property.title,
       description: ogDescription,
       images: ogImageUrl ? [ogImageUrl] : undefined,
-    }
+    },
+    alternates: {
+      canonical: locale === "ru" ? `https://funduq.ae/ru/villas/${id}` : `https://funduq.ae/villas/${id}`,
+      languages: {
+        en: `https://funduq.ae/en/villas/${id}`,
+        ru: `https://funduq.ae/ru/villas/${id}`,
+      },
+    },
   };
 }
 

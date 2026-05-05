@@ -34,6 +34,13 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
     },
+    alternates: {
+      canonical: locale === "ru" ? "https://funduq.ae/ru" : "https://funduq.ae",
+      languages: {
+        en: "https://funduq.ae/en",
+        ru: "https://funduq.ae/ru",
+      },
+    },
   };
 }
 

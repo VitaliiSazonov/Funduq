@@ -55,6 +55,13 @@ export async function generateMetadata({
       description: excerpt,
       images: [coverImage],
     },
+    alternates: {
+      canonical: locale === "ru" ? `https://funduq.ae/ru/blog/${slug}` : `https://funduq.ae/blog/${slug}`,
+      languages: {
+        en: `https://funduq.ae/en/blog/${slug}`,
+        ru: `https://funduq.ae/ru/blog/${slug}`,
+      },
+    },
   };
 }
 

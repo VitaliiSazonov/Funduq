@@ -42,6 +42,13 @@ export async function generateMetadata({
       description: slicedDescription,
       images: ["https://funduq.ae/images/og-default.jpg"],
     },
+    alternates: {
+      canonical: locale === "ru" ? `https://funduq.ae/ru/areas/${slug}` : `https://funduq.ae/areas/${slug}`,
+      languages: {
+        en: `https://funduq.ae/en/areas/${slug}`,
+        ru: `https://funduq.ae/ru/areas/${slug}`,
+      },
+    },
   };
 }
 
