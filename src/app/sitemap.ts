@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { blogPosts } from '@/data/blog-posts';
+import { dubaiAreas } from '@/data/dubai-areas';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,59 +11,64 @@ const supabase = createClient(
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://funduq.ae';
 
-  // Fetch all properties to generate dynamic routes
+  // 1. Fetch active properties from Supabase for dynamic villas
   const { data: properties } = await supabase
     .from('properties')
     .select('id, updated_at')
     .eq('status', 'active');
 
-  // Next-intl prefix default is en
+  // Dynamic villa entries: /villas/{id}
   const propertyEntries: MetadataRoute.Sitemap = (properties || []).map((prop) => ({
-    url: `${baseUrl}/en/villas/${prop.id}`,
+    url: `${baseUrl}/villas/${prop.id}`,
     lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
     changeFrequency: 'daily',
     priority: 0.8,
   }));
 
+  // 2. Static pages: /, /villas, /blog, /about
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}/en`,
+      url: `${baseUrl}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/en/villas`,
+      url: `${baseUrl}/villas`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 0.8,
     },
     {
-      url: `${baseUrl}/en/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/en/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/en/blog`,
+      url: `${baseUrl}/blog`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.8,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
   ];
 
+  // 3. Dynamic areas: /areas/{slug}
+  const areaEntries: MetadataRoute.Sitemap = dubaiAreas.map((area) => ({
+    url: `${baseUrl}/areas/${area.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }));
+
+  // 4. Dynamic blog posts: /blog/{slug}
   const blogEntries: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${baseUrl}/en/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: 'monthly',
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+    changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
-  return [...staticPages, ...propertyEntries, ...blogEntries];
+  return [...staticPages, ...propertyEntries, ...areaEntries, ...blogEntries];
 }
+
