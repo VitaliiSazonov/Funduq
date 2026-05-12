@@ -7,7 +7,10 @@ export type BookingStatus = "pending" | "confirmed" | "declined" | "cancelled";
 export interface Booking {
   id: string;
   property_id: string;
-  guest_id: string;
+  guest_id: string | null;    // null for anonymous (unauthenticated) bookings
+  guest_name: string | null;  // provided by anonymous guests
+  guest_email: string | null; // provided by anonymous guests
+  guest_phone: string | null; // provided by anonymous guests
   check_in: string;   // ISO date string (YYYY-MM-DD)
   check_out: string;  // ISO date string (YYYY-MM-DD)
   total_guests: number;
@@ -33,6 +36,8 @@ export interface BookingWithProperty extends Booking {
 export interface BookingWithGuest extends Booking {
   guest: {
     email: string;
+    name: string;
+    phone: string | null;
   };
   property: {
     id: string;

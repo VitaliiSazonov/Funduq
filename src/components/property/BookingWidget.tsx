@@ -16,9 +16,15 @@ import {
   Users,
   Loader2,
   MessageSquare,
+  CheckCircle2,
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getDisabledDates } from "@/app/actions/ical";
+import { createBookingRequest } from "@/app/actions/bookings";
 
 // ─────────────────────────────────────────────────────────────
 // Props
@@ -30,6 +36,8 @@ interface BookingWidgetProps {
   maxGuests: number;
   propertyTitle: string;
 }
+
+type SubmitState = "idle" | "loading" | "success" | "error";
 
 // ─────────────────────────────────────────────────────────────
 // Component
@@ -64,8 +72,13 @@ export default function BookingWidget({
   const [range, setRange] = useState<DateRange | undefined>(initialRange);
   const [guests, setGuests] = useState(1);
   const [message, setMessage] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // ─── Fetch disabled dates ───
   const fetchDates = useCallback(async () => {
@@ -102,28 +115,85 @@ export default function BookingWidget({
     return disabledDates.some((d) => isSameDay(d, date));
   }
 
-  // ─── Redirect directly to WhatsApp with prefilled message ───
-  function handleSubmit() {
-    if (!range?.from || !range?.to || rangeHasConflict()) return;
+  // ─── Validation ───
+  function isFormValid(): boolean {
+    if (!range?.from || !range?.to || rangeHasConflict()) return false;
+    if (!guestName.trim() || !guestEmail.trim()) return false;
+    if (!guestEmail.includes("@")) return false;
+    return true;
+  }
 
-    const checkInStr = format(range.from, "yyyy-MM-dd");
-    const checkOutStr = format(range.to, "yyyy-MM-dd");
-    const propertyLink = typeof window !== "undefined" ? window.location.href : "";
-    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585338192";
+  // ─── Submit booking request via Server Action ───
+  async function handleSubmit() {
+    if (!isFormValid()) return;
 
-    const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+    setSubmitState("loading");
+    setErrorMessage("");
 
-Hello! I would like to request a booking:
-*Property:* ${propertyTitle}
-*ID:* ${propertyId}
-*Dates:* ${checkInStr} to ${checkOutStr}
-*Guests:* ${guests}
-*Link:* ${propertyLink}
-${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
+    try {
+      const result = await createBookingRequest({
+        property_id: propertyId,
+        guest_name: guestName.trim(),
+        guest_email: guestEmail.trim(),
+        guest_phone: guestPhone.trim() || undefined,
+        check_in: format(range!.from!, "yyyy-MM-dd"),
+        check_out: format(range!.to!, "yyyy-MM-dd"),
+        total_guests: guests,
+        message: message.trim() || undefined,
+      });
 
-    const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-    
-    window.open(url, "_blank", "noopener,noreferrer");
+      if (result.success) {
+        setSubmitState("success");
+      } else {
+        setSubmitState("error");
+        setErrorMessage(result.error || t("somethingWrong"));
+      }
+    } catch (err) {
+      console.error("Booking submission error:", err);
+      setSubmitState("error");
+      setErrorMessage(t("somethingWrong"));
+    }
+  }
+
+  // ─── Success State ───
+  if (submitState === "success") {
+    return (
+      <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury overflow-hidden">
+        <div className="gold-gradient px-6 py-5">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-bold mb-1">
+            {t("from")}
+          </p>
+          <p className="text-2xl font-black text-white display-font">
+            AED {new Intl.NumberFormat().format(priceMin)}
+            <span className="text-white/50 text-base font-normal"> {t("perNight")}</span>
+          </p>
+        </div>
+        <div className="p-8 flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mb-4">
+            <CheckCircle2 className="w-8 h-8 text-green-500" />
+          </div>
+          <h3 className="text-xl font-black text-charcoal display-font mb-2">
+            {t("requestSentTitle")}
+          </h3>
+          <p className="text-charcoal/50 text-sm leading-relaxed">
+            {t("requestSentDesc")}
+          </p>
+          <button
+            onClick={() => {
+              setSubmitState("idle");
+              setGuestName("");
+              setGuestEmail("");
+              setGuestPhone("");
+              setMessage("");
+              setRange(undefined);
+            }}
+            className="mt-6 text-sm font-semibold text-gold hover:text-gold-dark transition-colors"
+          >
+            {t("makeAnotherRequest")}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -187,6 +257,14 @@ ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
               )}
             </div>
           )}
+
+          {/* Conflict warning */}
+          {rangeHasConflict() && (
+            <div className="mt-2 flex items-center gap-2 text-xs text-red-600 bg-red-50 px-3 py-2 rounded-xl">
+              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+              {t("datesUnavailable")}
+            </div>
+          )}
         </div>
 
         {/* ─── Guests ─── */}
@@ -206,6 +284,49 @@ ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
               </option>
             ))}
           </select>
+        </div>
+
+        {/* ─── Guest Contact Info ─── */}
+        <div className="space-y-3">
+          <p className="text-xs font-bold text-charcoal/50 uppercase tracking-wider">
+            {t("yourDetails")}
+          </p>
+
+          {/* Name */}
+          <div className="relative">
+            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal/30" />
+            <input
+              type="text"
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              placeholder={t("namePlaceholder")}
+              className="w-full pl-10 pr-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/25 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="relative">
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal/30" />
+            <input
+              type="email"
+              value={guestEmail}
+              onChange={(e) => setGuestEmail(e.target.value)}
+              placeholder={t("emailPlaceholder")}
+              className="w-full pl-10 pr-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/25 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all"
+            />
+          </div>
+
+          {/* Phone (optional) */}
+          <div className="relative">
+            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal/30" />
+            <input
+              type="tel"
+              value={guestPhone}
+              onChange={(e) => setGuestPhone(e.target.value)}
+              placeholder={t("phonePlaceholder")}
+              className="w-full pl-10 pr-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/25 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all"
+            />
+          </div>
         </div>
 
         {/* ─── Message (optional) ─── */}
@@ -244,16 +365,36 @@ ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
           </div>
         )}
 
+        {/* ─── Error message ─── */}
+        {submitState === "error" && errorMessage && (
+          <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-xl">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         {/* ─── Submit ─── */}
         <button
           type="button"
+          id="booking-submit-btn"
           onClick={handleSubmit}
-          disabled={!range?.from || !range?.to || rangeHasConflict()}
+          disabled={!isFormValid() || submitState === "loading"}
           data-testid="request-to-book-btn"
           className="w-full flex items-center justify-center gap-2 px-6 py-4 gold-gradient text-white rounded-2xl font-bold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          {t("requestToBook")}
+          {submitState === "loading" ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              {t("requesting")}
+            </>
+          ) : (
+            t("requestToBook")
+          )}
         </button>
+
+        <p className="text-center text-[10px] text-charcoal/30 uppercase tracking-wider">
+          {t("noPaymentRequired")}
+        </p>
       </div>
     </div>
   );

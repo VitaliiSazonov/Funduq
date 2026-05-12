@@ -113,7 +113,11 @@ export default async function HostBookingsPage() {
                       <span>
                         {booking.total_guests} {booking.total_guests !== 1 ? h.guestPlural : h.guest}
                       </span>
-                      <span>{h.guestLabel}: {booking.guest.email}</span>
+                      <span>{h.guestLabel}: <strong className="text-charcoal">{booking.guest.name}</strong></span>
+                      <span>{booking.guest.email}</span>
+                      {booking.guest.phone && (
+                        <span>{booking.guest.phone}</span>
+                      )}
                     </div>
 
                     {booking.message && (
