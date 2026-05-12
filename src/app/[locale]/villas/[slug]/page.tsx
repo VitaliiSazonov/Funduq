@@ -31,7 +31,8 @@ import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import JsonLd from "@/components/seo/JsonLd";
 import FaqAccordion from "@/components/property/FaqAccordion";
-import ReviewsSection, { mockReviews } from "@/components/property/ReviewsSection";
+import ReviewsSection from "@/components/property/ReviewsSection";
+import { mockReviews } from "@/components/property/reviewsData";
 
 // ─────────────────────────────────────────────────────────────
 // Params interface (Next.js 15+: params is a Promise)
