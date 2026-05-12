@@ -25,6 +25,8 @@ export function buildVillaUrl(id: string | number, title: string): string {
 }
 
 export function extractIdFromSlug(slug: string): string {
-  const parts = slug.split('-');
-  return parts[parts.length - 1];
+  const parts = slug.split("-");
+  // UUID v4 always has 5 parts joined by hyphens.
+  // e.g. 103fbc80-b1b4-4589-9657-fa7ef2d068dc
+  return parts.slice(-5).join("-");
 }
