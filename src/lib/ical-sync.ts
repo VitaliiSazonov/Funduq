@@ -1,4 +1,5 @@
-import ical from 'node-ical';
+// Removed top-level import to prevent build evaluation errors
+// import ical from 'node-ical';
 import { createClient } from '@supabase/supabase-js';
 import { format } from 'date-fns';
 
@@ -24,6 +25,7 @@ export async function syncCalendarFeed(
         }
 
         const icalData = await response.text();
+        const ical = await import('node-ical');
         const events = await ical.async.parseICS(icalData);
 
         const blockedDatesToInsert: any[] = [];
@@ -32,7 +34,7 @@ export async function syncCalendarFeed(
         for (const k in events) {
             if (events.hasOwnProperty(k)) {
                 const ev = events[k];
-                if (ev.type === 'VEVENT') {
+                if (ev && ev.type === 'VEVENT') {
                     // Extract start and end dates
                     const start = ev.start as Date;
                     const end = ev.end as Date;

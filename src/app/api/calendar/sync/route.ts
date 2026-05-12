@@ -4,6 +4,7 @@ import { syncCalendarFeed } from "@/lib/ical-sync";
 
 // Force Node.js runtime for this cron to allow 'node-ical' usage if needed
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
     try {

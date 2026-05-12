@@ -11,6 +11,11 @@ import { sendEmail } from "@/lib/email/sendEmail";
 import BookingConfirmedEmail from "@/lib/email/templates/BookingConfirmedEmail";
 import BookingDeclinedEmail from "@/lib/email/templates/BookingDeclinedEmail";
 
+type ActionResult = {
+  success: boolean;
+  error?: string;
+};
+
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────

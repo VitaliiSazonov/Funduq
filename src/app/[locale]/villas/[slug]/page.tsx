@@ -95,11 +95,31 @@ export async function generateMetadata({
   };
 }
 
+import { createAdminClient } from "@/lib/supabase/admin";
+
 export async function generateStaticParams() {
-  const properties = await getAllProperties();
-  return properties.map((p) => ({
-    slug: `${slugify(p.title)}-${p.id}`,
-  }));
+  // Bypasses cookies() by using Admin Client directly, avoiding build failures
+  const supabase = createAdminClient();
+  const { data: properties } = await supabase
+    .from("properties")
+    .select("id, title")
+    .eq("status", "active");
+
+  if (!properties) return [];
+
+  const locales = ["en", "ru"];
+  const paths: { locale: string; slug: string }[] = [];
+
+  properties.forEach((p) => {
+    locales.forEach((locale) => {
+      paths.push({
+        locale,
+        slug: `${slugify(p.title)}-${p.id}`,
+      });
+    });
+  });
+
+  return paths;
 }
 
 // ─────────────────────────────────────────────────────────────

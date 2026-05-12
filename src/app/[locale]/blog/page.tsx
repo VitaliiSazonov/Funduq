@@ -8,11 +8,12 @@ export const metadata: Metadata = {
   description: 'Expert guides, travel tips, and neighborhood insights for holiday homes in Dubai and the UAE.',
 };
 
-export default function BlogIndexPage({
-  params: { locale },
+export default async function BlogIndexPage({
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const isRu = locale === 'ru';
   
   // Categorize logic could be implemented here; for now, we just list them out.
