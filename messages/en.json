@@ -587,5 +587,25 @@
     "syncError": "Error syncing calendar",
     "deleteSuccess": "Feed deleted successfully",
     "deleteError": "Error deleting feed"
+  },
+  "about": {
+    "metaTitle": "About Funduq | Premium Villas in Dubai",
+    "metaDescription": "Premium holiday homes in Dubai — carefully selected for unforgettable stays.",
+    "heroTitle": "About Funduq",
+    "heroSubtitle": "Premium holiday homes in Dubai — carefully selected for unforgettable stays",
+    "missionTitle": "Our Mission",
+    "missionText": "We connect travelers with the finest private villas and holiday homes in Dubai. Every property on Funduq is personally vetted to ensure the highest standards of comfort, design, and hospitality.",
+    "statsVillas": "50+ Villas",
+    "statsRating": "4.9★ Average rating",
+    "statsYears": "2+ Years on market",
+    "statsSupport": "24/7 Support",
+    "whyTitle": "Why Funduq?",
+    "whyItem1": "Verified properties only",
+    "whyItem2": "Flexible check-in & check-out",
+    "whyItem3": "No hidden fees",
+    "whyItem4": "Dedicated host support",
+    "whyItem5": "iCal sync with Airbnb & Booking.com",
+    "ctaTitle": "Ready for an unforgettable stay?",
+    "ctaButton": "Browse Villas"
   }
 }
