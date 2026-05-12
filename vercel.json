@@ -25,7 +25,7 @@
     },
     {
       "path": "/api/calendar/sync",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 4 * * *"
     }
   ]
 }
