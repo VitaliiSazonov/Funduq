@@ -11,6 +11,7 @@ import {
   Preview,
 } from "@react-email/components";
 import * as React from "react";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 
 interface PropertyApprovedEmailProps {
   hostName: string;
@@ -71,7 +72,7 @@ export default function PropertyApprovedEmail({
 
           {/* CTA */}
           <Section style={ctaSection}>
-            <Button style={ctaButton} href={`${baseUrl}/villas/${propertyId}`}>
+            <Button style={ctaButton} href={`${baseUrl}${buildVillaUrl(propertyId, propertyTitle)}`}>
               View Your Listing
             </Button>
           </Section>

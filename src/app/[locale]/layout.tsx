@@ -18,6 +18,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.ae";
 
   const titles: Record<string, string> = {
     en: "Funduq | Luxury Short-Term Rentals in UAE",
@@ -29,13 +30,31 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     ru: "Эксклюзивная коллекция вилл, пентхаусов и пустынных резортов по всем Эмиратам для самых взыскательных гостей.",
   };
 
+  const title = titles[locale] ?? titles.en;
+  const description = descriptions[locale] ?? descriptions.en;
+
   return {
-    title: titles[locale] ?? titles.en,
-    description: descriptions[locale] ?? descriptions.en,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${baseUrl}/${locale}`,
+      siteName: "Funduq",
+      locale: locale === "ru" ? "ru_RU" : "en_AE",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
     alternates: {
+      canonical: `${baseUrl}/${locale}`,
       languages: {
-        en: "https://funduq.vercel.app",
-        ru: "https://funduq.vercel.app/ru",
+        en: `${baseUrl}/en`,
+        ru: `${baseUrl}/ru`,
+        "x-default": `${baseUrl}/en`,
       },
     },
   };

@@ -4,6 +4,8 @@ import React, { useState, useTransition } from "react";
 import { approveProperty, suspendProperty, toggleSignatureProperty } from "@/app/actions/admin";
 import type { PropertyWithHost } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
+import { buildVillaUrl } from "@/lib/utils/slugify";
+import { Link } from "@/i18n/navigation";
 import {
   CheckCircle,
   Ban,
@@ -235,15 +237,15 @@ export default function PropertyModerationRow({
             </button>
           )}
 
-          <a
-            href={`/villas/${property.id}`}
+          <Link
+            href={buildVillaUrl(property.id, property.title)}
             target="_blank"
             rel="noopener noreferrer"
             style={viewBtn}
             title="View listing"
           >
             <ExternalLink size={14} />
-          </a>
+          </Link>
         </div>
       </td>
     </tr>

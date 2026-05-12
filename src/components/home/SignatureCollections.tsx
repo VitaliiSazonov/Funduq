@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { MapPin, Bed, Users, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 
 interface SignatureProperty {
   id: string;
@@ -144,7 +146,7 @@ export default function SignatureCollections({
           return (
             <Link
               key={property.id}
-              href={`/villas/${property.id}`}
+              href={buildVillaUrl(property.id, property.title)}
               className="absolute inset-0 flex items-center justify-center"
               style={{
                 opacity: style.opacity,

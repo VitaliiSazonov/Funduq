@@ -38,6 +38,16 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/villas/:id(\\d+)',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
+
   // ── Security Headers ──
   async headers() {
     return [

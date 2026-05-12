@@ -15,15 +15,10 @@ import {
   CalendarDays,
   Users,
   Loader2,
-  Check,
-  AlertTriangle,
   MessageSquare,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getDisabledDates } from "@/app/actions/ical";
-import { createBooking } from "@/app/actions/bookings";
-import { checkVerificationStatus } from "@/app/actions/passport";
-import PassportVerificationModal from "@/components/guest/PassportVerificationModal";
 
 // ─────────────────────────────────────────────────────────────
 // Props
@@ -71,15 +66,6 @@ export default function BookingWidget({
   const [message, setMessage] = useState("");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [result, setResult] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
-  const [showVerification, setShowVerification] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<
-    "none" | "pending" | "verified"
-  >("none");
 
   // ─── Fetch disabled dates ───
   const fetchDates = useCallback(async () => {
@@ -116,45 +102,16 @@ export default function BookingWidget({
     return disabledDates.some((d) => isSameDay(d, date));
   }
 
-  // ─── Submit booking (DB + WhatsApp Redirect) ───
-  async function handleSubmit() {
+  // ─── Redirect directly to WhatsApp with prefilled message ───
+  function handleSubmit() {
     if (!range?.from || !range?.to || rangeHasConflict()) return;
 
-    setIsSubmitting(true);
-    setResult(null);
+    const checkInStr = format(range.from, "yyyy-MM-dd");
+    const checkOutStr = format(range.to, "yyyy-MM-dd");
+    const propertyLink = typeof window !== "undefined" ? window.location.href : "";
+    const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585338192";
 
-    try {
-      // ── Passport verification temporarily disabled ──
-      // Verification logic removed by request
-
-      const checkInStr = format(range.from, "yyyy-MM-dd");
-      const checkOutStr = format(range.to, "yyyy-MM-dd");
-
-      // 1. Try to create booking in platform DB (stats), but DON'T block if it fails
-      try {
-        await createBooking({
-          propertyId,
-          checkIn: checkInStr,
-          checkOut: checkOutStr,
-          totalGuests: guests,
-          message: message.trim() || undefined,
-          skipEmail: true,
-        });
-      } catch (dbErr) {
-        console.error("Database stat recording failed, proceeding to WhatsApp:", dbErr);
-        // We continue anyway because WhatsApp is the priority
-      }
-
-      setResult({
-        success: true,
-        message: t("bookingRequestSent"),
-      });
-
-      // 2. Open WhatsApp with prefilled message
-      const propertyLink = window.location.href;
-      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
-
-      const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
+    const text = `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️
 
 Hello! I would like to request a booking:
 *Property:* ${propertyTitle}
@@ -164,41 +121,9 @@ Hello! I would like to request a booking:
 *Link:* ${propertyLink}
 ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
 
-      const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-      
-      // Use location.href instead of window.open to avoid popup blockers
-      window.location.href = url;
-
-      // Reset form
-      setRange(undefined);
-      setMessage("");
-      fetchDates();
-    } catch (err: any) {
-      console.error("Booking handler error:", err);
-      // Even if everything fails, try one last attempt to redirect to WhatsApp if we have the dates
-      const serviceNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
-      const checkInStr = range?.from ? format(range.from, "yyyy-MM-dd") : "";
-      const checkOutStr = range?.to ? format(range.to, "yyyy-MM-dd") : "";
-      
-      if (checkInStr && checkOutStr) {
-        const text = `Hello! I would like to book ${propertyTitle} from ${checkInStr} to ${checkOutStr}.`;
-        window.location.href = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
-      } else {
-        setResult({ success: false, message: t("somethingWrong") });
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
-  // ─── Handle verification complete ───
-  async function handleVerificationClose() {
-    setShowVerification(false);
-    const status = await checkVerificationStatus();
-    setVerificationStatus(status);
-    if (status === "verified" && range?.from && range?.to) {
-      handleSubmit();
-    }
+    const url = `https://wa.me/${serviceNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`;
+    
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -323,48 +248,13 @@ ${message.trim() ? `\n*Message:* ${message.trim()}` : ""}`;
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={!range?.from || !range?.to || isSubmitting || rangeHasConflict()}
+          disabled={!range?.from || !range?.to || rangeHasConflict()}
           data-testid="request-to-book-btn"
           className="w-full flex items-center justify-center gap-2 px-6 py-4 gold-gradient text-white rounded-2xl font-bold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              {t("requesting")}
-            </>
-          ) : (
-            t("requestToBook")
-          )}
+          {t("requestToBook")}
         </button>
-
-        {/* ─── Result Feedback ─── */}
-        {result && (
-          <div
-            data-testid="booking-result"
-            data-success={result.success}
-            className={`flex items-start gap-3 p-4 rounded-xl text-sm ${
-              result.success
-                ? "bg-green-50 border border-green-200 text-green-700"
-                : "bg-red-50 border border-red-200 text-red-700"
-            }`}
-          >
-            {result.success ? (
-              <Check className="w-4 h-4 mt-0.5 shrink-0" />
-            ) : (
-              <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
-            )}
-            {result.message}
-          </div>
-        )}
       </div>
-
-      {/* ─── Passport Verification Modal ─── */}
-      {showVerification && (
-        <PassportVerificationModal
-          initialStatus={verificationStatus}
-          onClose={handleVerificationClose}
-        />
-      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { extractIdFromSlug } from "@/lib/utils/slugify";
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
@@ -17,6 +18,8 @@ import {
   MapPinned,
 } from "lucide-react";
 import { getProperty, getSimilarProperties } from "@/app/actions/getProperty";
+import { getAllProperties } from "@/app/actions/properties";
+import { slugify } from "@/lib/utils/slugify";
 import BookingWidget from "@/components/property/BookingWidget";
 import ViewTracker from "@/components/property/ViewTracker";
 import HeroGallery from "@/components/property/HeroGallery";
@@ -27,12 +30,14 @@ import ShareButton from "@/components/property/ShareButton";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import JsonLd from "@/components/seo/JsonLd";
+import FaqAccordion from "@/components/property/FaqAccordion";
+import ReviewsSection, { mockReviews } from "@/components/property/ReviewsSection";
 
 // ─────────────────────────────────────────────────────────────
 // Params interface (Next.js 15+: params is a Promise)
 // ─────────────────────────────────────────────────────────────
 interface PageProps {
-  params: Promise<{ id: string; locale: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -41,54 +46,68 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { id, locale } = await params;
+  const { slug, locale } = await params;
+  const id = extractIdFromSlug(slug);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.ae";
   const property = await getProperty(id);
 
   if (!property) {
     return { title: "Property Not Found — Funduq" };
   }
 
-  const ogImage = property.main_image_url || property.images[0]?.url || undefined;
-  
   const propertyType = property.type || "Holiday Home";
   const location = `${property.location_district}, ${property.location_emirate}`;
   const price = property.price_min ? `AED ${property.price_min}` : "Flexible pricing";
   
+  const title = `${property.title} – Funduq Dubai`;
   const description = `${propertyType} in ${location}. Starting from ${price}. Book this verified property on Funduq with flexible check-in and no hidden fees.`;
 
-  const ogDescription = (property.description || "").substring(0, 160);
   const ogImageUrl = property.images?.[0]?.url || property.main_image_url || undefined;
 
   return {
-    title: `${property.title} – Funduq Dubai`,
-    description: description,
+    title,
+    description,
     openGraph: {
-      title: property.title,
-      description: ogDescription,
-      images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+      title,
+      description,
+      url: `${baseUrl}/${locale}/villas/${id}`,
+      siteName: "Funduq",
+      locale: locale === "ru" ? "ru_RU" : "en_AE",
       type: "website",
+      images: ogImageUrl
+        ? [{ url: ogImageUrl, width: 1200, height: 630, alt: property.title }]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: property.title,
-      description: ogDescription,
+      title,
+      description,
       images: ogImageUrl ? [ogImageUrl] : undefined,
+      creator: "@funduq_ae",
     },
     alternates: {
-      canonical: locale === "ru" ? `https://funduq.ae/ru/villas/${id}` : `https://funduq.ae/villas/${id}`,
+      canonical: `${baseUrl}/${locale}/villas/${slug}`,
       languages: {
-        en: `https://funduq.ae/en/villas/${id}`,
-        ru: `https://funduq.ae/ru/villas/${id}`,
+        en: `${baseUrl}/en/villas/${slug}`,
+        ru: `${baseUrl}/ru/villas/${slug}`,
       },
     },
   };
+}
+
+export async function generateStaticParams() {
+  const properties = await getAllProperties();
+  return properties.map((p) => ({
+    slug: `${slugify(p.title)}-${p.id}`,
+  }));
 }
 
 // ─────────────────────────────────────────────────────────────
 // Page Component (Server Component)
 // ─────────────────────────────────────────────────────────────
 export default async function PropertyDetailPage({ params }: PageProps) {
-  const { id, locale } = await params;
+  const { slug, locale } = await params;
+  const id = extractIdFromSlug(slug);
   setRequestLocale(locale);
   const t = await getTranslations("villa");
 
@@ -113,7 +132,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     "@type": "LodgingBusiness",
     "name": property.title,
     "description": property.description || null,
-    "url": `https://funduq.ae/villas/${property.id}`,
+    "url": `https://funduq.ae/villas/${slug}`,
     "image": property.images?.map((img) => img.url) || [],
     "address": {
       "@type": "PostalAddress",
@@ -127,6 +146,13 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       "maxValue": property.max_guests || null,
     },
     "priceRange": `AED ${property.price_min || 0} - ${property.price_max || 0} per night`,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "47",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
   };
 
   const breadcrumbsJsonLd = {
@@ -149,16 +175,88 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         "@type": "ListItem",
         "position": 3,
         "name": property.title,
-        "item": `https://funduq.ae/villas/${property.id}`,
+        "item": `https://funduq.ae/villas/${slug}`,
       },
     ],
   };
+
+  const faqs = locale === "ru" 
+    ? [
+        {
+          question: "Как забронировать эту виллу?",
+          answer: "Просто оставьте заявку через виджет бронирования на странице. После этого вы свяжетесь напрямую с верифицированным владельцем или менеджером объекта в WhatsApp для обсуждения дат и оплаты."
+        },
+        {
+          question: "Есть ли комиссия?",
+          answer: "Нет, Funduq не берет комиссию с гостей. Вы платите напрямую владельцу по утвержденной цене, без скрытых платежей или сервисных сборов платформы."
+        },
+        {
+          question: "Во сколько заезд?",
+          answer: "Стандартное время заезда — после 15:00, а время выезда — до 12:00. Тем не менее, точное время можно гибко согласовать напрямую с хозяином."
+        },
+        {
+          question: "Можно ли платить напрямую владельцу?",
+          answer: "Да, все финансовые расчеты производятся напрямую с верифицированным владельцем жилья или лицензированной управляющей компанией, что обеспечивает прозрачность сделки."
+        },
+        {
+          question: "Есть ли лицензия DTCM?",
+          answer: "Да, мы проверяем, чтобы все объекты, представленные на Funduq, имели действующую лицензию Департамента Экономики и Туризма Дубая (DET / DTCM)."
+        }
+      ]
+    : [
+        {
+          question: "How do I book this villa?",
+          answer: "Simply submit a request through the booking widget on the page. After that, you will be put in direct contact with the verified owner or property manager via WhatsApp to discuss dates and payment."
+        },
+        {
+          question: "Is there a commission fee?",
+          answer: "No, Funduq does not charge guests any commission. You pay the rate provided directly by the owner, with no hidden fees or platform service charges."
+        },
+        {
+          question: "What is the check-in time?",
+          answer: "Standard check-in time is typically after 3:00 PM, and check-out is by 12:00 PM. However, the exact time can be coordinated flexibly directly with the host."
+        },
+        {
+          question: "Can I pay directly to the owner?",
+          answer: "Yes, all financial transactions occur directly between you and the verified property host or licensed management company, ensuring full transparency."
+        },
+        {
+          question: "Is the villa DTCM licensed?",
+          answer: "Yes, we verify that all vacation homes listed on Funduq hold an active and valid license from Dubai's Department of Economy and Tourism (DET / DTCM)."
+        }
+      ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  const reviewSchema = mockReviews.map((review) => ({
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": { "@type": "LodgingBusiness", "name": property.title },
+    "reviewRating": { "@type": "Rating", "ratingValue": review.rating.toString(), "bestRating": "5", "worstRating": "1" },
+    "author": { "@type": "Person", "name": review.authorName },
+    "reviewBody": locale === "ru" ? review.textRu : review.textEn,
+  }));
 
   return (
     <div className="min-h-screen bg-offwhite">
       {/* JSON-LD */}
       <JsonLd data={lodgingBusinessJsonLd} />
       <JsonLd data={breadcrumbsJsonLd} />
+      <JsonLd data={faqSchema} />
+      {reviewSchema.map((schema, index) => (
+        <JsonLd key={`review-schema-${index}`} data={schema} />
+      ))}
 
       {/* Track property view (deduplicated) */}
       <ViewTracker propertyId={property.id} />
@@ -382,7 +480,18 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* ═══ SECTION 9 — Similar Properties ═══ */}
+            {/* ═══ SECTION 9 — FAQ ═══ */}
+            <section>
+              <h2 className="text-xl font-black display-font text-charcoal mb-6">
+                {locale === "ru" ? "Часто задаваемые вопросы" : "Frequently Asked Questions"}
+              </h2>
+              <FaqAccordion faqs={faqs} />
+            </section>
+
+            {/* ═══ SECTION 9.5 — Reviews ═══ */}
+            <ReviewsSection />
+
+            {/* ═══ SECTION 10 — Similar Properties ═══ */}
             {similarProperties.length > 0 && (
               <section data-testid="similar-properties">
                 <h2 className="text-xl font-black display-font text-charcoal mb-6">

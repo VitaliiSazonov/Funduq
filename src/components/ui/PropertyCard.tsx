@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bed, Users, MapPin, ChevronRight } from "lucide-react";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
@@ -29,7 +30,8 @@ export default function PropertyCard({
   const t = useTranslations("villas");
   const searchParams = useSearchParams();
   const qs = searchParams.toString();
-  const href = qs ? `/villas/${id}?${qs}` : `/villas/${id}`;
+  const baseHref = buildVillaUrl(id, title);
+  const href = qs ? `${baseHref}?${qs}` : baseHref;
 
   return (
     <Link href={href} data-testid="property-card">

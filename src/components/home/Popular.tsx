@@ -5,6 +5,7 @@ import { Star, ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 import type { PopularProperty } from "@/app/actions/popularity";
 import WishlistButton from "@/components/ui/WishlistButton";
 
@@ -39,7 +40,7 @@ function PropertyCard({
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={`group cursor-pointer ${className}`}
     >
-      <Link href={`/villas/${item.id}`}>
+      <Link href={buildVillaUrl(item.id, item.title)}>
         {/* Square Image */}
         <div className="relative aspect-square rounded-2xl overflow-hidden mb-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

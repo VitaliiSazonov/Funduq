@@ -5,6 +5,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { parseISO, addMonths, isSameDay } from "date-fns";
 import { Loader2, CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { getDisabledDates } from "@/app/actions/ical";
 
 interface AvailabilityCalendarProps {
@@ -14,6 +15,7 @@ interface AvailabilityCalendarProps {
 export default function AvailabilityCalendar({
   propertyId,
 }: AvailabilityCalendarProps) {
+  const t = useTranslations("availabilityCalendar");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,10 +44,10 @@ export default function AvailabilityCalendar({
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-black display-font text-charcoal flex items-center gap-2">
           <CalendarDays className="w-5 h-5 text-gold" />
-          Availability
+          {t("availability")}
         </h2>
         <span className="text-xs font-medium text-charcoal/40">
-          Updated in real time
+          {t("updatedRealTime")}
         </span>
       </div>
 
@@ -53,7 +55,7 @@ export default function AvailabilityCalendar({
         <div className="flex items-center justify-center py-16 bg-white rounded-2xl border border-charcoal/5">
           <Loader2 className="w-6 h-6 text-gold animate-spin" />
           <span className="ml-2 text-sm text-charcoal/40">
-            Loading calendar…
+            {t("loadingCalendar")}
           </span>
         </div>
       ) : (
@@ -72,13 +74,13 @@ export default function AvailabilityCalendar({
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-offwhite border border-charcoal/10" />
               <span className="text-xs text-charcoal/40 font-medium">
-                Available
+                {t("available")}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-charcoal/10" />
               <span className="text-xs text-charcoal/40 font-medium line-through">
-                Booked
+                {t("booked")}
               </span>
             </div>
           </div>

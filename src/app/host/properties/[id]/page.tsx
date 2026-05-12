@@ -24,6 +24,7 @@ import {
 import { getProperty } from "@/app/actions/getProperty";
 import { createClient } from "@/lib/supabase/server";
 import { getHostLocale, getHostMessages } from "@/lib/getHostLocale";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 import HeroGallery from "@/components/property/HeroGallery";
 import AmenitiesGrid from "@/components/property/AmenitiesGrid";
 import AvailabilityCalendar from "@/components/property/AvailabilityCalendar";
@@ -168,7 +169,7 @@ export default async function HostPropertyDetailPage({ params }: PageProps) {
           <div className="flex items-center gap-3">
             {property.status === "active" && (
               <Link
-                href={`/en/villas/${property.id}`}
+                href={`/en${buildVillaUrl(property.id, property.title)}`}
                 target="_blank"
                 className="flex items-center gap-2 text-sm font-bold text-gold hover:text-gold-dark transition-colors"
               >
@@ -383,7 +384,7 @@ export default async function HostPropertyDetailPage({ params }: PageProps) {
 
                 {property.status === "active" && (
                   <Link
-                    href={`/en/villas/${property.id}`}
+                    href={`/en${buildVillaUrl(property.id, property.title)}`}
                     target="_blank"
                     className="flex items-center gap-3 w-full px-5 py-3.5 rounded-xl bg-charcoal text-white font-bold text-sm hover:bg-gold transition-all duration-300"
                   >
@@ -398,6 +399,14 @@ export default async function HostPropertyDetailPage({ params }: PageProps) {
                 >
                   <Pencil className="w-4 h-4" />
                   {h.editListingBtn}
+                </Link>
+
+                <Link
+                  href={`/host/properties/${property.id}/calendar`}
+                  className="flex items-center gap-3 w-full px-5 py-3.5 rounded-xl border border-blue-200 text-blue-700 font-bold text-sm hover:bg-blue-50 transition-all duration-300"
+                >
+                  <Calendar className="w-4 h-4" />
+                  Calendar Sync
                 </Link>
 
                 <Link

@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import ical, { VEvent } from "node-ical";
 import {
   parseISO,
   eachDayOfInterval,
@@ -14,13 +13,6 @@ import { TZDate } from "@date-fns/tz";
 // Asia/Dubai timezone constant
 // ─────────────────────────────────────────────────────────────
 const TZ = "Asia/Dubai";
-
-/**
- * Type guard to narrow a CalendarComponent to a VEvent.
- */
-function isVEvent(component: ical.CalendarComponent): component is VEvent {
-  return component.type === "VEVENT";
-}
 
 /**
  * Converts a Date to a "YYYY-MM-DD" string in Asia/Dubai timezone.
@@ -72,49 +64,82 @@ export async function getDisabledDates(
     }
   }
 
-  // ─── 2. External iCal calendar links ───
-  const { data: icalLinks, error: icalError } = await supabase
-    .from("ical_links")
-    .select("url")
+  // ─── 2. External iCal blocks from blocked_dates ───
+  const { data: blockedDates, error: blockedDatesError } = await supabase
+    .from("blocked_dates")
+    .select("start_date, end_date")
     .eq("property_id", propertyId);
 
-  if (icalError) {
-    console.error("Error fetching iCal links:", icalError);
+  if (blockedDatesError) {
+    console.error("Error fetching blocked dates:", blockedDatesError);
   }
 
-  if (icalLinks) {
-    const icalPromises = icalLinks.map(async (link) => {
-      try {
-        const events = await ical.async.fromURL(link.url);
+  if (blockedDates) {
+    for (const block of blockedDates) {
+      const start = parseISO(block.start_date);
+      const end = parseISO(block.end_date);
 
-        for (const key of Object.keys(events)) {
-          const component = events[key];
-          if (!component || !isVEvent(component)) continue;
-
-          const start = component.start;
-          const end = component.end;
-          if (!start || !end) continue;
-
-          const days = eachDayOfInterval({
-            start: new Date(start.getTime()),
-            end: new Date(end.getTime()),
-          });
-
-          for (const day of days) {
-            const dayStr = toDubaiDateStr(day);
-            if (!isBefore(parseISO(dayStr), parseISO(todayStr))) {
-              disabledSet.add(dayStr);
-            }
-          }
+      const days = eachDayOfInterval({ start, end });
+      for (const day of days) {
+        const dayStr = toDubaiDateStr(day);
+        if (!isBefore(parseISO(dayStr), parseISO(todayStr))) {
+          disabledSet.add(dayStr);
         }
-      } catch (err) {
-        console.error(`Failed to fetch iCal from ${link.url}:`, err);
-        // Don't fail the whole request — just skip this calendar
       }
-    });
-
-    await Promise.all(icalPromises);
+    }
   }
 
   return Array.from(disabledSet).sort();
+}
+
+/**
+ * Deletes a calendar feed and removes all upcoming blocked dates that came from this feed source.
+ */
+export async function deleteCalendarFeed(
+  feedId: string,
+  propertyId: string,
+  sourceName: string
+) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  // ─── 1. Verify user owns the property (security check handled by RLS implicitly, but double safety) ───
+  const { data: property } = await supabase
+    .from("properties")
+    .select("owner_id")
+    .eq("id", propertyId)
+    .single();
+
+  if (!property || property.owner_id !== user.id) {
+    throw new Error("Unauthorized: You don't own this property");
+  }
+
+  // ─── 2. Delete the feed record ───
+  const { error: deleteFeedError } = await supabase
+    .from("calendar_feeds")
+    .delete()
+    .eq("id", feedId);
+
+  if (deleteFeedError) {
+    throw deleteFeedError;
+  }
+
+  // ─── 3. Delete associated blocked dates ───
+  // We only delete FUTURE events to maintain history of past blocks if needed, 
+  // or delete all for complete cleanup? Usually better to delete all for this source to keep UI clean.
+  const { error: deleteBlocksError } = await supabase
+    .from("blocked_dates")
+    .delete()
+    .eq("property_id", propertyId)
+    .eq("source", sourceName.toLowerCase());
+
+  if (deleteBlocksError) {
+    console.error("Partial deletion: feed removed, but blocked dates failed to delete.", deleteBlocksError);
+  }
+
+  return { success: true };
 }

@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { blogPosts } from '@/data/blog-posts';
 import { dubaiAreas } from '@/data/dubai-areas';
+import { buildVillaUrl } from "@/lib/utils/slugify";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,17 +10,17 @@ const supabase = createClient(
 );
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://funduq.ae';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://funduq.ae';
 
   // 1. Fetch active properties from Supabase for dynamic villas
   const { data: properties } = await supabase
     .from('properties')
-    .select('id, updated_at')
+    .select('id, title, updated_at')
     .eq('status', 'active');
 
-  // Dynamic villa entries: /villas/{id}
+  // Dynamic villa entries: /villas/{slug}-{id}
   const propertyEntries: MetadataRoute.Sitemap = (properties || []).map((prop) => ({
-    url: `${baseUrl}/villas/${prop.id}`,
+    url: `${baseUrl}${buildVillaUrl(prop.id, prop.title)}`,
     lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
     changeFrequency: 'daily',
     priority: 0.8,

@@ -57,6 +57,12 @@ export default function Footer({ userRole }: FooterProps) {
             </h4>
             <nav className="flex flex-col gap-3">
               <IntlLink
+                href="/about"
+                className="text-sm hover:text-white transition-colors duration-300"
+              >
+                {t("about")}
+              </IntlLink>
+              <IntlLink
                 href="/villas"
                 className="text-sm hover:text-white transition-colors duration-300"
               >

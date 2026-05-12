@@ -25,15 +25,16 @@ export async function generateMetadata({
   params,
 }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.ae";
   const isRu = locale === "ru";
 
   const title = isRu
-    ? "О нас | Funduq — Отборные виллы и дома для отдыха в ОАЭ"
-    : "About Us | Funduq — Honest Luxury Holiday Homes in UAE";
+    ? "О Funduq | Аренда вилл без комиссии в Дубае"
+    : "About Funduq | 0% Commission Villa Rentals in Dubai";
 
   const description = isRu
-    ? "История Funduq. Узнайте, как мы соединяем путешественников с лучшими виллами в Дубае без комиссии и с полной прозрачностью."
-    : "Learn the story behind Funduq. Discover how we connect discerning travelers with luxury holiday homes in Dubai with 0% guest commission and full transparency.";
+    ? "Funduq — эксклюзивная платформа аренды вилл в Дубае. Гости платят напрямую владельцу без комиссии."
+    : "Funduq is an exclusive villa rental platform in Dubai. Guests pay directly to the owner with 0% commission.";
 
   return {
     title,
@@ -41,6 +42,10 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
+      url: `${baseUrl}/${locale}/about`,
+      siteName: "Funduq",
+      locale: locale === "ru" ? "ru_RU" : "en_AE",
+      type: "website",
       images: [{ url: "https://funduq.ae/images/og-default.jpg" }],
     },
     twitter: {
@@ -49,10 +54,10 @@ export async function generateMetadata({
       description,
     },
     alternates: {
-      canonical: isRu ? "https://funduq.ae/ru/about" : "https://funduq.ae/about",
+      canonical: `${baseUrl}/${locale}/about`,
       languages: {
-        en: "https://funduq.ae/about",
-        ru: "https://funduq.ae/ru/about",
+        en: `${baseUrl}/en/about`,
+        ru: `${baseUrl}/ru/about`,
       },
     },
   };
@@ -63,6 +68,13 @@ export default async function AboutPage({ params }: Props) {
   setRequestLocale(locale);
 
   const isRu = locale === "ru";
+
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585338192";
+  const formattedNumber = whatsappNumber.replace(/[^0-9]/g, "");
+  const whatsappMessage = isRu 
+    ? "Здравствуйте, я хочу узнать больше о Funduq!" 
+    : "Hello, I would like to know more about Funduq!";
+  const whatsappLink = `https://wa.me/${formattedNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -443,20 +455,22 @@ export default async function AboutPage({ params }: Props) {
                 </div>
               </a>
 
-              {/* Phone Card */}
+              {/* WhatsApp Card */}
               <a 
-                href="tel:+971585825323" 
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-start gap-4"
               >
                 <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center text-gold group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="w-6 h-6" />
+                  <MessageSquare className="w-6 h-6" />
                 </div>
                 <div>
                   <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">
-                    {isRu ? "Позвоните нам" : "Call Us"}
+                    {isRu ? "Написать в WhatsApp" : "Message on WhatsApp"}
                   </span>
                   <span className="font-bold text-lg text-white group-hover:text-gold transition-colors">
-                    +971 58 582 5323
+                    {whatsappNumber}
                   </span>
                 </div>
               </a>

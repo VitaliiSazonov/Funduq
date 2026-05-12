@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { CalendarCheck } from "lucide-react";
+import { buildVillaUrl } from "@/lib/utils/slugify";
 
 export const dynamic = "force-dynamic";
 
@@ -186,7 +187,7 @@ export default async function AdminBookingsPage() {
                     >
                       <td style={{ padding: "12px 16px" }}>
                         <a
-                          href={`/villas/${b.property?.id}`}
+                          href={b.property ? buildVillaUrl(b.property.id, b.property.title) : "#"}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{

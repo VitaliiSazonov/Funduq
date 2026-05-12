@@ -119,9 +119,9 @@ export async function getAllProperties(filters?: PropertyFilters): Promise<Prope
     query = query.order("created_at", { ascending: false });
   }
 
-  // Location filter — match against location_country
+  // Location filter — match against location_district
   if (filters?.location) {
-    query = query.ilike("location_country", filters.location);
+    query = query.ilike("location_district", `%${filters.location}%`);
   }
 
   // Bedrooms filter — supports single value (gte for 1-3 & 6+, exact for 4-5) or multi-select array
