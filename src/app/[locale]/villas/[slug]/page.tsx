@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
-import { extractIdFromSlug } from "@/lib/utils/slugify";
+import { extractIdFromSlug, buildVillaUrl } from "@/lib/utils/slugify";
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
@@ -136,6 +136,14 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   if (!property || property.status !== "active") {
     notFound();
+  }
+
+  // ── Canonical slug redirect (prevents duplicate content) ──
+  // buildVillaUrl signature: (id, title)
+  const canonicalSlug = buildVillaUrl(property.id, property.title).replace("/villas/", "");
+  if (slug !== canonicalSlug) {
+    const localePrefix = locale === "en" ? "" : `/${locale}`;
+    permanentRedirect(`${localePrefix}/villas/${canonicalSlug}`);
   }
 
   const similarProperties = await getSimilarProperties(
