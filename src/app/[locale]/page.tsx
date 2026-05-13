@@ -12,6 +12,7 @@ import { getPopularProperties } from "@/app/actions/popularity";
 import { getWishlistedIds } from "@/app/actions/wishlist";
 import { getSearchLocations } from "@/app/actions/locations";
 import { setRequestLocale } from "next-intl/server";
+import FaqAccordion from "@/components/property/FaqAccordion";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -76,43 +77,55 @@ export default async function HomePage({ params }: Props) {
     }
   };
 
+  const faqs = locale === "ru"
+    ? [
+        {
+          question: "Что такое Funduq?",
+          answer: "Funduq — это платформа для аренды домов для отдыха и краткосрочного проживания в Дубае, ОАЭ. Мы предлагаем проверенные апартаменты, виллы и студии с прозрачными ценами и гибким заселением."
+        },
+        {
+          question: "Как забронировать жилье через Funduq?",
+          answer: "Просмотрите наши проверенные объявления, выберите даты и объект недвижимости, а затем отправьте запрос на бронирование. Наша команда подтвердит доступность в течение 24 часов."
+        },
+        {
+          question: "Все ли объекты на Funduq проходят проверку?",
+          answer: "Да. Все объекты недвижимости на Funduq проходят строгую проверку нашей командой модераторов перед публикацией на платформе."
+        },
+        {
+          question: "Какие районы Дубая охватывает сервис?",
+          answer: "Funduq охватывает все основные районы Дубая, включая Downtown Dubai, Dubai Marina, JBR, Palm Jumeirah, Business Bay, DIFC и другие."
+        }
+      ]
+    : [
+        {
+          question: "What is Funduq?",
+          answer: "Funduq is a holiday homes and short-term rental platform in Dubai, UAE. We offer verified apartments, villas, and studios with transparent pricing and flexible check-in."
+        },
+        {
+          question: "How do I book a holiday home through Funduq?",
+          answer: "Browse our verified listings, select your dates and property, and submit a booking request. Our team will confirm availability within 24 hours."
+        },
+        {
+          question: "Are all Funduq properties verified?",
+          answer: "Yes. All properties on Funduq are reviewed and verified by our moderation team before being published on the platform."
+        },
+        {
+          question: "What areas in Dubai does Funduq cover?",
+          answer: "Funduq covers all major areas of Dubai including Downtown Dubai, Dubai Marina, JBR, Palm Jumeirah, Business Bay, DIFC, and more."
+        }
+      ];
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is Funduq?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Funduq is a holiday homes and short-term rental platform in Dubai, UAE. We offer verified apartments, villas, and studios with transparent pricing and flexible check-in."
-        }
-      },
-      {
-        "@type": "Question", 
-        "name": "How do I book a holiday home in Dubai through Funduq?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Browse our verified listings, select your dates and property, and submit a booking request. Our team will confirm availability within 24 hours."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Are all Funduq properties verified?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. All properties on Funduq are reviewed and verified by our moderation team before being published on the platform."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What areas in Dubai does Funduq cover?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Funduq covers all major areas of Dubai including Downtown Dubai, Dubai Marina, JBR, Palm Jumeirah, Business Bay, DIFC, and more."
-        }
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
       }
-    ]
+    }))
   };
 
   return (
@@ -136,6 +149,16 @@ export default async function HomePage({ params }: Props) {
 
       {/* Signature Collections — Scroll-driven immersive showcase */}
       <SignatureCollections properties={signatureProperties} />
+
+      {/* FAQ Section */}
+      <section className="py-24 px-4 md:px-8 bg-offwhite">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-black display-font text-charcoal text-center mb-12">
+            {locale === "ru" ? "Часто задаваемые вопросы" : "Frequently Asked Questions"}
+          </h2>
+          <FaqAccordion faqs={faqs} />
+        </div>
+      </section>
 
       {/* Host CTA */}
       <HostCTA />

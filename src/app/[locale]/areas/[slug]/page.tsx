@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale } from "next-intl/server";
 import JsonLd from "@/components/seo/JsonLd";
+import FaqAccordion from "@/components/property/FaqAccordion";
 
 export async function generateStaticParams() {
   return dubaiAreas.map((area) => ({
@@ -164,6 +165,11 @@ export default async function AreaPage({
     ]
   };
 
+  const faqs = faqJsonLd.mainEntity.map(q => ({
+    question: q.name,
+    answer: q.acceptedAnswer.text
+  }));
+
   return (
     <div className="flex flex-col min-h-screen">
       <JsonLd data={placeJsonLd} />
@@ -199,6 +205,16 @@ export default async function AreaPage({
               {locale === "ru" ? "В данный момент в этом районе нет доступных объектов." : "No properties available in this area at the moment."}
             </p>
           )}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 px-4 md:px-8 bg-[#f9f9f6] border-t border-charcoal/5">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-black display-font text-charcoal mb-8 text-center">
+            {locale === "ru" ? "Часто задаваемые вопросы" : "Frequently Asked Questions"}
+          </h2>
+          <FaqAccordion faqs={faqs} />
         </div>
       </section>
     </div>
