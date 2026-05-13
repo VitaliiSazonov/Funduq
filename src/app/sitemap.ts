@@ -19,12 +19,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .eq('status', 'active');
 
   // Dynamic villa entries: /villas/{slug}-{id}
-  const propertyEntries: MetadataRoute.Sitemap = (properties || []).map((prop) => ({
-    url: `${baseUrl}${buildVillaUrl(prop.id, prop.title)}`,
-    lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
-    changeFrequency: 'daily',
-    priority: 0.8,
-  }));
+  const propertyEntries: MetadataRoute.Sitemap = (properties || []).map((prop) => {
+    const path = buildVillaUrl(prop.id, prop.title);
+    return {
+      url: `${baseUrl}${path}`,
+      lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}${path}`,
+          ru: `${baseUrl}/ru${path}`,
+        },
+      },
+    };
+  });
 
   // 2. Static pages: /, /villas, /blog, /about
   const staticPages: MetadataRoute.Sitemap = [
@@ -33,24 +42,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
+      alternates: {
+        languages: {
+          en: `${baseUrl}`,
+          ru: `${baseUrl}/ru`,
+        },
+      },
     },
     {
       url: `${baseUrl}/villas`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/villas`,
+          ru: `${baseUrl}/ru/villas`,
+        },
+      },
     },
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/blog`,
+          ru: `${baseUrl}/ru/blog`,
+        },
+      },
     },
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/about`,
+          ru: `${baseUrl}/ru/about`,
+        },
+      },
     },
   ];
 
@@ -60,6 +93,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.6,
+    alternates: {
+      languages: {
+        en: `${baseUrl}/areas/${area.slug}`,
+        ru: `${baseUrl}/ru/areas/${area.slug}`,
+      },
+    },
   }));
 
   // 4. Dynamic blog posts: /blog/{slug}
@@ -68,6 +107,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
     changeFrequency: 'weekly',
     priority: 0.7,
+    alternates: {
+      languages: {
+        en: `${baseUrl}/blog/${post.slug}`,
+        ru: `${baseUrl}/ru/blog/${post.slug}`,
+      },
+    },
   }));
 
   return [...staticPages, ...propertyEntries, ...areaEntries, ...blogEntries];
