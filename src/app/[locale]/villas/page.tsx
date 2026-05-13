@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import PropertyCatalogue from "@/components/villas/PropertyCatalogue";
 import { getAllProperties, SortOption } from "@/app/actions/properties";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -8,6 +9,42 @@ type Props = {
 };
 
 const VALID_SORTS: SortOption[] = ["price_asc", "price_desc", "newest"];
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "villas" });
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.ae";
+
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    openGraph: {
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      url: `${baseUrl}/${locale}/villas`,
+      siteName: "Funduq",
+      locale: locale === "ru" ? "ru_RU" : "en_AE",
+      type: "website",
+      images: [{ url: `${baseUrl}/images/og-default.jpg` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      images: [`${baseUrl}/images/og-default.jpg`],
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}/villas`,
+      languages: {
+        en: `${baseUrl}/en/villas`,
+        ru: `${baseUrl}/ru/villas`,
+      },
+    },
+  };
+}
+
 
 export default async function VillasPage({ params, searchParams }: Props) {
   const { locale } = await params;

@@ -71,7 +71,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `${baseUrl}/${locale}/villas/${id}`,
+      url: `${baseUrl}/${locale}/villas/${slug}`,
       siteName: "Funduq",
       locale: locale === "ru" ? "ru_RU" : "en_AE",
       type: "website",

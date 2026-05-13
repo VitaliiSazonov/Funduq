@@ -1,20 +1,53 @@
 import { blogPosts } from '@/data/blog-posts';
 import { Link } from '@/i18n/navigation';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: 'Dubai Travel Guides & Holiday Home Tips | Funduq Blog',
-  description: 'Expert guides, travel tips, and neighborhood insights for holiday homes in Dubai and the UAE.',
+type Props = {
+  params: Promise<{ locale: string }>;
 };
 
-export default async function BlogIndexPage({
+export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+}: Props): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "blog" });
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://funduq.ae";
+
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    openGraph: {
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      url: `${baseUrl}/${locale}/blog`,
+      siteName: "Funduq",
+      locale: locale === "ru" ? "ru_RU" : "en_AE",
+      type: "website",
+      images: [{ url: `${baseUrl}/images/og-default.jpg` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      images: [`${baseUrl}/images/og-default.jpg`],
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}/blog`,
+      languages: {
+        en: `${baseUrl}/en/blog`,
+        ru: `${baseUrl}/ru/blog`,
+      },
+    },
+  };
+}
+
+export default async function BlogIndexPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const isRu = locale === 'ru';
+  const t = await getTranslations({ locale, namespace: "blog" });
   
   // Categorize logic could be implemented here; for now, we just list them out.
   const categories = ['All', 'Guides', 'Travel', 'Destinations'];
@@ -24,12 +57,10 @@ export default async function BlogIndexPage({
       {/* Page Header */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-16">
         <h1 className="text-4xl md:text-6xl font-black text-charcoal display-font tracking-tight mb-6">
-          {isRu ? 'Блог и Путеводители' : 'Blog & Guides'}
+          {t("title")}
         </h1>
         <p className="text-lg text-charcoal/60 max-w-2xl font-medium">
-          {isRu
-            ? 'Экспертные советы, путеводители по районам и инсайты рынка краткосрочной аренды в Дубае.'
-            : 'Expert tips, neighborhood guides, and insights into the short-term rental market in Dubai.'}
+          {t("subtitle")}
         </p>
         
         {/* Categories (Static UI for aesthetics as per request) */}

@@ -140,7 +140,9 @@
     "filter_clear": "Clear All",
     "concierge_title": "Can't find what you're looking for?",
     "concierge_subtitle": "Our concierges are available 24/7 to help you find the perfect villa for your stay in the Emirates.",
-    "concierge_button": "Chat with Concierge"
+    "concierge_button": "Chat with Concierge",
+    "metaTitle": "Luxury Villas Catalog in Dubai | Funduq",
+    "metaDescription": "Explore our premium portfolio of handpicked holiday homes, villas, and penthouses for rent in Dubai and the UAE."
   },
   "property": {
     "bookNow": "Book Now",
@@ -607,5 +609,11 @@
     "whyItem5": "iCal sync with Airbnb & Booking.com",
     "ctaTitle": "Ready for an unforgettable stay?",
     "ctaButton": "Browse Villas"
+  },
+  "blog": {
+    "metaTitle": "Dubai Travel Guides & Holiday Home Tips | Funduq Blog",
+    "metaDescription": "Expert guides, travel tips, and neighborhood insights for holiday homes in Dubai and the UAE.",
+    "title": "Blog & Guides",
+    "subtitle": "Expert tips, neighborhood guides, and insights into the short-term rental market in Dubai."
   }
 }
