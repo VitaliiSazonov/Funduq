@@ -31,7 +31,17 @@ export async function generateMetadata({
 
   const isRu = locale === 'ru';
   const title = isRu ? post.titleRu : post.titleEn;
+  
+  // Use customized metaTitle if available, otherwise fallback to standard template
+  const metaTitle = isRu
+    ? ((post as any).metaTitleRu || `${title} | Funduq Guides`)
+    : ((post as any).metaTitleEn || `${title} | Funduq Guides`);
+    
   const description = isRu ? post.descriptionRu : post.descriptionEn;
+  // Use customized metaDescription if available, otherwise fallback to post description
+  const metaDescription = isRu
+    ? ((post as any).metaDescriptionRu || description)
+    : ((post as any).metaDescriptionEn || description);
 
   const excerpt = isRu
     ? ((post as any).excerptRu || post.descriptionRu)
@@ -39,19 +49,19 @@ export async function generateMetadata({
   const coverImage = (post as any).coverImage ?? 'https://funduq.ae/images/og-default.jpg';
 
   return {
-    title: `${title} | Funduq Guides`,
-    description,
+    title: metaTitle,
+    description: metaDescription,
     openGraph: {
-      title,
+      title: metaTitle,
       description: excerpt,
       images: [{ url: coverImage }],
       type: 'article',
       publishedTime: post.publishedAt,
-      authors: ['Funduq Editorial Team'],
+      authors: [(post as any).author || 'Funduq Editorial Team'],
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: metaTitle,
       description: excerpt,
       images: [coverImage],
     },
@@ -89,8 +99,8 @@ export default async function BlogPostPage({
     dateModified: (post as any).updatedAt || post.publishedAt,
     image: (post as any).coverImage || 'https://funduq.ae/images/og-default.jpg',
     author: {
-      '@type': 'Organization',
-      name: 'Funduq Editorial Team',
+      '@type': (post as any).author ? 'Person' : 'Organization',
+      name: (post as any).author || 'Funduq Editorial Team',
       url: 'https://funduq.ae'
     },
     publisher: {
