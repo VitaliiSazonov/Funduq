@@ -118,9 +118,14 @@ export default async function VillasPage({ params, searchParams }: Props) {
           <p className="text-muted mb-8 max-w-lg mx-auto">
             {t("concierge_subtitle")}
           </p>
-          <button className="bg-charcoal text-white px-8 py-4 rounded-full font-black hover:bg-gold transition-all duration-300 luxury-shadow">
+          <a
+            href="https://wa.me/971585338192?text=Hello%2C%20I%20need%20help%20finding%20the%20perfect%20villa%20for%20my%20stay%20in%20the%20Emirates.%20Could%20you%20please%20assist%20me%3F"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-charcoal text-white px-8 py-4 rounded-full font-black hover:bg-gold transition-all duration-300 luxury-shadow"
+          >
             {t("concierge_button")}
-          </button>
+          </a>
         </div>
       </section>
     </div>
