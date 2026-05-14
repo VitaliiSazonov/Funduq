@@ -75,18 +75,18 @@ const nextConfig: NextConfig = {
             value: [
               // Base
               "default-src 'self'",
-              // Scripts: self + inline (Next.js needs inline for hydration)
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              // Scripts: self + inline (Next.js needs inline for hydration) + Google Ads / GTM
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
               // Styles: self + inline (Tailwind injects styles)
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Fonts: Google Fonts CDN
               "font-src 'self' https://fonts.gstatic.com data:",
-              // Images: self + Supabase Storage + Unsplash + data URIs + blobs
-              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob:",
-              // Connect: self + Supabase APIs + Resend + Google OAuth + Sentry
-              "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io",
-              // Frames: Google OAuth popup
-              "frame-src https://accounts.google.com https://jftowqfrhhohkqkslfaa.supabase.co",
+              // Images: self + Supabase Storage + Unsplash + data URIs + blobs + Google Ads tracking pixels
+              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob: https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
+              // Connect: self + Supabase APIs + Resend + Google OAuth + Sentry + Google Analytics/Ads
+              "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
+              // Frames: Google OAuth popup + GTM iframe
+              "frame-src https://accounts.google.com https://jftowqfrhhohkqkslfaa.supabase.co https://www.googletagmanager.com",
               // Form actions
               "form-action 'self'",
               // Base URI restriction
