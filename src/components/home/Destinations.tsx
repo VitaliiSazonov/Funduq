@@ -22,14 +22,14 @@ const DESTINATIONS = [
   },
   {
     key: "rak",
-    image: "https://images.unsplash.com/photo-1626207860361-9c174ecce3e5?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=800&q=80",
     alt: "Hajar mountains and beach in Ras Al Khaimah",
     offset: false,
     filterValue: "Ras Al Khaimah",
   },
   {
     key: "fujairah",
-    image: "https://images.unsplash.com/photo-1610059918731-031e84776100?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
     alt: "Pristine beaches of Fujairah with mountains",
     offset: true,
     filterValue: "Fujairah",
