@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import type {
   BookingWithProperty,
@@ -102,7 +103,8 @@ export async function createBookingRequest(params: {
   } = await supabase.auth.getUser();
 
   // ── 5. Insert the booking ──
-  const { data: booking, error: insertError } = await supabase
+  const adminSupabase = createAdminClient();
+  const { data: booking, error: insertError } = await adminSupabase
     .from("bookings")
     .insert({
       property_id,
