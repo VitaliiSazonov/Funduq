@@ -21,6 +21,7 @@ import { getProperty, getSimilarProperties } from "@/app/actions/getProperty";
 import { getAllProperties } from "@/app/actions/properties";
 import { slugify } from "@/lib/utils/slugify";
 import BookingWidget from "@/components/property/BookingWidget";
+import MobileBookingWidget from "@/components/property/MobileBookingWidget";
 import ViewTracker from "@/components/property/ViewTracker";
 import HeroGallery from "@/components/property/HeroGallery";
 import DescriptionToggle from "@/components/property/DescriptionToggle";
@@ -311,7 +312,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       </header>
 
       {/* ─── Main Content ─── */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-6 md:py-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-6 md:py-10 pb-24 md:pb-10">
         {/* ═══ SECTION 1 — Hero Gallery ═══ */}
         <HeroGallery images={property.images} propertyTitle={property.title} />
 
@@ -550,7 +551,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
           {/* ═══ RIGHT COLUMN — Booking Widget ═══ */}
           <div
-            className="w-full lg:w-[380px] flex-shrink-0"
+            className="hidden lg:block w-full lg:w-[380px] flex-shrink-0"
             data-testid="booking-widget"
           >
             <div className="lg:sticky lg:top-20">
@@ -565,6 +566,15 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           </div>
         </div>
       </main>
+
+      {/* Mobile Sticky Booking Bar & Bottom Sheet */}
+      <MobileBookingWidget
+        propertyId={property.id}
+        priceMin={property.price_min}
+        priceMax={property.price_max}
+        maxGuests={property.max_guests}
+        propertyTitle={property.title}
+      />
     </div>
   );
 }
