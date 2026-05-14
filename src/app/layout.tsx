@@ -111,7 +111,7 @@ export default function RootLayout({
         </Script>
         <Script id="google-ads-conversion" strategy="afterInteractive">
           {`
-            function gtag_report_conversion(url) {
+            window.gtag_report_conversion = function(url) {
               var callback = function () {
                 if (typeof(url) != 'undefined') {
                   window.location = url;
@@ -122,7 +122,7 @@ export default function RootLayout({
                 'event_callback': callback
               });
               return false;
-            }
+            };
           `}
         </Script>
       </body>
