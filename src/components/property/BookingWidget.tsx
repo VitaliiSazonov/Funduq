@@ -122,13 +122,16 @@ export default function BookingWidget({
 
     const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.funduq.ae";
     const waMessage = encodeURIComponent(
-      `Hello! I'd like to book this villa.\n` +
-      `🏠 ${propertyTitle}\n` +
-      `📅 Check-in: ${checkIn}\n` +
-      `📅 Check-out: ${checkOut}\n` +
-      `👥 Guests: ${totalGuests}\n` +
-      (messageToHost ? `💬 Message: ${messageToHost}\n` : ``)
+      `⚠️ PLEASE DO NOT EDIT OR DELETE THIS MESSAGE ⚠️\n\n` +
+      `Hello! I would like to request a booking:\n` +
+      `Property: ${propertyTitle}\n` +
+      `ID: ${propertyId}\n` +
+      `Dates: ${checkIn} to ${checkOut}\n` +
+      `Guests: ${totalGuests}\n` +
+      `Link: ${siteUrl}/villas/${propertyId}` +
+      (messageToHost ? `\nMessage: ${messageToHost}` : ``)
     );
 
     window.open(`https://wa.me/${whatsappNumber}?text=${waMessage}`, "_blank");
