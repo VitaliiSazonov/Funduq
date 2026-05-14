@@ -526,11 +526,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                 <h2 className="text-xl font-black display-font text-charcoal mb-6">
                   {t("similarProperties")}
                 </h2>
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide lg:grid lg:grid-cols-3 lg:overflow-visible">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {similarProperties.map((sp) => (
                     <div
                       key={sp.id}
-                      className="min-w-[280px] lg:min-w-0 w-[280px] lg:w-auto flex-shrink-0"
+                      className="w-full"
                     >
                       <PropertyCard
                         id={sp.id}

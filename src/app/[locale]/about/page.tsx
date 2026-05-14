@@ -181,7 +181,7 @@ export default async function AboutPage({ params }: Props) {
           
           <Link
             href="/villas"
-            className="inline-flex items-center gap-3 bg-gold hover:bg-gold-light text-charcoal font-black text-lg px-10 py-5 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-gold/20 group"
+            className="inline-flex items-center gap-3 bg-gold hover:bg-gold-light text-charcoal font-black text-lg px-6 md:px-10 py-4 md:py-5 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-gold/20 group"
           >
             {t("ctaButton")}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
