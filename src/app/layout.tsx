@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -96,6 +97,18 @@ export default function RootLayout({
       </head>
       <body className="antialiased selection:bg-gold/20 selection:text-gold-dark scroll-smooth">
         <main className="min-h-screen bg-offwhite">{children}</main>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18163609312"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18163609312');
+          `}
+        </Script>
       </body>
     </html>
   );

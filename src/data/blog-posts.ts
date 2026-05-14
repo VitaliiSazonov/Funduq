@@ -58,7 +58,7 @@ export const blogPosts = [
       
       <h2>Dining and Entertainment</h2>
       <p><strong>Dubai Marina:</strong> Hundreds of restaurants are right on your doorstep. From casual cafes under your building to high-end dining at Pier 7, the options are endless and easily accessible on foot.</p>
-      <p><strong>Palm Jumeirah:</strong> Home to some of the city's best fine-dining establishments, often located within 5-star hotels or at locations like The Pointe and Club Vista Mare. Dining here is an "event," usually requiring a short taxi ride, but offering spectacular seafront settings.</p>
+      <p><strong>Palm Jumeirah:</strong> Home to some of the city's best fine-dining establishments, often located within 5-star hotels or at vibrant destinations like Palm West Beach and Club Vista Mare. Dining here is an "event," usually requiring a short taxi ride, but offering spectacular seafront settings.</p>
       
       <h2>The Final Verdict</h2>
       <p>Choose <strong>Dubai Marina</strong> if you want to be in the heart of the action, love walking to restaurants, and enjoy the bustling energy of a high-rise city by the sea. Choose <strong>Palm Jumeirah</strong> if your priority is luxury, privacy, beach access, and a tranquil escape from the urban rush. Whichever you choose, you are guaranteed spectacular views and world-class luxury.</p>
@@ -118,8 +118,8 @@ export const blogPosts = [
       <h2>2. Aquaventure Waterpark</h2>
       <p>Located at Atlantis, The Palm, Aquaventure is one of the world's largest and most thrilling waterparks. Whether you are taking the plunge on the terrifying Leap of Faith, riding the rapids on the lazy river, or just relaxing on the private beach, it is an essential full-day activity for families and thrill-seekers alike.</p>
       
-      <h2>3. Fine Dining at The Pointe</h2>
-      <p>The Pointe, located at the tip of the trunk, offers a massive array of waterside dining options. With spectacular views facing Atlantis and the mesmerizing Palm Fountain, it is the perfect spot for a romantic dinner or a relaxed evening out with family.</p>
+      <h2>3. Sunset Dining at Palm West Beach</h2>
+      <p>Palm West Beach, stretching along the western shore of the trunk, offers a vibrant waterfront promenade with premium beachside restaurants and beach clubs. With spectacular views facing the Dubai Marina skyline, it is the perfect spot for a sunset dinner or a relaxed evening out with family.</p>
       
       <h2>4. Relax at Club Vista Mare</h2>
       <p>This premium beachfront dining destination houses several restaurants spanning different international cuisines—from Peruvian to Middle Eastern. The relaxed, chic vibe makes it perfect for a long, lazy weekend lunch leading into sunset drinks directly on the sand.</p>
@@ -204,7 +204,7 @@ export const blogPosts = [
       
       <h2>Navigating the Fronds: Which One is Best?</h2>
       <p>The "leaves" of the Palm Jumeirah, known as Fronds (named A to P), house the vast majority of the island's private beach villas. While they all offer premium living, there are slight differences:</p>
-      <p><strong>Fronds A to E (Lower Fronds):</strong> These are closest to the Trunk and the entry/exit points. They offer fast access to Nakheel Mall, West Beach, and the mainland. Excellent if you plan to commute or explore Dubai frequently.</p>
+      <p><strong>Fronds A to E (Lower Fronds):</strong> These are closest to the Trunk and the entry/exit points. They offer fast access to The Palm Mall, West Beach, and the mainland. Excellent if you plan to commute or explore Dubai frequently.</p>
       <p><strong>Fronds F to L (Mid Fronds):</strong> Perfect balance of tranquility and convenience. The views are open and the water circulation is excellent. Often favored by long-stay family vacationers.</p>
       <p><strong>Fronds M to P (Upper Fronds):</strong> Furthest from the base, these fronds offer maximum privacy and stunning, unobstructed vistas of the Arabian Gulf and the Burj Al Arab. However, expect a slightly longer drive when leaving the Palm.</p>
       
@@ -239,7 +239,7 @@ export const blogPosts = [
       
       <h2>Разбираемся в «ветвях»: какую выбрать?</h2>
       <p>«Листья» Палм-Джумейры, называемые фрондами (Fronds A-P), вмещают большинство частных пляжных вилл. Хотя все они относятся к премиум-сегменту, между ними есть небольшие различия:</p>
-      <p><strong>Фронды A - E (ближние):</strong> Расположены ближе всего к «стволу» (Trunk) острова и выезду в город. Удобно добираться до Nakheel Mall, West Beach и материка. Отличный выбор, если вы планируете часто выезжать.</p>
+      <p><strong>Фронды A - E (ближние):</strong> Расположены ближе всего к «стволу» (Trunk) острова и выезду в город. Удобно добираться до The Palm Mall, West Beach и материка. Отличный выбор, если вы планируете часто выезжать.</p>
       <p><strong>Фронды F - L (средние):</strong> Баланс тишины и удобства. Здесь открытые виды и отличная циркуляция воды. Популярно среди семей, бронирующих жилье на длительный срок.</p>
       <p><strong>Фронды M - P (дальние):</strong> Максимальная уединенность и потрясающие панорамные виды на Персидский залив и отель Burj Al Arab. Дорога до выезда с острова займет чуть больше времени.</p>
       
