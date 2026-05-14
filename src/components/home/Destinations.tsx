@@ -22,8 +22,8 @@ const DESTINATIONS = [
   },
   {
     key: "rak",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    alt: "Jebel Jais mountain in Ras Al Khaimah",
+    image: "https://images.unsplash.com/photo-1542878447-e2b6df2526fa?w=800&q=80",
+    alt: "Jebel Jais mountain landscape in Ras Al Khaimah",
     offset: false,
     filterValue: "Ras Al Khaimah",
   },
