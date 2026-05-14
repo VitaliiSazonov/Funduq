@@ -76,17 +76,17 @@ const nextConfig: NextConfig = {
               // Base
               "default-src 'self'",
               // Scripts: self + inline (Next.js needs inline for hydration) + Google Ads / GTM
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.googleadservices.com https://*.doubleclick.net https://*.google.com",
               // Styles: self + inline (Tailwind injects styles)
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Fonts: Google Fonts CDN
               "font-src 'self' https://fonts.gstatic.com data:",
               // Images: self + Supabase Storage + Unsplash + data URIs + blobs + Google Ads tracking pixels
-              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob: https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
+              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob: https://*.google.com https://*.googleadservices.com https://*.doubleclick.net",
               // Connect: self + Supabase APIs + Resend + Google OAuth + Sentry + Google Analytics/Ads
-              "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net",
+              "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io https://*.google-analytics.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net",
               // Frames: Google OAuth popup + GTM iframe
-              "frame-src https://accounts.google.com https://jftowqfrhhohkqkslfaa.supabase.co https://www.googletagmanager.com",
+              "frame-src https://accounts.google.com https://jftowqfrhhohkqkslfaa.supabase.co https://*.googletagmanager.com https://*.google.com",
               // Form actions
               "form-action 'self'",
               // Base URI restriction
