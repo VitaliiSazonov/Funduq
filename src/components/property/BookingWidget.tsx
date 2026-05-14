@@ -111,12 +111,12 @@ export default function BookingWidget({
     return true;
   }
 
-  // ─── Submit booking via WhatsApp Redirect ───
-  function handleSubmit() {
-    if (!isFormValid()) return;
+  // ─── Precompute WhatsApp redirect URL ───
+  const whatsAppUrl = useMemo(() => {
+    if (!range?.from || !range?.to) return "#";
 
-    const checkIn = format(range!.from!, "yyyy-MM-dd");
-    const checkOut = format(range!.to!, "yyyy-MM-dd");
+    const checkIn = format(range.from, "yyyy-MM-dd");
+    const checkOut = format(range.to, "yyyy-MM-dd");
     const totalGuests = guests;
     const messageToHost = message.trim();
 
@@ -134,8 +134,25 @@ export default function BookingWidget({
       (messageToHost ? `\nMessage: ${messageToHost}` : ``)
     );
 
-    window.open(`https://wa.me/${whatsappNumber}?text=${waMessage}`, "_blank");
-  }
+    return `https://wa.me/${whatsappNumber}?text=${waMessage}`;
+  }, [range, guests, message, propertyTitle, propertyId]);
+
+  // ─── Submit booking via WhatsApp Redirect with conversion tracking ───
+  const handleRequestToBook = (e: React.MouseEvent, whatsAppUrl: string) => {
+    e.preventDefault();
+    if (!isFormValid()) return;
+
+    if (
+      typeof window !== "undefined" &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      typeof (window as any).gtag_report_conversion === "function"
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).gtag_report_conversion(whatsAppUrl);
+    } else {
+      window.location.href = whatsAppUrl;
+    }
+  };
 
 
 
@@ -268,16 +285,17 @@ export default function BookingWidget({
         )}
 
         {/* ─── Submit ─── */}
-        <button
-          type="button"
+        <a
           id="booking-submit-btn"
-          onClick={handleSubmit}
-          disabled={!isFormValid()}
+          href={whatsAppUrl}
+          onClick={(e) => handleRequestToBook(e, whatsAppUrl)}
           data-testid="request-to-book-btn"
-          className="w-full flex items-center justify-center gap-2 px-6 py-4 gold-gradient text-white rounded-2xl font-bold text-base hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className={`w-full flex items-center justify-center gap-2 px-6 py-4 gold-gradient text-white rounded-2xl font-bold text-base hover:opacity-90 transition-opacity ${
+            !isFormValid() ? "opacity-40 cursor-not-allowed pointer-events-none" : "cursor-pointer"
+          }`}
         >
           {t("requestToBook")}
-        </button>
+        </a>
 
         <p className="text-center text-[10px] text-charcoal/30 uppercase tracking-wider">
           {t("noPaymentRequired")}
