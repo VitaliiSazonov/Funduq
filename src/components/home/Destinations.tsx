@@ -22,8 +22,8 @@ const DESTINATIONS = [
   },
   {
     key: "rak",
-    image: "https://images.unsplash.com/photo-1656510683235-02f975f29966?w=800&q=80",
-    alt: "Jebel Jais Flight zipline in Ras Al Khaimah, UAE",
+    image: "https://images.unsplash.com/photo-1707403242352-4f624512b4bb?w=800&q=80",
+    alt: "Rocky mountain landscape in Ras Al Khaimah, UAE",
     offset: false,
     filterValue: "Ras Al Khaimah",
   },
