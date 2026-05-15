@@ -111,18 +111,36 @@ export default function RootLayout({
         </Script>
         <Script id="google-ads-conversion" strategy="afterInteractive">
           {`
-            window.gtag_report_conversion = function(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
+            window.trackWhatsAppAndRedirect = function(url) {
+              var redirected = false;
+              function doRedirect() {
+                if (!redirected) {
+                  redirected = true;
+                  window.location.href = url;
                 }
-              };
+              }
+
+              // Метод 1: gtag event_callback — редирект только после отправки hit
               gtag('event', 'conversion', {
                 'send_to': 'AW-18163609312/KNr0CI_Nna0cEODditVD',
-                'event_callback': callback
+                'event_callback': doRedirect
               });
-              return false;
+
+              // Метод 2: GA4 событие параллельно (менее чувствительно к задержкам)
+              gtag('event', 'whatsapp_click', {
+                'event_category': 'engagement',
+                'event_label': 'request_to_book',
+                'page_location': window.location.href
+              });
+
+              // Фолбэк: если callback не сработал за 500мс — всё равно открываем
+              setTimeout(doRedirect, 500);
+              
+              return false; // Блокируем нативный переход
             };
+
+            // Keep legacy name pointing to the robust handler
+            window.gtag_report_conversion = window.trackWhatsAppAndRedirect;
           `}
         </Script>
       </body>

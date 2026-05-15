@@ -77,6 +77,20 @@ export default function ContactReveal({
 
   const whatsappNumber = contact.whatsapp || contact.phone;
 
+  const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (
+      typeof window !== "undefined" &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      typeof (window as any).trackWhatsAppAndRedirect === "function"
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).trackWhatsAppAndRedirect(href);
+    } else {
+      window.location.href = href;
+    }
+  };
+
   return (
     <div data-testid="contact-reveal" className="mt-3 px-5 py-4 bg-green-50/50 border border-green-200/60 rounded-xl space-y-3">
       <p className="text-[10px] font-black text-green-600 uppercase tracking-[0.15em]">
@@ -117,6 +131,7 @@ export default function ContactReveal({
       {whatsappNumber && (
         <a
           href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`}
+          onClick={(e) => handleWhatsAppClick(e, `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}`)}
           target="_blank"
           rel="noopener noreferrer"
           data-testid="contact-whatsapp"

@@ -145,10 +145,10 @@ export default function BookingWidget({
     if (
       typeof window !== "undefined" &&
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      typeof (window as any).gtag_report_conversion === "function"
+      typeof (window as any).trackWhatsAppAndRedirect === "function"
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).gtag_report_conversion(whatsAppUrl);
+      (window as any).trackWhatsAppAndRedirect(whatsAppUrl);
     } else {
       window.location.href = whatsAppUrl;
     }
