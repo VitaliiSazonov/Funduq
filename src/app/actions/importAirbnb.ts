@@ -487,8 +487,9 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
     const allDescs = deepFindAll(stateData, (k, v) => (k === "description" || k === "listingDescription") && (typeof v === "string" || typeof v === "object"));
     
     for (const d of allDescs) {
+      if (!d) continue;
       let candidate = typeof d === "string" ? d : (d.htmlDescription || d.description || d.value || d.content || "");
-      if (candidate && !candidate.includes("treat it with care and respect")) {
+      if (candidate && typeof candidate === "string" && !candidate.includes("treat it with care and respect")) {
         description = candidate.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
         if (description.length > 50) break; // found a substantial description
       }
@@ -497,6 +498,7 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
     if (!description) {
       const sectionDescs = deepFindAll(stateData, (k, v) => k === "htmlDescription" && typeof v === "string");
       for (const d of sectionDescs) {
+         if (!d || typeof d !== "string") continue;
          if (!d.includes("treat it with care and respect")) {
             description = d.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "");
             if (description.length > 50) break;
@@ -596,7 +598,7 @@ async function scrapeViaDirectFetch(roomId: string): Promise<AirbnbScrapedData> 
   const { country, emirate, district } = resolveLocation(locationText || title || description);
 
   if (!title) {
-    throw new Error("Could not extract listing data. Airbnb may have blocked the request. Try again later or check the URL.");
+    throw new Error("Не удалось загрузить данные листинга. Проверьте ссылку или попробуйте позже.");
   }
 
   return {
