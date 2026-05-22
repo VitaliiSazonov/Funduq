@@ -5,7 +5,7 @@ import { approveProperty, suspendProperty, toggleSignatureProperty } from "@/app
 import type { PropertyWithHost } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { buildVillaUrl } from "@/lib/utils/slugify";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import {
   CheckCircle,
   Ban,
