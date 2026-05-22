@@ -12,7 +12,14 @@ const nextConfig: NextConfig = {
   // ── SSR required (do NOT set output: 'export') ──
   compress: true,
 
+  /**
+   * TODO (2026-05-23): unoptimized: true — временный фикс, Vercel Hobby quota исчерпана (HTTP 402).
+   * Долгосрочное решение: миграция фото в Supabase Storage + Image Transformation через custom loader.
+   * Tracking: Notion task "Мигрировать фото вилл с muscache.com в Supabase Storage".
+   * Risks while active: отсутствие WebP/AVIF, респонсивных размеров → просадка LCP/PageSpeed.
+   */
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
