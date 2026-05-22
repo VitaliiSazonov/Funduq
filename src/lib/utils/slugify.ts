@@ -1,4 +1,5 @@
-export function slugify(text: string): string {
+export function slugify(text: string | null | undefined): string {
+  if (!text) return "property";
   const cyrillicToLatin: Record<string, string> = {
     а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "zh",
     з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o",

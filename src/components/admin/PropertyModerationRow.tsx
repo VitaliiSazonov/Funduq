@@ -146,7 +146,7 @@ export default function PropertyModerationRow({
 
       {/* Title & Location */}
       <td style={cellStyle}>
-        <p style={titleText}>{property.title}</p>
+        <p style={titleText}>{property.title || "Untitled Property"}</p>
         <p style={locationText}>
           {property.location_district}, {property.location_emirate}
         </p>
