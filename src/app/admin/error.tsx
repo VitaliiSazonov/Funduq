@@ -10,7 +10,12 @@ export default function AdminError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[admin] error boundary:", error);
+    console.error("[admin] error boundary:", JSON.stringify({
+      message: error.message,
+      name: error.name,
+      digest: error.digest,
+      stack: error.stack,
+    }, null, 2));
   }, [error]);
 
   return (

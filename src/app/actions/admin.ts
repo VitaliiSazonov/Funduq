@@ -44,7 +44,7 @@ export interface PropertyWithHost {
     avatar_url: string | null;
     email: string | null;
     phone: string | null;
-  };
+  } | null;
 }
 
 // ─── Helpers ───────────────────────────────────────────────────
@@ -354,13 +354,15 @@ export async function getAllAdminProperties(
     price_max: row.price_max as number,
     created_at: row.created_at as string,
     is_signature: (row.is_signature as boolean) || false,
-    owner: row.owner as { 
-      id: string; 
-      full_name: string | null; 
-      avatar_url: string | null;
-      email: string | null;
-      phone: string | null;
-    },
+    owner: (() => {
+      const o = row.owner as
+        | { id: string; full_name: string | null; avatar_url: string | null; email: string | null; phone: string | null; }
+        | Array<{ id: string; full_name: string | null; avatar_url: string | null; email: string | null; phone: string | null; }>
+        | null;
+      if (!o) return null;
+      if (Array.isArray(o)) return o[0] ?? null;
+      return o;
+    })(),
   }));
 }
 

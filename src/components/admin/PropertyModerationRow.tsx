@@ -148,7 +148,7 @@ export default function PropertyModerationRow({
       <td style={cellStyle}>
         <p style={titleText}>{property.title || "Untitled Property"}</p>
         <p style={locationText}>
-          {property.location_district}, {property.location_emirate}
+          {property.location_district ?? "—"}, {property.location_emirate ?? "—"}
         </p>
       </td>
 
@@ -166,7 +166,7 @@ export default function PropertyModerationRow({
       {/* Submitted */}
       <td style={cellStyle}>
         <p style={dateText}>
-          {new Date(property.created_at).toLocaleDateString("en-GB", {
+          {new Date(property.created_at ?? Date.now()).toLocaleDateString("en-GB", {
             day: "numeric",
             month: "short",
             year: "numeric",
@@ -238,7 +238,7 @@ export default function PropertyModerationRow({
           )}
 
           <Link
-            href={buildVillaUrl(property.id, property.title)}
+            href={buildVillaUrl(property.id, property.title ?? "")}
             target="_blank"
             rel="noopener noreferrer"
             style={viewBtn}
