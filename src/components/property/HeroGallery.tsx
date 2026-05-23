@@ -3,8 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Images } from "lucide-react";
-import GalleryModal from "./GalleryModal";
+import dynamic from "next/dynamic";
 import type { PropertyImage } from "@/app/actions/getProperty";
+
+const GalleryModal = dynamic(() => import("./GalleryModal"), {
+  ssr: false,
+});
 
 interface HeroGalleryProps {
   images: PropertyImage[];
@@ -48,6 +52,7 @@ export default function HeroGallery({
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-luxury"
             priority
+            fetchPriority="high"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

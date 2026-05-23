@@ -26,14 +26,22 @@ import ViewTracker from "@/components/property/ViewTracker";
 import HeroGallery from "@/components/property/HeroGallery";
 import DescriptionToggle from "@/components/property/DescriptionToggle";
 import AmenitiesGrid from "@/components/property/AmenitiesGrid";
-import AvailabilityCalendar from "@/components/property/AvailabilityCalendar";
+import dynamic from "next/dynamic";
 import ShareButton from "@/components/property/ShareButton";
 import PropertyCard from "@/components/ui/PropertyCard";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import JsonLd from "@/components/seo/JsonLd";
-import FaqAccordion from "@/components/property/FaqAccordion";
-import ReviewsSection from "@/components/property/ReviewsSection";
 import { mockReviews } from "@/components/property/reviewsData";
+
+const AvailabilityCalendar = dynamic(() => import("@/components/property/AvailabilityCalendar"), {
+  loading: () => <div style={{ minHeight: "300px" }} />
+});
+const FaqAccordion = dynamic(() => import("@/components/property/FaqAccordion"), {
+  loading: () => <div style={{ minHeight: "150px" }} />
+});
+const ReviewsSection = dynamic(() => import("@/components/property/ReviewsSection"), {
+  loading: () => <div style={{ minHeight: "200px" }} />
+});
 
 // ─────────────────────────────────────────────────────────────
 // Params interface (Next.js 15+: params is a Promise)
