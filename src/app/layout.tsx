@@ -99,9 +99,9 @@ export default function RootLayout({
         <main className="min-h-screen bg-offwhite">{children}</main>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-18163609312"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
-        <Script id="google-ads" strategy="lazyOnload">
+        <Script id="google-ads" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -109,7 +109,7 @@ export default function RootLayout({
             gtag('config', 'AW-18163609312');
           `}
         </Script>
-        <Script id="google-ads-conversion" strategy="lazyOnload">
+        <Script id="google-ads-conversion" strategy="afterInteractive">
           {`
             window.trackWhatsAppAndRedirect = function(url) {
               var redirected = false;
