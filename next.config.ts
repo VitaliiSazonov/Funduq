@@ -11,6 +11,13 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   // ── SSR required (do NOT set output: 'export') ──
   compress: true,
+  
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "framer-motion",
+    ],
+  },
 
   images: {
     loader: "custom",
