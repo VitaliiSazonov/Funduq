@@ -85,13 +85,13 @@ const nextConfig: NextConfig = {
               // Base
               "default-src 'self'",
               // Scripts: self + inline (Next.js needs inline for hydration) + Google Ads / GTM
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.googleadservices.com https://*.doubleclick.net https://*.google.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.googleadservices.com https://*.doubleclick.net https://*.google.com https://www.google-analytics.com https://ssl.google-analytics.com",
               // Styles: self + inline (Tailwind injects styles)
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Fonts: Google Fonts CDN
               "font-src 'self' https://fonts.gstatic.com data:",
               // Images: self + Supabase Storage + Unsplash + data URIs + blobs + Google Ads tracking pixels
-              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob: https://*.google.com https://*.googleadservices.com https://*.doubleclick.net",
+              "img-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://images.unsplash.com https://*.muscache.com https://*.airbnb.com https://lh3.googleusercontent.com https://*.gallery.photo data: blob: https://*.google.com https://*.googleadservices.com https://*.doubleclick.net https://www.google-analytics.com https://*.google-analytics.com",
               // Connect: self + Supabase APIs + Resend + Google OAuth + Sentry + Google Analytics/Ads
               "connect-src 'self' https://jftowqfrhhohkqkslfaa.supabase.co https://*.supabase.co wss://*.supabase.co https://api.resend.com https://accounts.google.com https://oauth2.googleapis.com https://*.ingest.sentry.io https://*.google-analytics.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net",
               // Frames: Google OAuth popup + GTM iframe
