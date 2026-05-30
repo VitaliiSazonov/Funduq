@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
+import BookingRequestsTable, { BookingRequest } from "./BookingRequestsTable";
 
 function statusBadge(status: string) {
   const map: Record<string, string> = {
@@ -30,6 +31,13 @@ export default async function HostBookingsPage() {
   if (!user) redirect("/login");
 
   const bookings = await getHostBookings();
+
+  const { data: bookingRequests, error } = await supabase
+    .from("booking_requests")
+    .select(
+      "id, property_id, guest_name, guest_phone, check_in, check_out, total_guests, message, status, admin_comment, host_reply, created_at, properties(title)"
+    )
+    .order("created_at", { ascending: false });
 
   // ── Load translations ──
   const locale = await getHostLocale();
@@ -136,6 +144,20 @@ export default async function HostBookingsPage() {
             ))}
           </div>
         )}
+
+        {/* Booking Requests */}
+        <section className="mt-16 mb-8">
+          <h2 className="text-2xl font-bold text-charcoal display-font mb-6">
+            Booking Requests
+          </h2>
+          {error ? (
+            <p className="text-red-500">Failed to load. Try again.</p>
+          ) : !bookingRequests || bookingRequests.length === 0 ? (
+            <p className="text-gray-500">No booking requests yet.</p>
+          ) : (
+            <BookingRequestsTable bookingRequests={bookingRequests as unknown as BookingRequest[]} />
+          )}
+        </section>
       </div>
     </div>
   );
