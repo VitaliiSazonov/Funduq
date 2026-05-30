@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { CalendarCheck } from "lucide-react";
 import { buildVillaUrl } from "@/lib/utils/slugify";
+import AdminBookingRequestsTable, { AdminBookingRequest } from "./AdminBookingRequestsTable";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,13 @@ export default async function AdminBookingsPage() {
   if (error) {
     console.error("[Admin] Failed to fetch bookings:", error);
   }
+
+  const { data: bookingRequests, error: bookingRequestsError } = await supabase
+    .from("booking_requests")
+    .select(
+      "id, property_id, guest_name, guest_phone, check_in, check_out, total_guests, message, status, admin_comment, host_reply, host_id, created_at, properties(title)"
+    )
+    .order("created_at", { ascending: false });
 
   const rows: BookingRow[] = (bookings || []).map(
     (b: Record<string, unknown>) => ({
@@ -317,6 +325,17 @@ export default async function AdminBookingsPage() {
           </div>
         )}
       </div>
+
+      <section className="mt-8">
+        <h2 className="text-2xl font-semibold mb-4 text-[#E5E5E5]">All Booking Requests</h2>
+        {bookingRequestsError ? (
+          <p className="text-red-500">Failed to load. Try again.</p>
+        ) : !bookingRequests || bookingRequests.length === 0 ? (
+          <p className="text-gray-500">No booking requests yet.</p>
+        ) : (
+          <AdminBookingRequestsTable bookingRequests={bookingRequests as unknown as AdminBookingRequest[]} />
+        )}
+      </section>
     </div>
   );
 }
