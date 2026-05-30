@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getDisabledDates } from "@/app/actions/ical";
+import BookingRequestModal from "./BookingRequestModal";
 
 // ─────────────────────────────────────────────────────────────
 // Props
@@ -57,7 +58,7 @@ export default function BookingWidget({
         if (!isNaN(from.getTime()) && !isNaN(to.getTime())) {
           return { from, to };
         }
-      } catch (e) {
+      } catch {
         // invalid date
       }
     }
@@ -69,6 +70,8 @@ export default function BookingWidget({
   const [message, setMessage] = useState("");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   // ─── Fetch disabled dates ───
   const fetchDates = useCallback(async () => {
@@ -137,27 +140,19 @@ export default function BookingWidget({
     return `https://wa.me/${whatsappNumber}?text=${waMessage}`;
   }, [range, guests, message, propertyTitle, propertyId]);
 
-  // ─── Submit booking via WhatsApp Redirect with conversion tracking ───
-  const handleRequestToBook = (e: React.MouseEvent, whatsAppUrl: string) => {
+  // ─── Open modal to collect name + phone, then call Server Action + WhatsApp ───
+  const handleRequestToBook = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isFormValid()) return;
-
-    if (
-      typeof window !== "undefined" &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      typeof (window as any).trackWhatsAppAndRedirect === "function"
-    ) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).trackWhatsAppAndRedirect(whatsAppUrl);
-    } else {
-      window.location.href = whatsAppUrl;
-    }
+    setResetKey((k) => k + 1); // remount modal → clears form state
+    setModalOpen(true);
   };
 
 
 
   return (
-    <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury overflow-hidden flex flex-col max-h-[calc(100vh-6rem)]">
+    <>
+      <div className="bg-white rounded-3xl border border-charcoal/5 shadow-luxury overflow-hidden flex flex-col max-h-[calc(100vh-6rem)]">
       {/* ─── Header ─── */}
       <div className="gold-gradient px-6 py-5 shrink-0 z-10 shadow-sm relative">
         <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-bold mb-1">
@@ -285,22 +280,37 @@ export default function BookingWidget({
         )}
 
         {/* ─── Submit ─── */}
-        <a
+        <button
           id="booking-submit-btn"
-          href={whatsAppUrl}
-          onClick={(e) => handleRequestToBook(e, whatsAppUrl)}
+          type="button"
+          onClick={handleRequestToBook}
           data-testid="request-to-book-btn"
+          disabled={!isFormValid()}
           className={`w-full flex items-center justify-center gap-2 px-6 py-4 gold-gradient text-white rounded-2xl font-bold text-base hover:opacity-90 transition-opacity ${
-            !isFormValid() ? "opacity-40 cursor-not-allowed pointer-events-none" : "cursor-pointer"
+            !isFormValid() ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
           }`}
         >
           {t("requestToBook")}
-        </a>
+        </button>
 
         <p className="text-center text-[10px] text-charcoal/30 uppercase tracking-wider">
           {t("noPaymentRequired")}
         </p>
       </div>
     </div>
+
+      {/* ─── Booking Request Modal ─── */}
+      <BookingRequestModal
+        key={resetKey}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        propertyId={propertyId}
+        checkIn={range?.from ? format(range.from, "yyyy-MM-dd") : undefined}
+        checkOut={range?.to ? format(range.to, "yyyy-MM-dd") : undefined}
+        totalGuests={guests}
+        message={message || undefined}
+        whatsappUrl={whatsAppUrl}
+      />
+    </>
   );
 }
