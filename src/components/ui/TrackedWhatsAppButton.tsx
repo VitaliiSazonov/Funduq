@@ -21,11 +21,9 @@ export default function TrackedWhatsAppButton({
     e.preventDefault();
     if (
       typeof window !== "undefined" &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      typeof (window as any).trackWhatsAppAndRedirect === "function"
+      typeof window.trackWhatsAppAndRedirect === "function"
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).trackWhatsAppAndRedirect(href);
+      window.trackWhatsAppAndRedirect(href);
     } else {
       window.location.href = href;
     }

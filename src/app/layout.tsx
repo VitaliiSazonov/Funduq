@@ -116,20 +116,9 @@ export default function RootLayout({
           />
         </noscript>
         <main className="min-h-screen bg-offwhite">{children}</main>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-18163609312"
-          strategy="lazyOnload"
-        />
-        <Script id="google-ads" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-18163609312');
-          `}
-        </Script>
         <Script id="google-ads-conversion" strategy="lazyOnload">
           {`
+            window.dataLayer = window.dataLayer || [];
             window.trackWhatsAppAndRedirect = function(url) {
               var redirected = false;
               function doRedirect() {
@@ -138,27 +127,18 @@ export default function RootLayout({
                   window.location.href = url;
                 }
               }
-
-              // Метод 1: gtag event_callback — редирект только после отправки hit
-              gtag('event', 'conversion', {
-                'send_to': 'AW-18163609312/KNr0CI_Nna0cEODditVD',
-                'event_callback': doRedirect
+              window.dataLayer.push({
+                event: 'whatsapp_click',
+                event_category: 'engagement',
+                event_label: 'request_to_book',
+                page_location: window.location.href,
+                eventCallback: doRedirect,
+                eventTimeout: 500
               });
-
-              // Метод 2: GA4 событие параллельно (менее чувствительно к задержкам)
-              gtag('event', 'whatsapp_click', {
-                'event_category': 'engagement',
-                'event_label': 'request_to_book',
-                'page_location': window.location.href
-              });
-
-              // Фолбэк: если callback не сработал за 500мс — всё равно открываем
+              // Fallback: если GTM eventCallback не вызвался за 500мс — всё равно открываем
               setTimeout(doRedirect, 500);
-              
-              return false; // Блокируем нативный переход
+              return false;
             };
-
-            // Keep legacy name pointing to the robust handler
             window.gtag_report_conversion = window.trackWhatsAppAndRedirect;
           `}
         </Script>
