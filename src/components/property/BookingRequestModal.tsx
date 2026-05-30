@@ -112,6 +112,16 @@ export default function BookingRequestModal({
         console.error("[BookingRequest] DB failed:", result.error, result.code);
       }
 
+      // Push tracking event before opening new tab
+      if (typeof window !== "undefined" && window.dataLayer) {
+        window.dataLayer.push({
+          event: "whatsapp_click",
+          event_category: "engagement",
+          event_label: "request_to_book",
+          page_location: window.location.href,
+        });
+      }
+
       // ALWAYS redirect to WhatsApp regardless of result
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       onOpenChange(false);
