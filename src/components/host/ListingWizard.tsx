@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useDropzone } from "react-dropzone";
+import imageCompression from "browser-image-compression";
+import { createClient } from "@/lib/supabase/client";
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,6 +30,7 @@ import {
   PartyPopper,
   Palmtree,
   BedSingle,
+  UploadCloud,
 } from "lucide-react";
 import { submitProperty } from "@/app/actions/submitProperty";
 import { updateProperty } from "@/app/actions/updateProperty";
@@ -240,6 +244,8 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
     message: string;
   } | null>(null);
   const [newImageUrl, setNewImageUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const supabase = createClient();
 
   const {
     register,
@@ -323,6 +329,59 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
       setNewImageUrl("");
     }
   }
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    setIsUploading(true);
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+
+      const newUrls: string[] = [];
+
+      for (const file of acceptedFiles) {
+        if (imageUrls.length + newUrls.length >= 30) break;
+        
+        const compressedFile = await imageCompression(file, options);
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${compressedFile.name}`;
+        
+        const { error } = await supabase.storage
+          .from("properties-images")
+          .upload(`uploads/${fileName}`, compressedFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (error) {
+          console.error("Upload error:", error);
+          alert(`Failed to upload ${file.name}: ${error.message}`);
+          continue;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("properties-images")
+          .getPublicUrl(`uploads/${fileName}`);
+
+        newUrls.push(publicUrl);
+      }
+
+      setImageUrls((prev) => [...prev, ...newUrls].slice(0, 30));
+    } catch (error) {
+      console.error("Error during upload:", error);
+      alert("Error during upload. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  }, [imageUrls.length, supabase]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp"] },
+    maxFiles: 30 - imageUrls.length,
+    disabled: isUploading || imageUrls.length >= 30,
+  });
 
   function removeImage(index: number) {
     setImageUrls((prev) => prev.filter((_, i) => i !== index));
@@ -716,27 +775,52 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
             </div>
 
             {/* Add new image */}
-            <div className="flex gap-3">
-              <input
-                value={newImageUrl}
-                onChange={(e) => setNewImageUrl(e.target.value)}
-                placeholder="Paste image URL..."
-                className="flex-1 px-4 py-3 bg-white border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addImage();
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={addImage}
-                disabled={imageUrls.length >= 30 || !newImageUrl.trim()}
-                className="px-5 py-3 gold-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            <div className="flex flex-col gap-4">
+              <div 
+                {...getRootProps()} 
+                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+                  isDragActive ? "border-gold bg-gold/5" : "border-charcoal/20 hover:border-gold/50"
+                } ${isUploading || imageUrls.length >= 30 ? "opacity-50 pointer-events-none" : ""}`}
               >
-                <ImagePlus className="w-5 h-5" />
-              </button>
+                <input {...getInputProps()} />
+                <UploadCloud className="w-10 h-10 mx-auto text-charcoal/30 mb-3" />
+                <p className="text-sm text-charcoal/70 font-medium">
+                  {isDragActive ? "Drop the files here..." : "Drag & drop photos here, or click to select"}
+                </p>
+                <p className="text-xs text-charcoal/40 mt-1">
+                  JPG, PNG or WEBP (max 30 images)
+                </p>
+                {isUploading && (
+                  <div className="mt-4 flex items-center justify-center gap-2 text-gold">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm font-medium">Uploading & Compressing...</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 items-center">
+                <span className="text-sm font-semibold text-charcoal/40 uppercase">OR</span>
+                <input
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  placeholder="Paste image URL (e.g. from Airbnb)..."
+                  className="flex-1 px-4 py-3 bg-white border border-charcoal/10 rounded-xl text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addImage();
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={addImage}
+                  disabled={imageUrls.length >= 30 || !newImageUrl.trim()}
+                  className="px-5 py-3 gold-gradient text-white rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex-shrink-0"
+                >
+                  <ImagePlus className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Image Grid */}
