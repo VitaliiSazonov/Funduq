@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useDropzone } from "react-dropzone";
 import imageCompression from "browser-image-compression";
-import { createClient } from "@/lib/supabase/client";
+import { uploadPropertyImage } from "@/app/actions/uploadPropertyImage";
 import {
   ArrowLeft,
   ArrowRight,
@@ -245,7 +245,6 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
   } | null>(null);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const supabase = createClient();
 
   const {
     register,
@@ -347,24 +346,19 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
         const compressedFile = await imageCompression(file, options);
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${compressedFile.name}`;
         
-        const { error } = await supabase.storage
-          .from("properties-images")
-          .upload(`uploads/${fileName}`, compressedFile, {
-            cacheControl: "3600",
-            upsert: false,
-          });
+        const formData = new FormData();
+        formData.append("file", compressedFile);
+        formData.append("fileName", fileName);
 
-        if (error) {
-          console.error("Upload error:", error);
-          alert(`Failed to upload ${file.name}: ${error.message}`);
+        const result = await uploadPropertyImage(formData);
+
+        if (!result.success || !result.url) {
+          console.error("Upload error:", result.error);
+          alert(`Failed to upload ${file.name}: ${result.error || "Unknown error"}`);
           continue;
         }
 
-        const { data: { publicUrl } } = supabase.storage
-          .from("properties-images")
-          .getPublicUrl(`uploads/${fileName}`);
-
-        newUrls.push(publicUrl);
+        newUrls.push(result.url);
       }
 
       setImageUrls((prev) => [...prev, ...newUrls].slice(0, 30));
@@ -374,7 +368,7 @@ export default function ListingWizard({ importedData, editData }: ListingWizardP
     } finally {
       setIsUploading(false);
     }
-  }, [imageUrls.length, supabase]);
+  }, [imageUrls.length]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
