@@ -15,9 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { format, parseISO, isPast, startOfDay, endOfDay } from "date-fns";
-import { DayPicker, DateRange } from "react-day-picker";
-import "react-day-picker/style.css";
+import { format, parseISO, isPast } from "date-fns";
 import type { GuestBookingRequest } from "@/app/actions/booking-requests";
 
 /* ── helpers ─────────────────────────────────────────────── */
@@ -75,11 +73,11 @@ interface Props {
 export default function GuestBookingsClient({ bookings, t }: Props) {
   /* filter state */
   const [statusFilter, setStatusFilter] = useState<StatusKey | "all">("all");
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
   const hasActiveFilters =
-    statusFilter !== "all" || !!dateRange?.from || !!dateRange?.to;
+    statusFilter !== "all" || selectedMonths.length > 0;
 
   /* status config */
   function statusConfig(status: string) {
@@ -122,19 +120,16 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
       // Status filter
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
 
-      // Date range filter (against check_in)
-      if (dateRange?.from) {
+      // Month filter (against check_in)
+      if (selectedMonths.length > 0) {
         const checkIn = parseISO(b.check_in);
-        if (checkIn < startOfDay(dateRange.from)) return false;
-      }
-      if (dateRange?.to) {
-        const checkIn = parseISO(b.check_in);
-        if (checkIn > endOfDay(dateRange.to)) return false;
+        const month = checkIn.getMonth(); // 0-11
+        if (!selectedMonths.includes(month)) return false;
       }
 
       return true;
     });
-  }, [bookings, statusFilter, dateRange]);
+  }, [bookings, statusFilter, selectedMonths]);
 
   /* split into upcoming vs past */
   const upcoming = filtered.filter(
@@ -162,7 +157,7 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
 
   function clearFilters() {
     setStatusFilter("all");
-    setDateRange(undefined);
+    setSelectedMonths([]);
   }
 
   /* ── render booking card ─── */
@@ -357,20 +352,35 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
               </div>
             </div>
 
-            {/* Date range */}
+            {/* Month Filter */}
             <div>
               <label className="block text-xs font-black text-charcoal/30 uppercase tracking-[0.15em] mb-3">
                 {t.filterByDate}
               </label>
-              <div className="flex flex-col gap-3">
-                <div className="rdp-funduq bg-offwhite rounded-xl border border-charcoal/10 p-2 overflow-x-auto">
-                  <DayPicker
-                    mode="range"
-                    selected={dateRange}
-                    onSelect={setDateRange}
-                    numberOfMonths={1}
-                  />
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const monthName = format(new Date(2024, i, 1), "MMM");
+                  const isSelected = selectedMonths.includes(i);
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setSelectedMonths((prev) =>
+                          prev.includes(i)
+                            ? prev.filter((m) => m !== i)
+                            : [...prev, i]
+                        );
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                        isSelected
+                          ? "bg-gold text-white shadow-md ring-2 ring-offset-1 ring-gold/20"
+                          : "bg-charcoal/5 text-charcoal/50 hover:bg-charcoal/10"
+                      }`}
+                    >
+                      {monthName}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
