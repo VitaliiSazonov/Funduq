@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { format, parseISO, isPast, isWithinInterval, startOfDay, endOfDay } from "date-fns";
+import { format, parseISO, isPast, startOfDay, endOfDay } from "date-fns";
+import { DayPicker, DateRange } from "react-day-picker";
+import "react-day-picker/style.css";
 import type { GuestBookingRequest } from "@/app/actions/booking-requests";
 
 /* ── helpers ─────────────────────────────────────────────── */
@@ -73,12 +75,11 @@ interface Props {
 export default function GuestBookingsClient({ bookings, t }: Props) {
   /* filter state */
   const [statusFilter, setStatusFilter] = useState<StatusKey | "all">("all");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [showFilters, setShowFilters] = useState(false);
 
   const hasActiveFilters =
-    statusFilter !== "all" || dateFrom !== "" || dateTo !== "";
+    statusFilter !== "all" || !!dateRange?.from || !!dateRange?.to;
 
   /* status config */
   function statusConfig(status: string) {
@@ -122,18 +123,18 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
 
       // Date range filter (against check_in)
-      if (dateFrom) {
+      if (dateRange?.from) {
         const checkIn = parseISO(b.check_in);
-        if (checkIn < startOfDay(parseISO(dateFrom))) return false;
+        if (checkIn < startOfDay(dateRange.from)) return false;
       }
-      if (dateTo) {
+      if (dateRange?.to) {
         const checkIn = parseISO(b.check_in);
-        if (checkIn > endOfDay(parseISO(dateTo))) return false;
+        if (checkIn > endOfDay(dateRange.to)) return false;
       }
 
       return true;
     });
-  }, [bookings, statusFilter, dateFrom, dateTo]);
+  }, [bookings, statusFilter, dateRange]);
 
   /* split into upcoming vs past */
   const upcoming = filtered.filter(
@@ -161,8 +162,7 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
 
   function clearFilters() {
     setStatusFilter("all");
-    setDateFrom("");
-    setDateTo("");
+    setDateRange(undefined);
   }
 
   /* ── render booking card ─── */
@@ -362,27 +362,13 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
               <label className="block text-xs font-black text-charcoal/30 uppercase tracking-[0.15em] mb-3">
                 {t.filterByDate}
               </label>
-              <div className="flex flex-wrap gap-3">
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-charcoal/30 uppercase">
-                    {t.from}
-                  </span>
-                  <input
-                    type="date"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
-                    className="pl-14 pr-3 py-2.5 bg-offwhite border border-charcoal/10 rounded-xl text-sm text-charcoal font-medium focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all"
-                  />
-                </div>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-charcoal/30 uppercase">
-                    {t.to}
-                  </span>
-                  <input
-                    type="date"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
-                    className="pl-14 pr-3 py-2.5 bg-offwhite border border-charcoal/10 rounded-xl text-sm text-charcoal font-medium focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all"
+              <div className="flex flex-col gap-3">
+                <div className="rdp-funduq bg-offwhite rounded-xl border border-charcoal/10 p-2 overflow-x-auto">
+                  <DayPicker
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={1}
                   />
                 </div>
               </div>
