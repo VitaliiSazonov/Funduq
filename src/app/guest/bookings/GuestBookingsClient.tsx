@@ -74,10 +74,11 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
   /* filter state */
   const [statusFilter, setStatusFilter] = useState<StatusKey | "all">("all");
   const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
+  const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
   const hasActiveFilters =
-    statusFilter !== "all" || selectedMonths.length > 0;
+    statusFilter !== "all" || selectedMonths.length > 0 || selectedYears.length > 0;
 
   /* status config */
   function statusConfig(status: string) {
@@ -120,16 +121,21 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
       // Status filter
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
 
-      // Month filter (against check_in)
+      const checkIn = parseISO(b.check_in);
+
+      // Month filter
       if (selectedMonths.length > 0) {
-        const checkIn = parseISO(b.check_in);
-        const month = checkIn.getMonth(); // 0-11
-        if (!selectedMonths.includes(month)) return false;
+        if (!selectedMonths.includes(checkIn.getMonth())) return false;
+      }
+
+      // Year filter
+      if (selectedYears.length > 0) {
+        if (!selectedYears.includes(checkIn.getFullYear())) return false;
       }
 
       return true;
     });
-  }, [bookings, statusFilter, selectedMonths]);
+  }, [bookings, statusFilter, selectedMonths, selectedYears]);
 
   /* split into upcoming vs past */
   const upcoming = filtered.filter(
@@ -158,6 +164,7 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
   function clearFilters() {
     setStatusFilter("all");
     setSelectedMonths([]);
+    setSelectedYears([]);
   }
 
   /* ── render booking card ─── */
@@ -352,12 +359,12 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
               </div>
             </div>
 
-            {/* Month Filter */}
+            {/* Month & Year Filter */}
             <div>
               <label className="block text-xs font-black text-charcoal/30 uppercase tracking-[0.15em] mb-3">
                 {t.filterByDate}
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {Array.from({ length: 12 }).map((_, i) => {
                   const monthName = format(new Date(2024, i, 1), "MMM");
                   const isSelected = selectedMonths.includes(i);
@@ -378,6 +385,30 @@ export default function GuestBookingsClient({ bookings, t }: Props) {
                       }`}
                     >
                       {monthName}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[2026, 2027, 2028, 2029, 2030].map((year) => {
+                  const isSelected = selectedYears.includes(year);
+                  return (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        setSelectedYears((prev) =>
+                          prev.includes(year)
+                            ? prev.filter((y) => y !== year)
+                            : [...prev, year]
+                        );
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                        isSelected
+                          ? "bg-gold text-white shadow-md ring-2 ring-offset-1 ring-gold/20"
+                          : "bg-charcoal/5 text-charcoal/50 hover:bg-charcoal/10"
+                      }`}
+                    >
+                      {year}
                     </button>
                   );
                 })}
