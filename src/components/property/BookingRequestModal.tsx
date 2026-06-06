@@ -21,15 +21,28 @@ interface BookingRequestModalProps {
 // ─────────────────────────────────────────────────────────────
 // Validation helpers
 // ─────────────────────────────────────────────────────────────
-const PHONE_RE = /^[+]?[\d\s()-]{7,20}$/;
+// Must start with "+" and country code (1-3 digits), then the rest
+// of the number (digits, spaces, dashes, parens allowed).
+// Total digit count (excluding the leading "+") must be 7-15 (E.164).
+const PHONE_RE = /^\+\d{1,3}[\s-]?\(?\d+\)?[\d\s()-]{4,}$/;
 
 function isNameValid(v: string): boolean {
   return v.trim().length >= 2;
 }
 
 function isPhoneValid(v: string): boolean {
-  return PHONE_RE.test(v.trim());
+  const cleaned = v.trim();
+  if (!PHONE_RE.test(cleaned)) return false;
+  // Count only digits (skip the leading "+")
+  const digitCount = cleaned.replace(/[^\d]/g, "").length;
+  return digitCount >= 7 && digitCount <= 15;
 }
+
+// ─────────────────────────────────────────────────────────────
+// Session persistence keys
+// ─────────────────────────────────────────────────────────────
+const SS_NAME_KEY = "brm_guest_name";
+const SS_PHONE_KEY = "brm_guest_phone";
 
 // ─────────────────────────────────────────────────────────────
 // Form state
@@ -50,7 +63,12 @@ export default function BookingRequestModal({
   message,
   whatsappUrl,
 }: BookingRequestModalProps) {
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [form, setForm] = useState<FormState>(() => {
+    if (typeof window === "undefined") return INITIAL_FORM;
+    const savedName = sessionStorage.getItem(SS_NAME_KEY) ?? "";
+    const savedPhone = sessionStorage.getItem(SS_PHONE_KEY) ?? "";
+    return { ...INITIAL_FORM, name: savedName, phone: savedPhone };
+  });
   const [isPending, startTransition] = useTransition();
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -121,6 +139,10 @@ export default function BookingRequestModal({
           page_location: window.location.href,
         });
       }
+
+      // Persist guest details for the rest of the session
+      sessionStorage.setItem(SS_NAME_KEY, form.name.trim());
+      sessionStorage.setItem(SS_PHONE_KEY, form.phone.trim());
 
       // ALWAYS redirect to WhatsApp regardless of result
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
@@ -234,7 +256,7 @@ export default function BookingRequestModal({
               />
               {form.touchedPhone && !phoneOk && (
                 <p className="mt-1 text-xs text-red-500">
-                  Please enter a valid phone number
+                  Enter phone with country code, e.g. +971 50 123 4567
                 </p>
               )}
             </div>
