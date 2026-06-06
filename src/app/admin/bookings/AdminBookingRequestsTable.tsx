@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X, Phone, Save } from "lucide-react";
 import { setAdminComment } from "@/app/actions/booking-requests";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isThisWeek, isThisMonth } from "date-fns";
 
 export type AdminBookingRequest = {
   id: string;
@@ -75,6 +75,7 @@ export default function AdminBookingRequestsTable({
   bookingRequests: AdminBookingRequest[];
 }) {
   const [filterCreatedDate, setFilterCreatedDate] = useState("");
+  const [checkInFilterType, setCheckInFilterType] = useState<"All" | "ThisWeek" | "ThisMonth" | "Specific">("All");
   const [filterCheckInDate, setFilterCheckInDate] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
 
@@ -86,9 +87,16 @@ export default function AdminBookingRequestsTable({
       if (reqCreated !== filterCreatedDate) return false;
     }
 
-    if (filterCheckInDate) {
-      const reqCheckIn = req.check_in.split('T')[0];
-      if (reqCheckIn !== filterCheckInDate) return false;
+    if (checkInFilterType !== "All") {
+      const checkInDateObj = parseISO(req.check_in);
+      if (checkInFilterType === "ThisWeek") {
+        if (!isThisWeek(checkInDateObj, { weekStartsOn: 1 })) return false;
+      } else if (checkInFilterType === "ThisMonth") {
+        if (!isThisMonth(checkInDateObj)) return false;
+      } else if (checkInFilterType === "Specific" && filterCheckInDate) {
+        const reqCheckInStr = req.check_in.split('T')[0];
+        if (reqCheckInStr !== filterCheckInDate) return false;
+      }
     }
 
     return true;
@@ -154,19 +162,39 @@ export default function AdminBookingRequestsTable({
         </div>
         <div className="flex flex-col">
           <label className="text-xs uppercase text-charcoal/60 font-semibold mb-1">Check-in Date</label>
-          <input
-            type="date"
-            value={filterCheckInDate}
-            onChange={(e) => setFilterCheckInDate(e.target.value)}
-            className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold min-w-[140px]"
-          />
+          <div className="flex gap-2 items-center">
+            <select
+              value={checkInFilterType}
+              onChange={(e) => {
+                setCheckInFilterType(e.target.value as any);
+                if (e.target.value !== "Specific") {
+                  setFilterCheckInDate("");
+                }
+              }}
+              className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold"
+            >
+              <option value="All">Any Date</option>
+              <option value="ThisWeek">This Week</option>
+              <option value="ThisMonth">This Month</option>
+              <option value="Specific">Specific Date</option>
+            </select>
+            {checkInFilterType === "Specific" && (
+              <input
+                type="date"
+                value={filterCheckInDate}
+                onChange={(e) => setFilterCheckInDate(e.target.value)}
+                className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold min-w-[140px]"
+              />
+            )}
+          </div>
         </div>
-        {(filterStatus !== "All" || filterCreatedDate || filterCheckInDate) && (
+        {(filterStatus !== "All" || filterCreatedDate || checkInFilterType !== "All") && (
           <div className="flex flex-col justify-end mt-auto mb-1">
             <button
               onClick={() => {
                 setFilterStatus("All");
                 setFilterCreatedDate("");
+                setCheckInFilterType("All");
                 setFilterCheckInDate("");
               }}
               className="text-xs font-semibold text-red-500 hover:text-red-700 uppercase"
