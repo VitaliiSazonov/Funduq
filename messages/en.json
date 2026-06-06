@@ -469,7 +469,17 @@
     "cancel": "Cancelled",
     "guest": "guest",
     "guests": "guests",
-    "pastAndCancelled": "Past & Cancelled"
+    "pastAndCancelled": "Past & Cancelled",
+    "filterByStatus": "Filter",
+    "filterByDate": "Filter by Date",
+    "allStatuses": "All",
+    "from": "From",
+    "to": "To",
+    "clearFilters": "Clear filters",
+    "activeFilters": "Filters active",
+    "noResults": "No matching bookings",
+    "noResultsHint": "Try adjusting your filters to see more results.",
+    "viewProperty": "View Property"
   },
   "contactReveal": {
     "contactAfterConfirm": "Host contact details will be revealed after your booking is confirmed.",

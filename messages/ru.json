@@ -467,7 +467,17 @@
     "cancel": "Отменено",
     "guest": "гость",
     "guests": "гостей",
-    "pastAndCancelled": "Прошедшие и отменённые"
+    "pastAndCancelled": "Прошедшие и отменённые",
+    "filterByStatus": "Фильтр",
+    "filterByDate": "Фильтр по дате",
+    "allStatuses": "Все",
+    "from": "От",
+    "to": "До",
+    "clearFilters": "Сбросить фильтры",
+    "activeFilters": "Фильтры активны",
+    "noResults": "Нет совпадений",
+    "noResultsHint": "Попробуйте изменить фильтры для поиска.",
+    "viewProperty": "Перейти к объявлению"
   },
   "contactReveal": {
     "contactAfterConfirm": "Контактные данные хоста будут доступны после подтверждения бронирования.",
