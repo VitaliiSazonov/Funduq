@@ -74,6 +74,26 @@ export default function AdminBookingRequestsTable({
 }: {
   bookingRequests: AdminBookingRequest[];
 }) {
+  const [filterCreatedDate, setFilterCreatedDate] = useState("");
+  const [filterCheckInDate, setFilterCheckInDate] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+
+  const filteredRequests = bookingRequests.filter((req) => {
+    if (filterStatus !== "All" && req.status !== filterStatus) return false;
+    
+    if (filterCreatedDate) {
+      const reqCreated = req.created_at.split('T')[0];
+      if (reqCreated !== filterCreatedDate) return false;
+    }
+
+    if (filterCheckInDate) {
+      const reqCheckIn = req.check_in.split('T')[0];
+      if (reqCheckIn !== filterCheckInDate) return false;
+    }
+
+    return true;
+  });
+
   const getStatusBadge = (status: AdminBookingRequest["status"]) => {
     switch (status) {
       case "Request":
@@ -105,7 +125,59 @@ export default function AdminBookingRequestsTable({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 lg:block">
+    <div className="flex flex-col gap-4">
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-4 bg-white p-4 rounded-2xl border border-charcoal/5 shadow-sm">
+        <div className="flex flex-col">
+          <label className="text-xs uppercase text-charcoal/60 font-semibold mb-1">Status</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold"
+          >
+            <option value="All">All Statuses</option>
+            <option value="Request">Request</option>
+            <option value="OnProcess">OnProcess</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Checkout">Checkout</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-xs uppercase text-charcoal/60 font-semibold mb-1">Created Date</label>
+          <input
+            type="date"
+            value={filterCreatedDate}
+            onChange={(e) => setFilterCreatedDate(e.target.value)}
+            className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold min-w-[140px]"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="text-xs uppercase text-charcoal/60 font-semibold mb-1">Check-in Date</label>
+          <input
+            type="date"
+            value={filterCheckInDate}
+            onChange={(e) => setFilterCheckInDate(e.target.value)}
+            className="border border-charcoal/10 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gold min-w-[140px]"
+          />
+        </div>
+        {(filterStatus !== "All" || filterCreatedDate || filterCheckInDate) && (
+          <div className="flex flex-col justify-end mt-auto mb-1">
+            <button
+              onClick={() => {
+                setFilterStatus("All");
+                setFilterCreatedDate("");
+                setFilterCheckInDate("");
+              }}
+              className="text-xs font-semibold text-red-500 hover:text-red-700 uppercase"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 lg:block">
       {/* Desktop view */}
       <div className="hidden lg:block overflow-x-auto bg-white rounded-2xl border border-charcoal/5 shadow-sm">
         <table className="w-full text-left text-sm text-charcoal">
@@ -123,7 +195,7 @@ export default function AdminBookingRequestsTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-charcoal/5">
-            {bookingRequests.map((req) => (
+            {filteredRequests.map((req) => (
               <tr key={req.id} className="hover:bg-offwhite/50 transition-colors">
                 <td className="px-4 py-3 font-medium display-font">{req.properties?.title || "Unknown"}</td>
                 <td className="px-4 py-3">
@@ -156,7 +228,7 @@ export default function AdminBookingRequestsTable({
 
       {/* Mobile view */}
       <div className="lg:hidden space-y-4">
-        {bookingRequests.map((req) => (
+        {filteredRequests.map((req) => (
           <div key={req.id} className="bg-white rounded-2xl border border-charcoal/5 p-4 flex flex-col gap-3 shadow-sm">
             <div className="flex justify-between items-start">
               <div>
@@ -207,6 +279,7 @@ export default function AdminBookingRequestsTable({
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }
