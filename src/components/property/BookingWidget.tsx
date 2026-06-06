@@ -66,7 +66,7 @@ export default function BookingWidget({
   }, [searchParams]);
 
   const [range, setRange] = useState<DateRange | undefined>(initialRange);
-  const [guests, setGuests] = useState(1);
+  const [guests, setGuests] = useState<number | "">("");
   const [message, setMessage] = useState("");
   const [disabledDates, setDisabledDates] = useState<Date[]>([]);
   const [isLoadingDates, setIsLoadingDates] = useState(true);
@@ -111,6 +111,7 @@ export default function BookingWidget({
   // ─── Validation ───
   function isFormValid(): boolean {
     if (!range?.from || !range?.to || rangeHasConflict()) return false;
+    if (guests === "" || guests < 1) return false;
     return true;
   }
 
@@ -120,7 +121,7 @@ export default function BookingWidget({
 
     const checkIn = format(range.from, "yyyy-MM-dd");
     const checkOut = format(range.to, "yyyy-MM-dd");
-    const totalGuests = guests;
+    const totalGuests = guests || 1;
     const messageToHost = message.trim();
 
     const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_NUMBER || "971585825323";
@@ -230,9 +231,17 @@ export default function BookingWidget({
           </label>
           <select
             value={guests}
-            onChange={(e) => setGuests(Number(e.target.value))}
-            className="w-full px-4 py-3 bg-offwhite border border-charcoal/10 rounded-xl text-charcoal font-medium focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all appearance-none"
+            onChange={(e) => setGuests(e.target.value === "" ? "" : Number(e.target.value))}
+            required
+            className={`w-full px-4 py-3 bg-offwhite border rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all appearance-none ${
+              guests === ""
+                ? "border-charcoal/10 text-charcoal/40"
+                : "border-charcoal/10 text-charcoal"
+            }`}
           >
+            <option value="" disabled>
+              {t("selectGuests")}
+            </option>
             {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>
                 {n} {n !== 1 ? t("guestsPlural") : t("guest")}
@@ -307,7 +316,7 @@ export default function BookingWidget({
         propertyId={propertyId}
         checkIn={range?.from ? format(range.from, "yyyy-MM-dd") : undefined}
         checkOut={range?.to ? format(range.to, "yyyy-MM-dd") : undefined}
-        totalGuests={guests}
+        totalGuests={guests || 1}
         message={message || undefined}
         whatsappUrl={whatsAppUrl}
       />

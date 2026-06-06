@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getGuestBookings } from "@/app/actions/bookings";
+import { getGuestBookingRequests } from "@/app/actions/booking-requests";
 import { getHostLocale, getHostMessages } from "@/lib/getHostLocale";
-import ContactReveal from "./ContactReveal";
 import {
   CalendarDays,
   ArrowLeft,
@@ -11,6 +10,7 @@ import {
   CheckCircle2,
   XCircle,
   MapPin,
+  Loader,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export default async function GuestBookingsPage() {
 
   if (!user) redirect("/login");
 
-  const bookings = await getGuestBookings();
+  const bookings = await getGuestBookingRequests();
 
   // ── Load translations ──
   const locale = await getHostLocale();
@@ -42,41 +42,46 @@ export default async function GuestBookingsPage() {
       string,
       { label: string; bg: string; icon: React.ReactNode }
     > = {
-      pending: {
-        label: t.pending,
+      Request: {
+        label: t.request,
         bg: "bg-amber-100 text-amber-700",
         icon: <Clock className="w-3 h-3" />,
       },
-      confirmed: {
+      OnProcess: {
+        label: t.onProcess,
+        bg: "bg-blue-100 text-blue-700",
+        icon: <Loader className="w-3 h-3" />,
+      },
+      Confirmed: {
         label: t.confirmed,
         bg: "bg-green-100 text-green-700",
         icon: <CheckCircle2 className="w-3 h-3" />,
       },
-      declined: {
-        label: t.declined,
+      Checkout: {
+        label: t.checkout,
+        bg: "bg-gray-100 text-gray-500",
+        icon: <CheckCircle2 className="w-3 h-3" />,
+      },
+      Cancel: {
+        label: t.cancel,
         bg: "bg-red-100 text-red-600",
         icon: <XCircle className="w-3 h-3" />,
       },
-      cancelled: {
-        label: t.cancelled,
-        bg: "bg-gray-100 text-gray-500",
-        icon: <XCircle className="w-3 h-3" />,
-      },
     };
-    return map[status] || map.cancelled;
+    return map[status] || map.Request;
   }
 
   // Split into upcoming vs past
   const upcoming = bookings.filter(
     (b) =>
       !isPast(parseISO(b.check_out)) &&
-      (b.status === "pending" || b.status === "confirmed")
+      (b.status === "Request" || b.status === "OnProcess" || b.status === "Confirmed")
   );
   const past = bookings.filter(
     (b) =>
       isPast(parseISO(b.check_out)) ||
-      b.status === "declined" ||
-      b.status === "cancelled"
+      b.status === "Cancel" ||
+      b.status === "Checkout"
   );
 
   return (
@@ -177,11 +182,11 @@ export default async function GuestBookingsPage() {
                             </span>
                           </div>
 
-                          {/* ─── Contact Reveal ─── */}
-                          <ContactReveal
-                            bookingId={booking.id}
-                            status={booking.status}
-                          />
+                          {booking.message && (
+                            <p className="text-sm text-charcoal/40 italic border-l-2 border-gold/20 pl-3">
+                              &ldquo;{booking.message}&rdquo;
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -191,11 +196,11 @@ export default async function GuestBookingsPage() {
             )}
           </section>
 
-          {/* ─── Past / Declined ─── */}
+          {/* ─── Past / Cancelled ─── */}
           {past.length > 0 && (
             <section>
               <h2 className="text-xs font-black text-charcoal/30 uppercase tracking-[0.2em] mb-6">
-                {t.pastAndDeclined} ({past.length})
+                {t.pastAndCancelled} ({past.length})
               </h2>
               <div className="space-y-3">
                 {past.map((booking) => {

@@ -238,11 +238,15 @@ export default function PropertyModerationRow({
           )}
 
           <Link
-            href={buildVillaUrl(property.id, property.title ?? "")}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={
+              property.status === "active"
+                ? buildVillaUrl(property.id, property.title ?? "")
+                : `/admin/properties/${property.id}/preview`
+            }
+            target={property.status === "active" ? "_blank" : undefined}
+            rel={property.status === "active" ? "noopener noreferrer" : undefined}
             style={viewBtn}
-            title="View listing"
+            title={property.status === "active" ? "View public listing" : "Preview listing (admin only)"}
           >
             <ExternalLink size={14} />
           </Link>

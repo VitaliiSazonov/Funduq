@@ -41,12 +41,17 @@ export async function createBookingRequest(
   // createAdminClient is synchronous (no await needed)
   const admin = createAdminClient();
 
+  // Try to get the current user to link the request to their account
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   const { data, error } = await admin
     .from("booking_requests")
     .insert({
       property_id: parsed.data.property_id,
       // Placeholder — the trigger set_host_id overwrites this with properties.owner_id
       host_id: "00000000-0000-0000-0000-000000000000",
+      guest_id: user?.id ?? null,
       guest_name: parsed.data.guest_name,
       guest_phone: parsed.data.guest_phone,
       check_in: parsed.data.check_in,
@@ -176,4 +181,62 @@ export async function setAdminComment(
   }
 
   return { success: true };
+}
+
+// ─── 5. getGuestBookingRequests ───────────────────────────────────────────────
+// Fetch all booking_requests for the currently authenticated guest.
+
+export interface GuestBookingRequest {
+  id: string;
+  property_id: string;
+  guest_name: string;
+  guest_phone: string;
+  check_in: string;
+  check_out: string;
+  total_guests: number;
+  message: string | null;
+  status: string;
+  host_reply: string | null;
+  created_at: string;
+  updated_at: string;
+  property: {
+    id: string;
+    title: string;
+    location_emirate: string;
+    location_district: string;
+    main_image_url: string | null;
+    type: string;
+  };
+}
+
+export async function getGuestBookingRequests(): Promise<GuestBookingRequest[]> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from("booking_requests")
+    .select(
+      `
+      id, property_id, guest_name, guest_phone,
+      check_in, check_out, total_guests, message,
+      status, host_reply, created_at, updated_at,
+      property:properties!booking_requests_property_id_fkey (
+        id, title, location_emirate, location_district, main_image_url, type
+      )
+    `
+    )
+    .eq("guest_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("[getGuestBookingRequests]", error);
+    return [];
+  }
+
+  return (data || []) as unknown as GuestBookingRequest[];
 }
