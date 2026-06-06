@@ -9,7 +9,8 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { signInAction, signInWithGoogleAction } from '@/app/actions/auth';
+import { signInAction } from '@/app/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 
 // ─────────────────────────────────────────────────────────────
 // Component
@@ -67,12 +68,16 @@ function LoginForm() {
     setIsGoogleLoading(true);
     setServerError(null);
 
-    const result = await signInWithGoogleAction();
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
 
-    if (result.success && result.url) {
-      window.location.href = result.url;
-    } else {
-      setServerError(result.error || t('couldNotGoogle'));
+    if (error) {
+      setServerError(error.message || t('couldNotGoogle'));
       setIsGoogleLoading(false);
     }
   }

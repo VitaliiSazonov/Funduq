@@ -199,34 +199,6 @@ export async function updatePasswordAction(
 }
 
 // ─────────────────────────────────────────────────────────────
-// Google OAuth — get redirect URL
-// ─────────────────────────────────────────────────────────────
-export async function signInWithGoogleAction(): Promise<
-  AuthResult & { url?: string }
-> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
-    },
-  });
-
-  if (error) {
-    return {
-      success: false,
-      error: friendlyAuthError(error.message),
-    };
-  }
-
-  return {
-    success: true,
-    url: data.url,
-  };
-}
-
-// ─────────────────────────────────────────────────────────────
 // User-friendly error message mapper
 // ─────────────────────────────────────────────────────────────
 function friendlyAuthError(message: string): string {
